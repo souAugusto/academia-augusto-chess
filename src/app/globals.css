@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* Tokens da identidade visual (PROMPT_MESTRE.md, seção 3). Definidos só aqui. */
+@theme {
+  --color-fundo: #0e241d;
+  --color-fundo-profundo: #0b1d17;
+  --color-superficie: #143128;
+  --color-superficie-alta: #1b3f33;
+  --color-borda: #1f4538;
+  --color-borda-forte: #3c6b58;
+  --color-texto: #f3efe4;
+  --color-texto-secundario: #c9d6ce;
+  --color-texto-discreto: #a9b9b0;
+  --color-dourado: #d4af57;
+  --color-sobre-dourado: #0e241d;
+  --color-casa-clara: #e8ddc0;
+  --color-casa-escura: #5e8b6f;
+
+  --font-titulo: var(--font-fraunces), Georgia, serif;
+  --font-texto: var(--font-manrope), system-ui, sans-serif;
+
+  /* Área mínima de toque: 44px */
+  --spacing-toque: 2.75rem;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-fundo);
+  color: var(--color-texto);
+  font-family: var(--font-texto);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-dourado);
+  outline-offset: 2px;
+}
