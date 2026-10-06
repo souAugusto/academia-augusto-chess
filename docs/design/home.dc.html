@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Academia Augusto Chess - Home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E241D;font-family:'Manrope',system-ui,sans-serif;color:#F3EFE4}
+html{scroll-behavior:smooth}
+a{color:inherit;text-decoration:none}
+.nav-link{color:#C9D6CE}
+.nav-link:hover{color:#FFFFFF}
+.btn:hover{filter:brightness(1.08)}
+.card:hover{border-color:#3C6B58}
+</style>
+</helmet>
+<div style="width: 100%; background: #0E241D; color: #F3EFE4; font-family: 'Manrope', system-ui, sans-serif">
+
+<!-- Cabeçalho -->
+<header style="border-bottom: 1px solid #1F4538">
+<div style="max-width: 1200px; margin: 0 auto; padding: 18px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="#topo" style="display: flex; align-items: center; gap: 12px">
+<span style="width: 44px; height: 44px; border-radius: 10px; background: {{accent}}; color: #0E241D; display: flex; align-items: center; justify-content: center; font-size: 28px">&#9822;&#xFE0E;</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 20px; letter-spacing: 0.01em">Academia Augusto Chess</span>
+</a>
+<nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-size: 15px; font-weight: 600">
+<a class="nav-link" href="#puzzle">Puzzle do dia</a>
+<a class="nav-link" href="#beneficios">Benefícios</a>
+<a class="nav-link" href="#metodo">Método</a>
+<a class="nav-link" href="#planos">Planos</a>
+<a class="nav-link" href="#faq">Dúvidas</a>
+<a class="nav-link" href="Entrar.dc.html">Entrar</a>
+<a class="btn" href="#planos" style="background: {{accent}}; color: #0E241D; padding: 12px 20px; border-radius: 10px; font-weight: 700">Assinar</a>
+</nav>
+</div>
+</header>
+
+<!-- Hero -->
+<section id="topo" style="max-width: 1200px; margin: 0 auto; padding: 72px 24px 56px; display: flex; flex-wrap: wrap; align-items: center; gap: 56px">
+<div style="flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{accent}}">Comunidade de xadrez ao vivo</span>
+<h1 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: clamp(40px, 5.2vw, 66px); line-height: 1.05; letter-spacing: -0.01em">Treine xadrez todo dia e evolua junto com a comunidade.</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #C9D6CE; max-width: 520px">Puzzles com progresso, aulas em vídeo, ranking entre os membros e acesso à comunidade que se encontra nas lives do Augusto.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 14px">
+<a class="btn" href="#planos" style="background: {{accent}}; color: #0E241D; padding: 16px 28px; border-radius: 12px; font-weight: 700; font-size: 16px">Quero ser membro</a>
+<a class="btn" href="#puzzle" style="border: 1.5px solid #3C6B58; color: #F3EFE4; padding: 15px 28px; border-radius: 12px; font-weight: 600; font-size: 16px">Resolver o puzzle do dia</a>
+</div>
+<span style="font-size: 14px; color: #A9B9B0">Lives diárias no TikTok · @augustochess</span>
+</div>
+<div id="puzzle" style="flex: 1 1 380px; min-width: 0; max-width: 500px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); border-radius: 12px; overflow: hidden; border: 6px solid #1B3F33; box-shadow: 0 24px 60px rgba(0,0,0,0.45)">
+<sc-for list="{{squares}}" as="sq" hint-placeholder-count="64">
+<div style="aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: clamp(22px, 6.4vw, 44px); line-height: 1; background: {{sq.bg}}; color: {{sq.fg}}; text-shadow: {{sq.shadow}}">{{sq.glyph}}</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 14px">
+<span style="font-weight: 700; color: {{accent}}">Puzzle do dia · Mate em 1</span>
+<span style="color: #A9B9B0">Brancas jogam</span>
+</div>
+</div>
+</section>
+
+<!-- Próxima live -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 0 24px 72px">
+<div style="background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 28px 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{accent}}">Próxima live</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 26px; font-weight: 700">[DIA E HORÁRIO DA LIVE]</span>
+<span style="font-size: 15px; color: #A9B9B0">Treino aberto no TikTok, com partidas e puzzles comentados.</span>
+</div>
+<a class="btn" href="https://www.tiktok.com/@augustochess" style="background: #F3EFE4; color: #0E241D; padding: 14px 24px; border-radius: 12px; font-weight: 700">Assistir no TikTok</a>
+</div>
+</section>
+
+<!-- Benefícios -->
+<section id="beneficios" style="background: #0B1D17; border-top: 1px solid #1F4538; border-bottom: 1px solid #1F4538">
+<div style="max-width: 1200px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 640px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{accent}}">O que você recebe</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: clamp(30px, 3.6vw, 44px); line-height: 1.1">Tudo para treinar com método, dentro e fora das lives.</h2>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 20px">
+<div class="card" style="flex: 1 1 320px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; color: {{accent}}">01</span>
+<h3 style="margin: 0; font-size: 20px">Puzzles com progresso</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Táticas por tema e dificuldade, com sequência diária e rating que acompanha a sua evolução.</p>
+</div>
+<div class="card" style="flex: 1 1 320px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; color: {{accent}}">02</span>
+<h3 style="margin: 0; font-size: 20px">Aulas em vídeo</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Cursos organizados em módulos, com o tabuleiro ao lado do vídeo e material em PDF e PGN para baixar.</p>
+</div>
+<div class="card" style="flex: 1 1 320px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; color: {{accent}}">03</span>
+<h3 style="margin: 0; font-size: 20px">Revisão dos seus erros</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Os puzzles que você errou voltam na hora certa, para fixar o padrão até virar automático.</p>
+</div>
+<div class="card" style="flex: 1 1 320px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; color: {{accent}}">04</span>
+<h3 style="margin: 0; font-size: 20px">Lives exclusivas</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Encontros só para membros, com análise de partidas e espaço para tirar dúvidas.</p>
+</div>
+<div class="card" style="flex: 1 1 320px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; color: {{accent}}">05</span>
+<h3 style="margin: 0; font-size: 20px">Ranking e torneios</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Dispute posições no ranking da academia e participe dos torneios internos entre os membros.</p>
+</div>
+<div class="card" style="flex: 1 1 320px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; color: {{accent}}">06</span>
+<h3 style="margin: 0; font-size: 20px">Comunidade no WhatsApp</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Convite liberado na sua área de membro depois da assinatura, para treinar junto com a comunidade.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Como funciona -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; gap: 40px">
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: clamp(30px, 3.6vw, 44px); line-height: 1.1; max-width: 640px">Como entrar na academia</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 32px">
+<div style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 10px; border-top: 2px solid {{accent}}; padding-top: 20px">
+<h3 style="margin: 0; font-size: 20px">1. Assista à live</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Acompanhe o treino aberto no TikTok e veja o método na prática.</p>
+</div>
+<div style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 10px; border-top: 2px solid {{accent}}; padding-top: 20px">
+<h3 style="margin: 0; font-size: 20px">2. Conheça o método</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Resolva o puzzle do dia e veja como o treino funciona na prática.</p>
+</div>
+<div style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 10px; border-top: 2px solid {{accent}}; padding-top: 20px">
+<h3 style="margin: 0; font-size: 20px">3. Vire membro</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Assine, libere as aulas e o grupo do WhatsApp e comece a subir no ranking.</p>
+</div>
+</div>
+</section>
+
+<!-- Método -->
+<section id="metodo" style="max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 680px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{accent}}">Treinamento intensivo</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: clamp(30px, 3.6vw, 44px); line-height: 1.1">Método Augusto Chess: do diagnóstico à evolução, com acompanhamento.</h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #C9D6CE">Para quem quer sair do treino solto e seguir um caminho definido, com o Augusto corrigindo a rota ao longo do processo.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 20px">
+<div style="flex: 1 1 240px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; color: {{accent}}">Fase 1</span>
+<h3 style="margin: 0; font-size: 20px">Diagnóstico</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Análise das suas partidas para encontrar os padrões de erro que mais custam pontos.</p>
+</div>
+<div style="flex: 1 1 240px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; color: {{accent}}">Fase 2</span>
+<h3 style="margin: 0; font-size: 20px">Seu conjunto de táticas</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Seleção de táticas no seu nível para formar o conjunto que você vai treinar até dominar.</p>
+</div>
+<div style="flex: 1 1 240px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; color: {{accent}}">Fase 3</span>
+<h3 style="margin: 0; font-size: 20px">Ciclos de repetição</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Você refaz o mesmo conjunto em ciclos, cada um mais rápido, com revisão espaçada dos erros.</p>
+</div>
+<div style="flex: 1 1 240px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; color: {{accent}}">Fase 4</span>
+<h3 style="margin: 0; font-size: 20px">Revisão ao vivo</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Encontros com turma de até 10 alunos para corrigir partidas, tirar dúvidas e ajustar o plano.</p>
+</div>
+</div>
+<span style="font-size: 13px; color: #A9B9B0">[DEFINIR DURAÇÃO E ESTRUTURA REAL DO MÉTODO ANTES DE PUBLICAR]</span>
+</section>
+
+<!-- Planos -->
+<section id="planos" style="background: #0B1D17; border-top: 1px solid #1F4538; border-bottom: 1px solid #1F4538">
+<div style="max-width: 1000px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 12px; text-align: center; align-items: center">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{accent}}">Planos</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: clamp(30px, 3.6vw, 44px); line-height: 1.1">Escolha o seu nível de treino.</h2>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+<div style="flex: 1 1 340px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 20px; padding: 36px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 20px">Membro</h3>
+<span style="font-size: 14px; color: #A9B9B0">Para treinar todo dia com a comunidade</span>
+</div>
+<div style="display: flex; align-items: baseline; gap: 6px"><span style="font-family: 'Fraunces', Georgia, serif; font-size: 48px; font-weight: 700">R$ 19</span><span style="color: #C9D6CE">/mês</span></div>
+<div style="display: flex; flex-direction: column; gap: 12px; font-size: 15px; color: #F3EFE4; line-height: 1.5; flex-grow: 1">
+<span>Todos os puzzles, com rating e revisão de erros</span>
+<span>Aulas em vídeo e material em PDF e PGN</span>
+<span>Lives exclusivas para membros</span>
+<span>Ranking, torneios e grupo no WhatsApp</span>
+</div>
+<a class="btn" href="#" style="border: 1.5px solid {{accent}}; color: {{accent}}; padding: 15px 24px; border-radius: 12px; font-weight: 700; text-align: center">Assinar como membro</a>
+<span style="font-size: 13px; color: #A9B9B0; text-align: center">Pagamento por Pix ou cartão · cancele quando quiser</span>
+</div>
+<div style="flex: 1 1 340px; min-width: 0; background: #1B3F33; border: 2px solid {{accent}}; border-radius: 20px; padding: 36px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px">
+<h3 style="margin: 0; font-size: 20px">Intensivo</h3>
+<span style="background: {{accent}}; color: #0E241D; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 999px">Turma de 10 alunos</span>
+</div>
+<span style="font-size: 14px; color: #C9D6CE; margin-top: -14px">Treinamento completo com o método da academia</span>
+<div style="display: flex; align-items: baseline; gap: 6px"><span style="font-family: 'Fraunces', Georgia, serif; font-size: 48px; font-weight: 700">R$ 119</span><span style="color: #C9D6CE">/mês</span></div>
+<div style="display: flex; flex-direction: column; gap: 12px; font-size: 15px; color: #F3EFE4; line-height: 1.5; flex-grow: 1">
+<span>Tudo do plano Membro</span>
+<span>Método Augusto Chess completo</span>
+<span>Diagnóstico das suas partidas</span>
+<span>Plano de treino individual por nível</span>
+<span>Revisões ao vivo na turma de até 10 alunos</span>
+<span>1 aula por mês com um mestre nacional em atividade</span>
+<span>Grupo exclusivo da turma no WhatsApp</span>
+<span>Prioridade nas lives e nas dúvidas</span>
+</div>
+<a class="btn" href="#" style="background: {{accent}}; color: #0E241D; padding: 16px 24px; border-radius: 12px; font-weight: 700; text-align: center">Garantir minha vaga</a>
+<span style="font-size: 13px; color: #A9B9B0; text-align: center">Pagamento por Pix ou cartão · cancele quando quiser</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Dúvidas -->
+<section id="faq" style="max-width: 800px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; gap: 32px">
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: clamp(30px, 3.6vw, 44px); line-height: 1.1">Dúvidas frequentes</h2>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="border-top: 1px solid #1F4538; padding: 22px 0; display: flex; flex-direction: column; gap: 8px">
+<h3 style="margin: 0; font-size: 18px">Preciso saber jogar bem para entrar?</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Não. Os puzzles e as aulas têm níveis de dificuldade, então iniciantes e intermediários treinam no próprio ritmo.</p>
+</div>
+<div style="border-top: 1px solid #1F4538; padding: 22px 0; display: flex; flex-direction: column; gap: 8px">
+<h3 style="margin: 0; font-size: 18px">Como recebo o acesso ao grupo do WhatsApp?</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Depois da confirmação do pagamento, o botão de convite aparece na sua área de membro.</p>
+</div>
+<div style="border-top: 1px solid #1F4538; padding: 22px 0; display: flex; flex-direction: column; gap: 8px">
+<h3 style="margin: 0; font-size: 18px">Posso cancelar quando quiser?</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">Sim. O cancelamento é feito direto na página Minha conta, sem precisar falar com ninguém.</p>
+</div>
+<div style="border-top: 1px solid #1F4538; border-bottom: 1px solid #1F4538; padding: 22px 0; display: flex; flex-direction: column; gap: 8px">
+<h3 style="margin: 0; font-size: 18px">O que muda para quem entra agora como fundador?</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #C9D6CE">[DEFINIR BENEFÍCIO DO FUNDADOR: preço travado, selo no ranking ou outro]</p>
+</div>
+</div>
+</section>
+
+<!-- Chamada final -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 0 24px 80px">
+<div style="background: #1B3F33; border-radius: 24px; padding: 56px 32px; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center">
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: clamp(30px, 3.6vw, 44px); line-height: 1.1; max-width: 640px">Seu próximo lance começa aqui.</h2>
+<p style="margin: 0; font-size: 17px; color: #C9D6CE; max-width: 520px; line-height: 1.6">Entre na academia e treine todo dia com quem leva o xadrez a sério.</p>
+<a class="btn" href="#planos" style="background: {{accent}}; color: #0E241D; padding: 16px 32px; border-radius: 12px; font-weight: 700; font-size: 16px">Quero ser membro</a>
+</div>
+</section>
+
+<!-- Rodapé -->
+<footer style="border-top: 1px solid #1F4538">
+<div style="max-width: 1200px; margin: 0 auto; padding: 28px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; font-size: 14px; color: #A9B9B0">
+<span>© 2026 Academia Augusto Chess</span>
+<div style="display: flex; flex-wrap: wrap; gap: 20px">
+<a class="nav-link" href="#">Termos de uso</a>
+<a class="nav-link" href="#">Privacidade</a>
+<a class="nav-link" href="https://www.tiktok.com/@augustochess">TikTok</a>
+</div>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#D4AF57","options":["#D4AF57","#E0B84A","#C9A24B","#E8C872"]},"$preview":{"width":1360,"height":3000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const fen = 'r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR';
+    const glyphs = { k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' };
+    const accent = this.props.accent ?? '#D4AF57';
+    const squares = [];
+    fen.split('/').forEach((row, r) => {
+      let f = 0;
+      for (const ch of row) {
+        if (/[1-8]/.test(ch)) {
+          for (let i = 0; i < Number(ch); i++) { squares.push(this.sq(r, f, '', accent)); f++; }
+        } else {
+          squares.push(this.sq(r, f, ch, accent)); f++;
+        }
+      }
+    });
+    return { accent, squares, glyphs };
+  }
+  sq(r, f, piece, accent) {
+    const glyphs = { k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' };
+    const dark = (r + f) % 2 === 1;
+    const hi = (r === 3 && f === 7) || (r === 1 && f === 5);
+    let bg = dark ? '#5E8B6F' : '#E8DDC0';
+    if (hi) bg = dark ? '#B99A45' : '#E3C46B';
+    const isWhite = piece && piece === piece.toUpperCase();
+    return {
+      bg,
+      glyph: piece ? glyphs[piece.toLowerCase()] + '︎' : '',
+      fg: isWhite ? '#FFFDF5' : '#171717',
+      shadow: isWhite ? '0 0 2px #000, 0 0 2px #000, 0 1px 1px #000' : 'none'
+    };
+  }
+}
+</script>
+</body>
+</html>

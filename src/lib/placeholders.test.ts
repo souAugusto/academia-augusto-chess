@@ -16,6 +16,19 @@ describe("findPlaceholders", () => {
     ]);
   });
 
+  it("acha os placeholders dos desenhos, inclusive com minúsculas depois", () => {
+    const desenhos = [
+      "[DIA E HORÁRIO DA LIVE]",
+      "[DEFINIR DURAÇÃO E ESTRUTURA REAL DO MÉTODO ANTES DE PUBLICAR]",
+      "[DEFINIR BENEFÍCIO DO FUNDADOR: preço travado, selo no ranking ou outro]",
+    ];
+    for (const texto of desenhos) {
+      expect(findPlaceholders(`<p>${texto}</p>`)).toEqual([
+        { line: 1, text: texto },
+      ]);
+    }
+  });
+
   it("acha mais de um na mesma linha", () => {
     expect(findPlaceholders("[NOME] e [FOTO]")).toHaveLength(2);
   });

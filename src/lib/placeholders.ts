@@ -1,7 +1,8 @@
 // Detecta placeholders de texto como "[DIA E HORÁRIO DA LIVE]" (PROMPT_MESTRE.md, seção 8.7).
-// Regra: "[" seguido de MAIÚSCULAS. Exige pelo menos 3 caracteres e ignora acesso
-// a índice (ex.: MAPA[CHAVE]), que vem colado a um identificador, "]" ou ")".
-const PLACEHOLDER = /(?<![\w\])])\[[A-ZÀ-Ý][A-ZÀ-Ý0-9 ,.:/'-]{2,}\]/gu;
+// Regra: "[" seguido de MAIÚSCULAS (pelo menos 3 no início); depois disso vale
+// qualquer texto até o "]", como em "[DEFINIR BENEFÍCIO: preço travado]". Ignora
+// acesso a índice (ex.: MAPA[CHAVE]), que vem colado a um identificador, "]" ou ")".
+const PLACEHOLDER = /(?<![\w\])])\[[A-ZÀ-Ý][A-ZÀ-Ý0-9 ]{2,}[^\]\n]*\]/gu;
 
 export type PlaceholderMatch = { line: number; text: string };
 

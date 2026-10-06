@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Treino Augusto Chess</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E241D;font-family:'Manrope',system-ui,sans-serif;color:#F3EFE4}
+a{color:inherit;text-decoration:none}
+.nav-link{color:#C9D6CE}
+.nav-link:hover{color:#FFFFFF}
+.btn:hover{filter:brightness(1.08)}
+button{font-family:inherit;cursor:pointer}
+input::placeholder{color:#7F9489}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 100%; background: #0E241D; color: #F3EFE4; font-family: 'Manrope', system-ui, sans-serif">
+
+<!-- Barra do app -->
+<header style="border-bottom: 1px solid #1F4538">
+<div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 12px">
+<span style="width: 40px; height: 40px; border-radius: 10px; background: {{accent}}; color: #0E241D; display: flex; align-items: center; justify-content: center; font-size: 26px">&#9822;&#xFE0E;</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 18px">Academia Augusto Chess</span>
+</a>
+<nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 22px; font-size: 15px; font-weight: 600">
+<a class="nav-link" href="#">Painel</a>
+<a class="nav-link" href="#">Puzzles</a>
+<a class="nav-link" href="#">Aulas</a>
+<a href="#" style="color: {{accent}}; border-bottom: 2px solid {{accent}}; padding-bottom: 4px">Treino</a>
+<a class="nav-link" href="#">Comunidade</a>
+</nav>
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="background: #1B3F33; border: 1px solid {{accent}}; color: {{accent}}; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 999px">Intensivo</span>
+<span style="width: 38px; height: 38px; border-radius: 999px; background: #1B3F33; display: flex; align-items: center; justify-content: center; font-weight: 700">A</span>
+</div>
+</div>
+</header>
+
+<main style="max-width: 1280px; margin: 0 auto; padding: 36px 24px 64px; display: flex; flex-direction: column; gap: 32px">
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: {{accent}}">Método Augusto Chess</span>
+<h1 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.1">Treino por ciclos</h1>
+</div>
+<span style="font-size: 14px; color: #A9B9B0">Refaça o conjunto inteiro, cada ciclo mais rápido que o anterior.</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+
+<!-- Tabuleiro -->
+<div style="flex: 1 1 480px; min-width: 0; max-width: 640px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px">
+<span style="font-weight: 700; color: {{accent}}">Puzzle 48 de 120</span>
+<span style="color: #C9D6CE">Brancas jogam. Encontre o melhor lance.</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); border-radius: 12px; overflow: hidden; border: 6px solid #1B3F33; box-shadow: 0 24px 60px rgba(0,0,0,0.45)">
+<sc-for list="{{squares}}" as="sq" hint-placeholder-count="64">
+<div style="aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: clamp(24px, 5.6vw, 56px); line-height: 1; background: {{sq.bg}}; color: {{sq.fg}}; text-shadow: {{sq.shadow}}">{{sq.glyph}}</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<button class="btn" type="button" style="background: #1B3F33; color: #F3EFE4; border: 1px solid #3C6B58; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 15px; min-height: 44px">Dica</button>
+<button class="btn" type="button" style="background: #1B3F33; color: #F3EFE4; border: 1px solid #3C6B58; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 15px; min-height: 44px">Pular</button>
+<button class="btn" type="button" style="background: {{accent}}; color: #0E241D; border: 0; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 15px; min-height: 44px">Salvar para revisão</button>
+</div>
+</div>
+
+<!-- Painel lateral -->
+<div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+
+<div style="background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #A9B9B0">Seu conjunto</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 700">Ciclo 3</span>
+</div>
+<span style="font-size: 16px; font-weight: 600">Táticas essenciais · nível 1</span>
+<div style="height: 8px; border-radius: 999px; background: #0E241D; overflow: hidden">
+<div style="width: 39%; height: 100%; background: {{accent}}"></div>
+</div>
+<span style="font-size: 14px; color: #C9D6CE">47 de 120 resolvidos neste ciclo</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 14px">
+<div style="flex: 1 1 140px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; color: #A9B9B0">Este puzzle</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 34px; font-weight: 700; color: {{accent}}">00:42</span>
+</div>
+<div style="flex: 1 1 140px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; color: #A9B9B0">Ciclo atual</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 34px; font-weight: 700">18:20</span>
+</div>
+<div style="flex: 1 1 140px; min-width: 0; background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; color: #A9B9B0">Ciclo anterior</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-size: 34px; font-weight: 700">31:40</span>
+</div>
+</div>
+
+<div style="background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #A9B9B0">Salvar uma tática</span>
+<label for="fen" style="font-size: 14px; color: #C9D6CE">Cole um FEN ou PGN de uma partida sua</label>
+<input id="fen" type="text" placeholder="r1bqkb1r/pppp1ppp/2n2n2/..." style="background: #0E241D; border: 1px solid #3C6B58; border-radius: 10px; color: #F3EFE4; padding: 12px 14px; font-size: 15px; min-height: 20px; font-family: inherit">
+<button class="btn" type="button" style="background: transparent; color: {{accent}}; border: 1.5px solid {{accent}}; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 15px; min-height: 44px">Adicionar ao conjunto</button>
+</div>
+
+<div style="background: #1B3F33; border: 1px solid {{accent}}; border-radius: 16px; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: {{accent}}">Revisão de hoje</span>
+<span style="font-size: 15px; color: #F3EFE4">5 puzzles com erro voltam hoje</span>
+</div>
+<a class="btn" href="#" style="background: {{accent}}; color: #0E241D; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 15px">Revisar agora</a>
+</div>
+
+</div>
+</div>
+
+<!-- Histórico de ciclos -->
+<section style="background: #143128; border: 1px solid #1F4538; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 24px">Histórico de ciclos</h2>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 520px; border-collapse: collapse; font-size: 15px">
+<thead>
+<tr style="text-align: left; color: #A9B9B0; font-size: 13px">
+<th style="padding: 10px 12px; border-bottom: 1px solid #1F4538; font-weight: 600">Ciclo</th>
+<th style="padding: 10px 12px; border-bottom: 1px solid #1F4538; font-weight: 600">Tempo total</th>
+<th style="padding: 10px 12px; border-bottom: 1px solid #1F4538; font-weight: 600">Acertos</th>
+<th style="padding: 10px 12px; border-bottom: 1px solid #1F4538; font-weight: 600">Comparado ao anterior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding: 12px; border-bottom: 1px solid #1F4538">1</td>
+<td style="padding: 12px; border-bottom: 1px solid #1F4538">52:10</td>
+<td style="padding: 12px; border-bottom: 1px solid #1F4538">96 de 120</td>
+<td style="padding: 12px; border-bottom: 1px solid #1F4538; color: #A9B9B0">Primeiro ciclo</td>
+</tr>
+<tr>
+<td style="padding: 12px; border-bottom: 1px solid #1F4538">2</td>
+<td style="padding: 12px; border-bottom: 1px solid #1F4538">31:40</td>
+<td style="padding: 12px; border-bottom: 1px solid #1F4538">108 de 120</td>
+<td style="padding: 12px; border-bottom: 1px solid #1F4538; color: {{accent}}; font-weight: 600">20:30 mais rápido</td>
+</tr>
+<tr>
+<td style="padding: 12px; font-weight: 700">3 (em andamento)</td>
+<td style="padding: 12px">18:20</td>
+<td style="padding: 12px">44 de 47</td>
+<td style="padding: 12px; color: #A9B9B0">Em curso</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#D4AF57","options":["#D4AF57","#E0B84A","#C9A24B","#E8C872"]},"$preview":{"width":1360,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const fen = 'rn1q1bnr/ppp1kB1p/3p2p1/4N3/4P3/2N5/PPPP1PPP/R1BbK2R';
+    const accent = this.props.accent ?? '#D4AF57';
+    const squares = [];
+    fen.split('/').forEach((row, r) => {
+      let f = 0;
+      for (const ch of row) {
+        if (/[1-8]/.test(ch)) {
+          for (let i = 0; i < Number(ch); i++) { squares.push(this.sq(r, f, '')); f++; }
+        } else {
+          squares.push(this.sq(r, f, ch)); f++;
+        }
+      }
+    });
+    return { accent, squares };
+  }
+  sq(r, f, piece) {
+    const glyphs = { k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' };
+    const dark = (r + f) % 2 === 1;
+    const isWhite = piece && piece === piece.toUpperCase();
+    return {
+      bg: dark ? '#5E8B6F' : '#E8DDC0',
+      glyph: piece ? glyphs[piece.toLowerCase()] + '︎' : '',
+      fg: isWhite ? '#FFFDF5' : '#171717',
+      shadow: isWhite ? '0 0 2px #000, 0 0 2px #000, 0 1px 1px #000' : 'none'
+    };
+  }
+}
+</script>
+</body>
+</html>
