@@ -1,7 +1,7 @@
 // Roda antes do build (npm "prebuild"). Em produção na Vercel, falha o build se
 // houver placeholder "[MAIÚSCULAS]" nos arquivos da interface. Fora de produção,
 // só avisa. Executado direto pelo Node 24 (remoção de tipos nativa).
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { findPlaceholders } from "../src/lib/placeholders.ts";
 
@@ -10,6 +10,8 @@ const UI_DIRS = ["src/app", "src/components"];
 const EXTENSIONS = /\.(tsx?|mdx?)$/;
 
 function listFiles(dir: string): string[] {
+  // O Git não guarda pastas vazias: no clone da Vercel a pasta pode não existir.
+  if (!existsSync(dir)) return [];
   return readdirSync(dir, { withFileTypes: true, recursive: true })
     .filter((entry) => entry.isFile() && EXTENSIONS.test(entry.name))
     .filter((entry) => !/\.test\.tsx?$/.test(entry.name))
