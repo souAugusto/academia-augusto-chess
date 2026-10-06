@@ -15,12 +15,46 @@
   --color-sobre-dourado: #0e241d;
   --color-casa-clara: #e8ddc0;
   --color-casa-escura: #5e8b6f;
+  --color-casa-destaque-clara: #e3c46b;
+  --color-casa-destaque-escura: #b99a45;
+  --color-peca-clara: #fffdf5;
+  --color-erro: #f2a7a0;
 
   --font-titulo: var(--font-fraunces), Georgia, serif;
   --font-texto: var(--font-manrope), system-ui, sans-serif;
 
+  /* Títulos fluidos dos desenhos */
+  --text-hero: clamp(2.5rem, 5.2vw, 4.125rem);
+  --text-hero--line-height: 1.05;
+  --text-secao: clamp(1.875rem, 3.6vw, 2.75rem);
+  --text-secao--line-height: 1.1;
+  --text-pagina: clamp(1.75rem, 3.4vw, 2.5rem);
+  --text-pagina--line-height: 1.1;
+  --text-preco: 3rem;
+  --text-preco--line-height: 1;
+
+  --radius-campo: 0.625rem;
+  --radius-botao: 0.75rem;
+  --radius-card: 1rem;
+  --radius-plano: 1.25rem;
+  --radius-faixa: 1.5rem;
+
+  --tracking-rotulo: 0.14em;
+
+  --shadow-tabuleiro: 0 24px 60px rgb(0 0 0 / 0.45);
+
   /* Área mínima de toque: 44px */
   --spacing-toque: 2.75rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 html {

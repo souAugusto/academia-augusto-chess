@@ -6,7 +6,7 @@ import { join, relative } from "node:path";
 import { findPlaceholders } from "../src/lib/placeholders.ts";
 
 const ROOT = join(import.meta.dirname, "..");
-const UI_DIRS = ["src/app", "src/components"];
+const UI_DIRS = ["src/app", "src/components", "src/content"];
 const EXTENSIONS = /\.(tsx?|mdx?)$/;
 
 function listFiles(dir: string): string[] {

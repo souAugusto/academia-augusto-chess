@@ -3,6 +3,7 @@ import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 
 const fraunces = Fraunces({
+  axes: ["opsz"],
   variable: "--font-fraunces",
   subsets: ["latin"],
 });
