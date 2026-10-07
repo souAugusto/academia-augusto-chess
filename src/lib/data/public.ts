@@ -70,10 +70,17 @@ export async function getNextPublicLive(
   );
 }
 
-// Puzzle do dia: o de hoje (São Paulo) ou, se o admin não cadastrou, o mais recente.
-export async function getDailyPuzzle(
+export type DailyPuzzleRecord = {
+  day: string;
+  puzzle: PuzzleRecord;
+  themeLabel: string | null;
+};
+
+// Puzzle do dia completo (com a solução), para a página jogável.
+// O de hoje (São Paulo) ou, se não houver, o mais recente.
+export async function getDailyPuzzleRecord(
   now: Date = new Date(),
-): Promise<DailyPuzzle | null> {
+): Promise<DailyPuzzleRecord | null> {
   const { data, error } = await createPublicClient()
     .from("daily_puzzles")
     .select("day, puzzles (fen, moves, first_move_is_setup, themes)")
@@ -86,9 +93,18 @@ export async function getDailyPuzzle(
   const related = data?.puzzles as
     PuzzleRecord | PuzzleRecord[] | null | undefined;
   const puzzle = Array.isArray(related) ? related[0] : related;
-  if (!puzzle) return null;
+  if (!data || !puzzle) return null;
+  return { day: data.day, puzzle, themeLabel: puzzleThemeLabel(puzzle.themes) };
+}
+
+// Posição inicial do puzzle do dia, para o tabuleiro estático da Home.
+export async function getDailyPuzzle(
+  now: Date = new Date(),
+): Promise<DailyPuzzle | null> {
+  const record = await getDailyPuzzleRecord(now);
+  if (!record) return null;
   return {
-    ...puzzleStartPosition(puzzle),
-    themeLabel: puzzleThemeLabel(puzzle.themes),
+    ...puzzleStartPosition(record.puzzle),
+    themeLabel: record.themeLabel,
   };
 }
