@@ -22,7 +22,7 @@ O **Método Augusto Chess** é um treino por ciclos de repetição de táticas: 
 - Next.js (App Router) + TypeScript + Tailwind CSS
 - Supabase: Auth (e-mail/senha + Google), Postgres, RLS. Use `@supabase/ssr`.
 - Stripe: Checkout (assinatura), webhooks, Customer Portal
-- Tabuleiro: `chessground` + `chess.js`. Verifique a licença do conjunto de peças e use um com licença que permita uso comercial.
+- Tabuleiro: `react-chessboard` (MIT) + `chess.js` (BSD), com as peças Cburnett (licença BSD, em `public/pieces/cburnett/`). Decisão de 2026-10-07: o `chessground` foi descartado por ser GPL-3.0.
 - Vídeo das aulas: Bunny Stream (fase 4, com URLs assinadas geradas no servidor). Antes disso, deixe o campo `video_id` e um player placeholder.
 - Deploy: Vercel (repo no GitHub, deploy automático)
 - Testes: Vitest para a lógica pura (revisão espaçada, ciclos, validação de lances)
@@ -92,7 +92,7 @@ Os desenhos de referência (Home, Treino, Entrar) estão em `docs/design/`. Repr
 - Acerto muito mais rápido que a mediana do próprio aluno naquele puzzle: `ease += 0.05`.
 - O painel mostra "N puzzles com erro voltam hoje" (`due_at <= agora`) e o botão "Revisar agora" abre uma fila só desses.
 
-**Tabuleiro:** `chessground` + `chess.js`. Orientação pelo lado que joga. Promoção com escolha de peça. Para puzzles do Lichess, `moves[0]` é o lance do adversário aplicado automaticamente; o aluno joga a partir de `moves[1]`. Resposta correta = lance da solução; no Lichess, qualquer lance que dê mate também vale como correto.
+**Tabuleiro:** `react-chessboard` + `chess.js`. Orientação pelo lado que joga. Promoção com escolha de peça. Para puzzles do Lichess, `moves[0]` é o lance do adversário aplicado automaticamente; o aluno joga a partir de `moves[1]`. Resposta correta = lance da solução; no Lichess, qualquer lance que dê mate também vale como correto.
 
 ## 7. Pagamentos (Stripe)
 

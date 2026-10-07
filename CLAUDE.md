@@ -3,7 +3,7 @@
 Site de assinatura de xadrez (Membro R$ 19/mês, Intensivo R$ 119/mês com turma de 10). Detalhes completos em `PROMPT_MESTRE.md`. Em caso de conflito, o `PROMPT_MESTRE.md` manda.
 
 ## Stack
-Next.js (App Router) + TypeScript + Tailwind · Supabase (Auth, Postgres, RLS, `@supabase/ssr`) · Stripe · chessground + chess.js · Vercel · Vitest.
+Next.js (App Router) + TypeScript + Tailwind · Supabase (Auth, Postgres, RLS, `@supabase/ssr`) · Stripe · react-chessboard (MIT) + chess.js · Vercel · Vitest.
 
 ## Comandos
 - `npm run dev`: servidor local

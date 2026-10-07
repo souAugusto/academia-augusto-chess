@@ -23,7 +23,7 @@ O que vale aproveitar:
 
 ## Pontos importantes
 
-- O tabuleiro nos desenhos é só ilustração (gerado por um pequeno script a partir de um FEN). No site real, use `chessground` + `chess.js`.
+- O tabuleiro nos desenhos é só ilustração (gerado por um pequeno script a partir de um FEN). No site real, use `react-chessboard` + `chess.js` (o `chessground` foi descartado por ser GPL-3.0).
 - Os dados da tela de Treino (tempos, acertos, "5 puzzles com erro") são **exemplos**.
 - O plano **Intensivo** mostra "Turma de 10 alunos"; no site real, o contador "Restam X de 10 vagas" vem do banco (`intensivo_seats_left()`).
 - Não existe plano gratuito.
