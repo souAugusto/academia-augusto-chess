@@ -22,7 +22,10 @@ export function Hero({ puzzle }: { puzzle: DailyPuzzle | null }) {
             <Link href="#planos" className={buttonClasses("primary", "lg")}>
               {HERO.primaryCta}
             </Link>
-            <Link href="#puzzle" className={buttonClasses("secondary", "lg")}>
+            <Link
+              href="/puzzle-do-dia"
+              className={buttonClasses("secondary", "lg")}
+            >
               {HERO.secondaryCta}
             </Link>
           </div>

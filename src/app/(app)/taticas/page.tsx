@@ -1,17 +1,36 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/app/ComingSoon";
+import { PlanRequired } from "@/components/app/PlanRequired";
+import { TacticsTrainer } from "@/components/tactics/TacticsTrainer";
+import { SectionLabel } from "@/components/ui/Label";
 import { requireUser } from "@/lib/data/account";
+import { getMyTacticStats } from "@/lib/data/tactics";
 
 export const metadata: Metadata = { title: "Táticas" };
 
 export default async function TaticasPage() {
-  await requireUser("/taticas");
+  const user = await requireUser("/taticas");
+  if (user.planRank < 1) {
+    return (
+      <PlanRequired
+        title="Táticas"
+        text="O treino de táticas, com rating, filtros por tema e revisão dos erros, faz parte da assinatura."
+      />
+    );
+  }
+
+  const stats = await getMyTacticStats();
   return (
-    <ComingSoon
-      section="taticas"
-      title="Táticas"
-      description="Puzzles por tema e dificuldade, com rating, dica, solução e revisão dos erros."
-      phase="[MÓDULO DE TÁTICAS ENTRA NA FASE 2]"
-    />
+    <>
+      <div className="flex flex-col gap-2">
+        <SectionLabel>Treino</SectionLabel>
+        <h1 className="font-display text-page font-semibold tracking-tight">
+          Táticas
+        </h1>
+      </div>
+      <TacticsTrainer
+        initialRating={stats.rating}
+        initialSolved={stats.solved}
+      />
+    </>
   );
 }

@@ -5,10 +5,11 @@ import { FormAlert } from "@/components/forms/Field";
 import { buttonClasses } from "@/components/ui/button";
 import { SectionLabel } from "@/components/ui/Label";
 import { PLAN_NAMES, requireUser } from "@/lib/data/account";
+import { getMyTacticStats } from "@/lib/data/tactics";
 
 export const metadata: Metadata = { title: "Painel" };
 
-// Painel da Fundação. Rating, sequência, revisão e trilhas entram nas fases 2 e 5.
+// Painel: rating de táticas (Fase 2). Sequência, revisão e trilhas entram na Fase 5.
 export default async function PainelPage({
   searchParams,
 }: PageProps<"/painel">) {
@@ -17,6 +18,7 @@ export default async function PainelPage({
     searchParams,
   ]);
   const plan = PLAN_NAMES[user.planRank];
+  const stats = plan ? await getMyTacticStats() : null;
   const areas = APP_SECTIONS.filter((section) => section.id !== "painel");
 
   return (
@@ -32,10 +34,21 @@ export default async function PainelPage({
         <FormAlert tone="sucesso">Sua senha foi alterada.</FormAlert>
       )}
 
-      {plan ? (
-        <p className="text-muted">
-          Seu plano: <strong className="text-text">{plan}</strong>
-        </p>
+      {plan && stats ? (
+        <section className="flex flex-wrap items-end justify-between gap-5 rounded-card border border-border bg-surface p-6 shadow-card">
+          <div className="flex flex-col gap-1">
+            <span className="text-sm text-muted">Rating de táticas</span>
+            <span className="font-display text-4xl font-semibold tabular-nums">
+              {stats.rating}
+            </span>
+            <span className="text-sm text-muted">
+              {stats.solved} puzzles resolvidos · plano {plan}
+            </span>
+          </div>
+          <Link href="/taticas" className={buttonClasses("primary")}>
+            Treinar táticas
+          </Link>
+        </section>
       ) : (
         <section className="flex flex-wrap items-center justify-between gap-5 rounded-card border border-accent bg-surface-2 p-6 shadow-card">
           <div className="flex flex-col gap-1">

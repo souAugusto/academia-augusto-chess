@@ -8,6 +8,7 @@ const SITE =
 const PUBLIC_PATHS = [
   "/",
   "/planos",
+  "/puzzle-do-dia",
   "/entrar",
   "/termos",
   "/privacidade",
