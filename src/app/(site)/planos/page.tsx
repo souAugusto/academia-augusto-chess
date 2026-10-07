@@ -7,7 +7,7 @@ import { PLANS_SECTION } from "@/content/home";
 import { getIntensivoSeatsLeft, getPlans } from "@/lib/data/public";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Planos · Academia Augusto Chess" };
+export const metadata: Metadata = { title: "Planos" };
 
 export default async function PlanosPage({
   searchParams,
@@ -24,9 +24,9 @@ export default async function PlanosPage({
   const nextHere = `/planos?plano=${chosen?.id ?? ""}`;
 
   return (
-    <div className="mx-auto flex max-w-[1000px] flex-col gap-10 px-4 py-16 sm:px-6">
+    <div className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-16 sm:px-6">
       <SectionHeading
-        eyebrow={PLANS_SECTION.eyebrow}
+        label={PLANS_SECTION.label}
         title={PLANS_SECTION.title}
         center
       />
@@ -34,22 +34,22 @@ export default async function PlanosPage({
       {chosen && (
         <section
           aria-live="polite"
-          className="flex flex-wrap items-center justify-between gap-5 rounded-card border border-dourado bg-superficie-alta p-6"
+          className="flex flex-wrap items-center justify-between gap-5 rounded-card border border-accent bg-surface-2 p-6 shadow-card"
         >
           <div className="flex flex-col gap-1">
-            <h2 className="text-lg font-bold">
+            <h2 className="text-lg font-semibold">
               Você escolheu o plano {chosen.name}
             </h2>
-            <p className="text-[0.9375rem] text-texto-secundario">
+            <p className="text-[0.9375rem] text-muted">
               {isLoggedIn
-                ? "[PAGAMENTO PELO STRIPE ENTRA NA FASE 3]"
+                ? "[PAGAMENTO ENTRA NA FASE 4]"
                 : "Crie sua conta para continuar. Depois do cadastro, você volta para cá."}
             </p>
           </div>
           {!isLoggedIn && (
             <Link
               href={`/entrar?aba=criar&next=${encodeURIComponent(nextHere)}`}
-              className={buttonClasses("primario")}
+              className={buttonClasses("primary")}
             >
               Criar conta
             </Link>
@@ -61,9 +61,9 @@ export default async function PlanosPage({
 
       <section
         id="lista-de-espera"
-        className="scroll-mt-4 text-center text-sm text-texto-discreto"
+        className="scroll-mt-20 text-center text-sm text-muted"
       >
-        {seatsLeft <= 0 && "[LISTA DE ESPERA DO INTENSIVO ENTRA NA FASE 3]"}
+        {seatsLeft <= 0 && "[LISTA DE ESPERA DO INTENSIVO ENTRA NA FASE 4]"}
       </section>
     </div>
   );

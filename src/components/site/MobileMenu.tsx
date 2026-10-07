@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useId, useState } from "react";
+import { IconClose, IconMenu } from "@/components/ui/icons";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SITE_NAV_LINKS } from "./nav-links";
 
 export function MobileMenu() {
@@ -16,6 +18,9 @@ export function MobileMenu() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  const linkClass =
+    "flex min-h-touch items-center border-b border-border py-3 text-base font-medium text-muted hover:text-text";
+
   return (
     <div className="lg:hidden">
       <button
@@ -23,30 +28,16 @@ export function MobileMenu() {
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
-        className="flex size-toque items-center justify-center rounded-campo border border-borda-forte"
+        className="flex size-touch items-center justify-center rounded-control text-muted hover:bg-surface-2 hover:text-text"
       >
         <span className="sr-only">{open ? "Fechar menu" : "Abrir menu"}</span>
-        <svg
-          viewBox="0 0 24 24"
-          className="size-6"
-          aria-hidden="true"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-        >
-          {open ? (
-            <path d="M6 6l12 12M18 6L6 18" />
-          ) : (
-            <path d="M4 7h16M4 12h16M4 17h16" />
-          )}
-        </svg>
+        {open ? <IconClose /> : <IconMenu />}
       </button>
       {open && (
         <nav
           id={panelId}
           aria-label="Menu principal"
-          className="absolute inset-x-0 top-full z-20 border-b border-borda bg-fundo-profundo px-4 pb-6"
+          className="absolute inset-x-0 top-full border-b border-border bg-bg/95 px-4 pb-5 backdrop-blur-xl"
         >
           <ul className="flex flex-col">
             {[...SITE_NAV_LINKS, { href: "/entrar", label: "Entrar" }].map(
@@ -55,7 +46,7 @@ export function MobileMenu() {
                   <Link
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="flex min-h-toque items-center border-b border-borda py-3 text-base font-semibold text-texto-secundario hover:text-texto"
+                    className={linkClass}
                   >
                     {link.label}
                   </Link>
@@ -63,6 +54,10 @@ export function MobileMenu() {
               ),
             )}
           </ul>
+          <div className="flex items-center justify-between pt-3 text-sm text-muted">
+            Tema
+            <ThemeToggle />
+          </div>
         </nav>
       )}
     </div>

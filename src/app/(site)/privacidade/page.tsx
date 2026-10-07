@@ -3,7 +3,7 @@ import { LegalPage } from "@/components/site/LegalPage";
 import { LEGAL_UPDATED, PRIVACY } from "@/content/legal";
 
 export const metadata: Metadata = {
-  title: "Política de privacidade · Academia Augusto Chess",
+  title: "Política de privacidade",
 };
 
 export default function PrivacidadePage() {

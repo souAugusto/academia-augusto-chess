@@ -1,65 +1,62 @@
 import Link from "next/link";
 import { StaticBoard } from "@/components/chess/StaticBoard";
 import { buttonClasses } from "@/components/ui/button";
-import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionLabel } from "@/components/ui/Label";
 import { HERO } from "@/content/home";
 import type { DailyPuzzle } from "@/lib/data/public";
 
 export function Hero({ puzzle }: { puzzle: DailyPuzzle | null }) {
   const side = puzzle?.sideToMove === "b" ? "Pretas jogam" : "Brancas jogam";
   return (
-    <section
-      id="topo"
-      className="mx-auto flex max-w-[1200px] flex-wrap items-center gap-14 px-4 pt-12 pb-14 sm:px-6 sm:pt-[4.5rem]"
-    >
-      <div className="flex min-w-0 flex-[1_1_460px] flex-col gap-6">
-        <Eyebrow>{HERO.eyebrow}</Eyebrow>
-        <h1 className="font-titulo text-hero font-bold tracking-[-0.01em]">
-          {HERO.title}
-        </h1>
-        <p className="max-w-[520px] text-lg leading-relaxed text-texto-secundario">
-          {HERO.text}
-        </p>
-        <div className="flex flex-wrap gap-3.5">
-          <Link href="#planos" className={buttonClasses("primario", "lg")}>
-            {HERO.primaryCta}
-          </Link>
-          <Link href="#puzzle" className={buttonClasses("contorno", "lg")}>
-            {HERO.secondaryCta}
-          </Link>
-        </div>
-        <span className="text-sm text-texto-discreto">{HERO.liveLine}</span>
-      </div>
-
-      <div
-        id="puzzle"
-        className="flex w-full max-w-[500px] min-w-0 flex-[1_1_380px] scroll-mt-4 flex-col gap-3.5"
-      >
-        {puzzle ? (
-          <>
-            <StaticBoard
-              fen={puzzle.fen}
-              orientation={puzzle.sideToMove}
-              highlight={
-                puzzle.lastMove
-                  ? [puzzle.lastMove.from, puzzle.lastMove.to]
-                  : []
-              }
-              label={`Puzzle do dia. ${side}.`}
-            />
-            <div className="flex flex-wrap justify-between gap-2 text-sm">
-              <span className="font-bold text-dourado">
-                Puzzle do dia
-                {puzzle.themeLabel ? ` · ${puzzle.themeLabel}` : ""}
-              </span>
-              <span className="text-texto-discreto">{side}</span>
-            </div>
-          </>
-        ) : (
-          <p className="rounded-card border border-borda bg-superficie p-7 text-texto-secundario">
-            O puzzle do dia volta em breve.
+    <section id="topo" className="bg-aurora">
+      <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-14 pb-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:pt-20">
+        <div className="flex flex-col gap-6">
+          <SectionLabel>{HERO.label}</SectionLabel>
+          <h1 className="font-display text-hero font-semibold tracking-tight">
+            {HERO.title}
+          </h1>
+          <p className="max-w-xl text-lg leading-relaxed text-muted sm:text-xl">
+            {HERO.text}
           </p>
-        )}
+          <div className="flex flex-wrap gap-3">
+            <Link href="#planos" className={buttonClasses("primary", "lg")}>
+              {HERO.primaryCta}
+            </Link>
+            <Link href="#puzzle" className={buttonClasses("secondary", "lg")}>
+              {HERO.secondaryCta}
+            </Link>
+          </div>
+          <p className="text-sm text-muted">{HERO.note}</p>
+        </div>
+
+        <div
+          id="puzzle"
+          className="mx-auto w-full max-w-[520px] scroll-mt-20 rounded-panel border border-border bg-glass p-3 shadow-board backdrop-blur-xl sm:p-4"
+        >
+          {puzzle ? (
+            <div className="flex flex-col gap-3">
+              <StaticBoard
+                fen={puzzle.fen}
+                orientation={puzzle.sideToMove}
+                highlight={
+                  puzzle.lastMove
+                    ? [puzzle.lastMove.from, puzzle.lastMove.to]
+                    : []
+                }
+                label={`Puzzle do dia. ${side}.`}
+              />
+              <div className="flex flex-wrap items-center justify-between gap-2 px-1 text-sm">
+                <span className="font-semibold text-accent-text">
+                  Puzzle do dia
+                  {puzzle.themeLabel ? ` · ${puzzle.themeLabel}` : ""}
+                </span>
+                <span className="text-muted">{side}</span>
+              </div>
+            </div>
+          ) : (
+            <p className="p-6 text-muted">O puzzle do dia volta em breve.</p>
+          )}
+        </div>
       </div>
     </section>
   );

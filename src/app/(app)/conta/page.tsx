@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { signOut } from "@/app/(auth)/actions";
 import { buttonClasses } from "@/components/ui/button";
-import { Eyebrow } from "@/components/ui/Eyebrow";
+import { SectionLabel } from "@/components/ui/Label";
 import { PLAN_NAMES, requireUser } from "@/lib/data/account";
 
 export const metadata: Metadata = {
-  title: "Minha conta · Academia Augusto Chess",
+  title: "Minha conta",
 };
 
 function formatWhatsapp(digits: string): string {
@@ -36,31 +36,31 @@ export default async function ContaPage() {
   return (
     <>
       <div className="flex flex-col gap-1.5">
-        <Eyebrow>Minha conta</Eyebrow>
-        <h1 className="font-titulo text-pagina font-bold">Seus dados</h1>
+        <SectionLabel>Minha conta</SectionLabel>
+        <h1 className="font-display text-page font-bold">Seus dados</h1>
       </div>
-      <dl className="flex max-w-[640px] flex-col rounded-card border border-borda bg-superficie px-6">
+      <dl className="flex max-w-[640px] flex-col rounded-card border border-border bg-surface px-6">
         {rows.map((row) => (
           <div
             key={row.label}
-            className="flex flex-wrap justify-between gap-2 border-b border-borda py-4 last:border-b-0"
+            className="flex flex-wrap justify-between gap-2 border-b border-border py-4 last:border-b-0"
           >
-            <dt className="text-texto-discreto">{row.label}</dt>
+            <dt className="text-muted">{row.label}</dt>
             <dd className="font-semibold break-all">{row.value}</dd>
           </div>
         ))}
       </dl>
       <div className="flex flex-wrap gap-3">
         {user.planRank === 0 && (
-          <Link href="/planos" className={buttonClasses("primario")}>
+          <Link href="/planos" className={buttonClasses("primary")}>
             Escolher plano
           </Link>
         )}
-        <Link href="/recuperar-senha" className={buttonClasses("contorno")}>
+        <Link href="/recuperar-senha" className={buttonClasses("secondary")}>
           Trocar senha
         </Link>
         <form action={signOut}>
-          <button type="submit" className={buttonClasses("contorno")}>
+          <button type="submit" className={buttonClasses("secondary")}>
             Sair
           </button>
         </form>

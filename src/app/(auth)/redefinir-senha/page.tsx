@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { NewPasswordForm } from "@/components/auth/PasswordForms";
 
 export const metadata: Metadata = {
-  title: "Nova senha · Academia Augusto Chess",
+  title: "Nova senha",
 };
 
 // Só abre com sessão: o link do e-mail passa por /auth/confirm, que faz o login

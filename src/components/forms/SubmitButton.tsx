@@ -12,7 +12,7 @@ type SubmitButtonProps = {
 export function SubmitButton({
   children,
   pendingText,
-  variant = "primario",
+  variant = "primary",
 }: SubmitButtonProps) {
   const { pending } = useFormStatus();
   return (

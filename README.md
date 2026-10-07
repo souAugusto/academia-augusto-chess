@@ -1,4 +1,4 @@
-# Academia Augusto Chess
+# Academia Finale de Xadrez
 
 Site de assinatura de xadrez. Especificação completa em `PROMPT_MESTRE.md`; regras de trabalho em `CLAUDE.md`.
 

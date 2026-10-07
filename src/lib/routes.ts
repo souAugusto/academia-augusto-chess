@@ -1,14 +1,16 @@
-// Regras de acesso por sessão (Fase 1). O acesso por plano entra na Fase 3,
+// Regras de acesso por sessão. O acesso por plano entra na Fase 4 (monetização),
 // sempre checado no servidor.
 
 // Área do aluno e admin: exigem login.
 const PROTECTED_PREFIXES = [
   "/painel",
-  "/puzzles",
+  "/taticas",
+  "/aberturas",
+  "/finais",
   "/aulas",
   "/treino",
-  "/comunidade",
   "/conta",
+  "/checkout",
   "/admin",
   "/redefinir-senha",
 ];

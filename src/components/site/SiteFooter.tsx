@@ -1,28 +1,32 @@
 import Link from "next/link";
-import { TIKTOK_URL } from "./nav-links";
+import { FinaleMark } from "@/components/brand/FinaleMark";
+import { BRAND } from "@/content/brand";
+
+const LINKS = [
+  { href: "/planos", label: "Planos" },
+  { href: "/termos", label: "Termos de uso" },
+  { href: "/privacidade", label: "Privacidade" },
+  { href: "/creditos", label: "Créditos" },
+];
 
 export function SiteFooter() {
-  const linkClass =
-    "flex min-h-toque items-center text-texto-secundario hover:text-texto";
   return (
-    <footer className="border-t border-borda">
-      <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-4 py-7 text-sm text-texto-discreto sm:px-6">
-        <span>© 2026 Academia Augusto Chess</span>
+    <footer className="border-t border-border">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-sm text-muted sm:px-6">
+        <div className="flex items-center gap-3">
+          <FinaleMark className="size-7" />
+          <span>© 2026 {BRAND.fullName}</span>
+        </div>
         <nav aria-label="Rodapé" className="flex flex-wrap gap-x-5">
-          <Link href="/termos" className={linkClass}>
-            Termos de uso
-          </Link>
-          <Link href="/privacidade" className={linkClass}>
-            Privacidade
-          </Link>
-          <a
-            href={TIKTOK_URL}
-            className={linkClass}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            TikTok
-          </a>
+          {LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="flex min-h-touch items-center hover:text-text"
+            >
+              {link.label}
+            </Link>
+          ))}
         </nav>
       </div>
     </footer>

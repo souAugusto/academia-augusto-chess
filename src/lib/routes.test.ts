@@ -9,6 +9,17 @@ describe("routeRedirect", () => {
     );
   });
 
+  it("protege os módulos da Finale", () => {
+    for (const path of [
+      "/taticas",
+      "/aberturas/siciliana",
+      "/finais",
+      "/checkout",
+    ]) {
+      expect(routeRedirect(path, "", false)).toMatch(/^\/entrar\?next=/);
+    }
+  });
+
   it("deixa páginas públicas abertas", () => {
     for (const path of [
       "/",

@@ -9,7 +9,7 @@ export const TERMS: LegalSection[] = [
   {
     title: "1. Quem somos",
     paragraphs: [
-      "A Academia Augusto Chess é um serviço de assinatura para treino de xadrez, mantido por [RAZÃO SOCIAL E CNPJ]. Ao criar uma conta, você concorda com estes Termos de uso e com a Política de privacidade.",
+      "A Academia Finale de Xadrez é um serviço de assinatura para treino de xadrez, mantido por [RAZÃO SOCIAL E CNPJ]. Ao criar uma conta, você concorda com estes Termos de uso e com a Política de privacidade.",
     ],
   },
   {
@@ -66,7 +66,7 @@ export const PRIVACY: LegalSection[] = [
   {
     title: "1. Controlador dos dados",
     paragraphs: [
-      "[RAZÃO SOCIAL E CNPJ] é o controlador dos dados pessoais tratados na Academia Augusto Chess, nos termos da Lei Geral de Proteção de Dados (Lei 13.709/2018).",
+      "[RAZÃO SOCIAL E CNPJ] é o controlador dos dados pessoais tratados na Academia Finale de Xadrez, nos termos da Lei Geral de Proteção de Dados (Lei 13.709/2018).",
     ],
   },
   {

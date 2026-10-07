@@ -32,16 +32,16 @@ export function Field({
         aria-describedby={
           [errorId, hintId].filter(Boolean).join(" ") || undefined
         }
-        className="min-h-toque rounded-campo border border-borda-forte bg-superficie px-3.5 py-3.5 text-base text-texto placeholder:text-texto-discreto focus:outline-2 focus:outline-offset-1 focus:outline-dourado aria-invalid:border-erro"
+        className="min-h-touch rounded-control border border-border-strong bg-surface px-3.5 py-3.5 text-base text-text placeholder:text-muted focus:outline-2 focus:outline-offset-1 focus:outline-accent aria-invalid:border-danger"
         {...input}
       />
       {error && (
-        <span id={errorId} className="text-sm text-erro">
+        <span id={errorId} className="text-sm text-danger">
           {error}
         </span>
       )}
       {hint && (
-        <span id={hintId} className="text-[0.8125rem] text-texto-discreto">
+        <span id={hintId} className="text-[0.8125rem] text-muted">
           {hint}
         </span>
       )}
@@ -59,10 +59,10 @@ export function FormAlert({
   return (
     <p
       role={tone === "erro" ? "alert" : "status"}
-      className={`rounded-campo border px-4 py-3 text-[0.9375rem] leading-relaxed ${
+      className={`rounded-control border px-4 py-3 text-[0.9375rem] leading-relaxed ${
         tone === "erro"
-          ? "border-erro text-erro"
-          : "border-dourado bg-superficie-alta text-texto"
+          ? "border-danger text-danger"
+          : "border-accent bg-surface-2 text-text"
       }`}
     >
       {children}

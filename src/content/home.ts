@@ -1,98 +1,63 @@
-// Textos da Home, conforme docs/design/home.dc.html.
-// Placeholders entre colchetes são pendências do Augusto e bloqueiam o deploy de produção.
+// Textos da Home da Finale (rascunho para revisão do Augusto).
+// Placeholders entre colchetes bloqueiam o deploy de produção.
 
 export const HERO = {
-  eyebrow: "Comunidade de xadrez ao vivo",
-  title: "Treine xadrez todo dia e evolua junto com a comunidade.",
-  text: "Puzzles com progresso, aulas em vídeo, ranking entre os membros e acesso à comunidade que se encontra nas lives do Augusto.",
-  primaryCta: "Quero ser membro",
+  label: "Academia Finale de Xadrez",
+  title: "Treino de xadrez com método.",
+  text: "Táticas, aberturas, finais e aulas em vídeo num só lugar, com um progresso que você enxerga a cada dia.",
+  primaryCta: "Ver planos",
   secondaryCta: "Resolver o puzzle do dia",
-  liveLine: "Lives diárias no TikTok · @augustochess",
+  note: "Feito para treinar no celular, em poucos minutos por dia.",
 };
 
-export const NEXT_LIVE = {
-  eyebrow: "Próxima live",
-  placeholder: "[DIA E HORÁRIO DA LIVE]",
-  text: "Treino aberto no TikTok, com partidas e puzzles comentados.",
-  cta: "Assistir no TikTok",
-};
-
-export const BENEFITS = {
-  eyebrow: "O que você recebe",
-  title: "Tudo para treinar com método, dentro e fora das lives.",
+export const MODULES = {
+  label: "O que tem dentro",
+  title: "Quatro frentes de treino, um só caminho.",
   items: [
     {
-      title: "Puzzles com progresso",
-      text: "Táticas por tema e dificuldade, com sequência diária e rating que acompanha a sua evolução.",
+      id: "taticas",
+      title: "Táticas",
+      text: "Puzzles por tema e dificuldade, com rating próprio, dica, solução e revisão dos erros na hora certa.",
     },
     {
+      id: "aberturas",
+      title: "Aberturas",
+      text: "Repertórios em árvore, com comentário em cada lance e um modo treino em que você repete a linha até fixar.",
+    },
+    {
+      id: "finais",
+      title: "Finais",
+      text: "Posições clássicas organizadas por nível, para treinar a conversão e a defesa contra o computador.",
+    },
+    {
+      id: "aulas",
       title: "Aulas em vídeo",
-      text: "Cursos organizados em módulos, com o tabuleiro ao lado do vídeo e material em PDF e PGN para baixar.",
-    },
-    {
-      title: "Revisão dos seus erros",
-      text: "Os puzzles que você errou voltam na hora certa, para fixar o padrão até virar automático.",
-    },
-    {
-      title: "Lives exclusivas",
-      text: "Encontros só para membros, com análise de partidas e espaço para tirar dúvidas.",
-    },
-    {
-      title: "Ranking e torneios",
-      text: "Dispute posições no ranking da academia e participe dos torneios internos entre os membros.",
-    },
-    {
-      title: "Comunidade no WhatsApp",
-      text: "Convite liberado na sua área de membro depois da assinatura, para treinar junto com a comunidade.",
+      text: "Cursos em módulos, com o tabuleiro acompanhando o vídeo e material em PDF e PGN para baixar.",
     },
   ],
 };
 
-export const STEPS = {
-  title: "Como entrar na academia",
-  items: [
+export const HOW_IT_WORKS = {
+  label: "Como funciona",
+  title: "Do primeiro acesso ao treino diário.",
+  steps: [
     {
-      title: "1. Assista à live",
-      text: "Acompanhe o treino aberto no TikTok e veja o método na prática.",
+      title: "Escolha seu plano",
+      text: "Assine o Membro ou garanta uma vaga na turma do Intensivo.",
     },
     {
-      title: "2. Conheça o método",
-      text: "Resolva o puzzle do dia e veja como o treino funciona na prática.",
+      title: "Treine todo dia",
+      text: "Alguns minutos por dia entre táticas, aberturas, finais e aulas.",
     },
     {
-      title: "3. Vire membro",
-      text: "Assine, libere as aulas e o grupo do WhatsApp e comece a subir no ranking.",
-    },
-  ],
-};
-
-export const METHOD = {
-  eyebrow: "Treinamento intensivo",
-  title: "Método Augusto Chess: do diagnóstico à evolução, com acompanhamento.",
-  text: "Para quem quer sair do treino solto e seguir um caminho definido, com o Augusto corrigindo a rota ao longo do processo.",
-  phases: [
-    {
-      title: "Diagnóstico",
-      text: "Análise das suas partidas para encontrar os padrões de erro que mais custam pontos.",
-    },
-    {
-      title: "Seu conjunto de táticas",
-      text: "Seleção de táticas no seu nível para formar o conjunto que você vai treinar até dominar.",
-    },
-    {
-      title: "Ciclos de repetição",
-      text: "Você refaz o mesmo conjunto em ciclos, cada um mais rápido, com revisão espaçada dos erros.",
-    },
-    {
-      title: "Revisão ao vivo",
-      text: "Encontros com turma de até 10 alunos para corrigir partidas, tirar dúvidas e ajustar o plano.",
+      title: "Acompanhe sua evolução",
+      text: "Veja seu rating, sua sequência de dias e os erros que voltam para revisão.",
     },
   ],
-  pending: "[DEFINIR DURAÇÃO E ESTRUTURA REAL DO MÉTODO ANTES DE PUBLICAR]",
 };
 
 export const PLANS_SECTION = {
-  eyebrow: "Planos",
+  label: "Planos",
   title: "Escolha o seu nível de treino.",
 };
 
@@ -100,19 +65,19 @@ export const FAQ = {
   title: "Dúvidas frequentes",
   items: [
     {
-      question: "Preciso saber jogar bem para entrar?",
+      question: "Preciso saber jogar bem para começar?",
       answer:
-        "Não. Os puzzles e as aulas têm níveis de dificuldade, então iniciantes e intermediários treinam no próprio ritmo.",
+        "Não. Puzzles, finais e aulas têm níveis de dificuldade, e o treino se ajusta ao seu ritmo.",
     },
     {
-      question: "Como recebo o acesso ao grupo do WhatsApp?",
+      question: "Funciona no celular?",
       answer:
-        "Depois da confirmação do pagamento, o botão de convite aparece na sua área de membro.",
+        "Sim. O site foi feito primeiro para o celular e pode ser instalado na tela inicial, como um aplicativo.",
     },
     {
       question: "Posso cancelar quando quiser?",
       answer:
-        "Sim. O cancelamento é feito direto na página Minha conta, sem precisar falar com ninguém.",
+        "Sim. O cancelamento é feito na página Minha conta, e o acesso continua até o fim do período pago.",
     },
     {
       question: "O que muda para quem entra agora como fundador?",
@@ -124,6 +89,6 @@ export const FAQ = {
 
 export const FINAL_CTA = {
   title: "Seu próximo lance começa aqui.",
-  text: "Entre na academia e treine todo dia com quem leva o xadrez a sério.",
-  cta: "Quero ser membro",
+  text: "Entre para a Finale e transforme o treino em hábito.",
+  cta: "Ver planos",
 };

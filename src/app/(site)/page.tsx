@@ -1,135 +1,120 @@
 import Link from "next/link";
+import { SectionIcon } from "@/components/app/SectionIcon";
 import { Hero } from "@/components/home/Hero";
-import { NextLiveCard } from "@/components/home/NextLiveCard";
-import { Card, Section, SectionHeading } from "@/components/home/Section";
+import { Section, SectionHeading } from "@/components/home/Section";
 import { PlanCards } from "@/components/plans/PlanCards";
 import { buttonClasses } from "@/components/ui/button";
+import { Card } from "@/components/ui/Card";
 import {
-  BENEFITS,
   FAQ,
   FINAL_CTA,
-  METHOD,
+  HOW_IT_WORKS,
+  MODULES,
   PLANS_SECTION,
-  STEPS,
 } from "@/content/home";
 import {
   getDailyPuzzle,
   getIntensivoSeatsLeft,
-  getNextPublicLive,
   getPlans,
 } from "@/lib/data/public";
 
-// Dados públicos: recalcula a cada minuto (vagas, próxima live, puzzle do dia).
+// Dados públicos: recalcula a cada minuto (vagas e puzzle do dia).
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [plans, seatsLeft, live, puzzle] = await Promise.all([
+  const [plans, seatsLeft, puzzle] = await Promise.all([
     getPlans(),
     getIntensivoSeatsLeft(),
-    getNextPublicLive(),
     getDailyPuzzle(),
   ]);
 
   return (
     <>
       <Hero puzzle={puzzle} />
-      <NextLiveCard live={live} />
 
-      <Section id="beneficios" band className="py-20">
-        <SectionHeading eyebrow={BENEFITS.eyebrow} title={BENEFITS.title} />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {BENEFITS.items.map((item, index) => (
-            <Card key={item.title}>
-              <span className="font-titulo text-[1.75rem] text-dourado">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <h3 className="text-xl font-bold">{item.title}</h3>
-              <p className="text-[0.9375rem] leading-relaxed text-texto-secundario">
-                {item.text}
-              </p>
-            </Card>
-          ))}
-        </div>
+      <Section id="modulos" className="py-20">
+        <SectionHeading label={MODULES.label} title={MODULES.title} />
+        <ul className="grid gap-5 sm:grid-cols-2">
+          {MODULES.items.map((item) => {
+            return (
+              <Card as="li" key={item.id} className="flex flex-col gap-3 p-7">
+                <span className="flex size-11 items-center justify-center rounded-control bg-surface-2 text-accent-text">
+                  <SectionIcon id={item.id} className="size-6" />
+                </span>
+                <h3 className="text-xl font-semibold">{item.title}</h3>
+                <p className="leading-relaxed text-muted">{item.text}</p>
+              </Card>
+            );
+          })}
+        </ul>
       </Section>
 
-      <Section className="py-20">
-        <SectionHeading title={STEPS.title} />
-        <ol className="flex flex-wrap gap-8">
-          {STEPS.items.map((step) => (
+      <Section id="como-funciona" className="pb-20">
+        <SectionHeading label={HOW_IT_WORKS.label} title={HOW_IT_WORKS.title} />
+        <ol className="grid gap-6 md:grid-cols-3">
+          {HOW_IT_WORKS.steps.map((step, index) => (
             <li
               key={step.title}
-              className="flex min-w-0 flex-[1_1_280px] flex-col gap-2.5 border-t-2 border-dourado pt-5"
+              className="flex flex-col gap-2 border-t border-border-strong pt-5"
             >
-              <h3 className="text-xl font-bold">{step.title}</h3>
-              <p className="text-[0.9375rem] leading-relaxed text-texto-secundario">
-                {step.text}
-              </p>
+              <span className="font-display text-3xl text-accent-text">
+                {index + 1}
+              </span>
+              <h3 className="text-lg font-semibold">{step.title}</h3>
+              <p className="leading-relaxed text-muted">{step.text}</p>
             </li>
           ))}
         </ol>
       </Section>
 
-      <Section id="metodo" className="pb-20">
+      <Section
+        id="planos"
+        className="border-y border-border bg-surface/40 py-20"
+      >
         <SectionHeading
-          eyebrow={METHOD.eyebrow}
-          title={METHOD.title}
-          text={METHOD.text}
-        />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {METHOD.phases.map((phase, index) => (
-            <Card key={phase.title}>
-              <span className="font-titulo text-[1.75rem] text-dourado">
-                Fase {index + 1}
-              </span>
-              <h3 className="text-xl font-bold">{phase.title}</h3>
-              <p className="text-[0.9375rem] leading-relaxed text-texto-secundario">
-                {phase.text}
-              </p>
-            </Card>
-          ))}
-        </div>
-        <span className="text-[0.8125rem] text-texto-discreto">
-          {METHOD.pending}
-        </span>
-      </Section>
-
-      <Section id="planos" band width="planos" className="py-20">
-        <SectionHeading
-          eyebrow={PLANS_SECTION.eyebrow}
+          label={PLANS_SECTION.label}
           title={PLANS_SECTION.title}
           center
         />
         <PlanCards plans={plans} seatsLeft={seatsLeft} />
       </Section>
 
-      <Section id="faq" width="estreita" className="gap-8 py-20">
-        <h2 className="font-titulo text-secao font-bold">{FAQ.title}</h2>
+      <Section id="faq" width="narrow" className="py-20">
+        <h2 className="font-display text-section font-semibold tracking-tight">
+          {FAQ.title}
+        </h2>
         <div className="flex flex-col">
           {FAQ.items.map((item) => (
-            <div
+            <details
               key={item.question}
-              className="flex flex-col gap-2 border-t border-borda py-[1.375rem] last:border-b"
+              className="group border-t border-border py-5 last:border-b [&_summary::-webkit-details-marker]:hidden"
             >
-              <h3 className="text-lg font-bold">{item.question}</h3>
-              <p className="text-[0.9375rem] leading-relaxed text-texto-secundario">
-                {item.answer}
-              </p>
-            </div>
+              <summary className="flex min-h-touch cursor-pointer items-center justify-between gap-4 text-lg font-semibold">
+                {item.question}
+                <span
+                  aria-hidden="true"
+                  className="text-2xl leading-none text-muted transition group-open:rotate-45"
+                >
+                  +
+                </span>
+              </summary>
+              <p className="pt-2 leading-relaxed text-muted">{item.answer}</p>
+            </details>
           ))}
         </div>
       </Section>
 
-      <section className="mx-auto max-w-[1200px] px-4 pb-20 sm:px-6">
-        <div className="flex flex-col items-center gap-5 rounded-faixa bg-superficie-alta px-6 py-14 text-center sm:px-8">
-          <h2 className="max-w-[640px] font-titulo text-secao font-bold">
+      <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6">
+        <div className="bg-aurora flex flex-col items-center gap-5 rounded-panel border border-border bg-surface px-6 py-16 text-center shadow-card">
+          <h2 className="max-w-2xl font-display text-section font-semibold tracking-tight">
             {FINAL_CTA.title}
           </h2>
-          <p className="max-w-[520px] text-[1.0625rem] leading-relaxed text-texto-secundario">
+          <p className="max-w-xl text-lg leading-relaxed text-muted">
             {FINAL_CTA.text}
           </p>
           <Link
             href="#planos"
-            className={buttonClasses("primario", "lg", "px-8")}
+            className={buttonClasses("primary", "lg", "px-8")}
           >
             {FINAL_CTA.cta}
           </Link>

@@ -3,7 +3,7 @@ import { AuthTabs } from "@/components/auth/AuthTabs";
 import { GoogleButton, OrDivider } from "@/components/auth/GoogleButton";
 import { HOME_LOGGED_IN, safeNextPath } from "@/lib/routes";
 
-export const metadata: Metadata = { title: "Entrar · Academia Augusto Chess" };
+export const metadata: Metadata = { title: "Entrar" };
 
 const NOTICES: Record<string, string> = {
   link: "O link expirou ou já foi usado. Entre com sua senha ou peça um novo link.",

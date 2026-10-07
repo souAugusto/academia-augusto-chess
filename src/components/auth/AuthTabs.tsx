@@ -29,7 +29,7 @@ export function AuthTabs({ initialTab, next, notice }: AuthTabsProps) {
       <div
         role="tablist"
         aria-label="Acesso"
-        className="flex gap-1 rounded-botao border border-borda bg-superficie p-1"
+        className="flex gap-1 rounded-control border border-border bg-surface p-1"
       >
         {tabs.map((item) => {
           const selected = tab === item.id;
@@ -42,10 +42,10 @@ export function AuthTabs({ initialTab, next, notice }: AuthTabsProps) {
               aria-selected={selected}
               aria-controls={`${baseId}-${item.id}-painel`}
               onClick={() => setTab(item.id)}
-              className={`min-h-toque flex-1 rounded-[0.5625rem] px-3 py-3 text-[0.9375rem] font-bold ${
+              className={`min-h-touch flex-1 rounded-[0.5625rem] px-3 py-3 text-[0.9375rem] font-bold ${
                 selected
-                  ? "bg-dourado text-sobre-dourado"
-                  : "text-texto-secundario hover:text-texto"
+                  ? "bg-accent text-on-accent"
+                  : "text-muted hover:text-text"
               }`}
             >
               {item.label}
@@ -72,10 +72,10 @@ function LoginForm({ next }: { next: string }) {
   return (
     <form action={action} noValidate className="flex flex-col gap-5">
       <div className="flex flex-col gap-1.5">
-        <h2 className="font-titulo text-[1.875rem] font-bold">
+        <h2 className="font-display text-[1.875rem] font-bold">
           Bem-vindo de volta
         </h2>
-        <p className="text-[0.9375rem] text-texto-secundario">
+        <p className="text-[0.9375rem] text-muted">
           Entre com o e-mail da sua assinatura.
         </p>
       </div>
@@ -104,7 +104,7 @@ function LoginForm({ next }: { next: string }) {
         labelAside={
           <Link
             href="/recuperar-senha"
-            className="text-[0.8125rem] text-dourado underline-offset-4 hover:underline"
+            className="text-[0.8125rem] text-accent-text underline-offset-4 hover:underline"
           >
             Esqueci minha senha
           </Link>
@@ -120,11 +120,11 @@ function SignupForm() {
   if (state.success) {
     return (
       <div className="flex flex-col gap-5">
-        <h2 className="font-titulo text-[1.875rem] font-bold">
+        <h2 className="font-display text-[1.875rem] font-bold">
           Confira seu e-mail
         </h2>
         <FormAlert tone="sucesso">{state.success}</FormAlert>
-        <p className="text-sm text-texto-discreto">
+        <p className="text-sm text-muted">
           Não chegou? Veja a caixa de spam ou tente criar a conta de novo em
           alguns minutos.
         </p>
@@ -134,10 +134,10 @@ function SignupForm() {
   return (
     <form action={action} noValidate className="flex flex-col gap-5">
       <div className="flex flex-col gap-1.5">
-        <h2 className="font-titulo text-[1.875rem] font-bold">
+        <h2 className="font-display text-[1.875rem] font-bold">
           Criar sua conta
         </h2>
-        <p className="text-[0.9375rem] text-texto-secundario">
+        <p className="text-[0.9375rem] text-muted">
           Depois do cadastro, você escolhe o plano e finaliza o pagamento.
         </p>
       </div>
@@ -196,17 +196,14 @@ function SignupForm() {
             required
             aria-invalid={state.errors?.terms ? true : undefined}
             aria-describedby={state.errors?.terms ? "termos-erro" : undefined}
-            className="mt-0.5 size-5 shrink-0 accent-dourado"
+            className="mt-0.5 size-5 shrink-0 accent-accent"
           />
-          <label
-            htmlFor="termos"
-            className="text-sm leading-normal text-texto-secundario"
-          >
+          <label htmlFor="termos" className="text-sm leading-normal text-muted">
             Li e aceito os{" "}
             <Link
               href="/termos"
               target="_blank"
-              className="text-dourado underline underline-offset-4"
+              className="text-accent-text underline underline-offset-4"
             >
               Termos de uso
             </Link>{" "}
@@ -214,7 +211,7 @@ function SignupForm() {
             <Link
               href="/privacidade"
               target="_blank"
-              className="text-dourado underline underline-offset-4"
+              className="text-accent-text underline underline-offset-4"
             >
               Política de privacidade
             </Link>
@@ -222,7 +219,7 @@ function SignupForm() {
           </label>
         </div>
         {state.errors?.terms && (
-          <span id="termos-erro" className="text-sm text-erro">
+          <span id="termos-erro" className="text-sm text-danger">
             {state.errors.terms}
           </span>
         )}

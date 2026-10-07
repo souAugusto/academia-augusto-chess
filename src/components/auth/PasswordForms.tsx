@@ -17,10 +17,10 @@ export function RequestResetForm() {
   return (
     <form action={action} noValidate className="flex flex-col gap-5">
       <div className="flex flex-col gap-1.5">
-        <h1 className="font-titulo text-[1.875rem] font-bold">
+        <h1 className="font-display text-[1.875rem] font-bold">
           Esqueci minha senha
         </h1>
-        <p className="text-[0.9375rem] text-texto-secundario">
+        <p className="text-[0.9375rem] text-muted">
           Digite o e-mail da sua conta. Enviaremos um link para você criar uma
           nova senha.
         </p>
@@ -45,7 +45,7 @@ export function RequestResetForm() {
       )}
       <Link
         href="/entrar"
-        className="text-center text-sm text-dourado underline-offset-4 hover:underline"
+        className="text-center text-sm text-accent-text underline-offset-4 hover:underline"
       >
         Voltar para o login
       </Link>
@@ -58,10 +58,10 @@ export function NewPasswordForm() {
   return (
     <form action={action} noValidate className="flex flex-col gap-5">
       <div className="flex flex-col gap-1.5">
-        <h1 className="font-titulo text-[1.875rem] font-bold">
+        <h1 className="font-display text-[1.875rem] font-bold">
           Criar nova senha
         </h1>
-        <p className="text-[0.9375rem] text-texto-secundario">
+        <p className="text-[0.9375rem] text-muted">
           Escolha uma senha com pelo menos 8 caracteres.
         </p>
       </div>

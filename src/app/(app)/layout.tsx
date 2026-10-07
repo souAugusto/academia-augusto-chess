@@ -1,47 +1,34 @@
 import Link from "next/link";
-import { signOut } from "@/app/(auth)/actions";
-import { Logo } from "@/components/ui/Logo";
+import { AppBottomNav, AppTopNav } from "@/components/app/AppNav";
+import { Logo } from "@/components/brand/Logo";
+import { IconUser } from "@/components/ui/icons";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
-// Área do aluno. Os demais itens (Puzzles, Aulas, Treino, Comunidade) entram
-// no menu junto com as fases que criam essas páginas.
-const APP_LINKS = [
-  { href: "/painel", label: "Painel" },
-  { href: "/conta", label: "Minha conta" },
-];
-
-export default function AlunoLayout({ children }: LayoutProps<"/">) {
+// Casca do app: cabeçalho com as áreas no desktop e barra inferior no celular.
+export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <>
-      <header className="border-b border-borda">
-        <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
-          <Logo href="/painel" size="sm" />
-          <nav
-            aria-label="Área do aluno"
-            className="flex flex-wrap items-center gap-x-6 text-[0.9375rem] font-semibold"
-          >
-            {APP_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="flex min-h-toque items-center text-texto-secundario hover:text-texto"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <form action={signOut}>
-              <button
-                type="submit"
-                className="flex min-h-toque items-center text-texto-secundario hover:text-texto"
-              >
-                Sair
-              </button>
-            </form>
-          </nav>
+      <header className="sticky top-0 z-30 border-b border-border bg-glass backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6">
+          <Logo href="/painel" />
+          <AppTopNav />
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <Link
+              href="/conta"
+              className="flex size-touch items-center justify-center rounded-control text-muted transition hover:bg-surface-2 hover:text-text"
+            >
+              <span className="sr-only">Minha conta</span>
+              <IconUser />
+            </Link>
+          </div>
         </div>
       </header>
-      <main className="mx-auto flex w-full max-w-[1280px] flex-1 flex-col gap-8 px-4 pt-9 pb-16 sm:px-6">
+      {/* Espaço extra embaixo no celular para a barra inferior não cobrir o conteúdo. */}
+      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 pt-8 pb-28 sm:px-6 md:pb-16">
         {children}
       </main>
+      <AppBottomNav />
     </>
   );
 }
