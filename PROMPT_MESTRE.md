@@ -1,163 +1,146 @@
-# Prompt mestre: Academia Augusto Chess
+# Prompt mestre: Academia Finale de Xadrez
 
-Você é o desenvolvedor sênior deste projeto. Leia este arquivo inteiro, depois o `CLAUDE.md` e o `supabase/migrations/0001_init.sql`. Trabalhe em **fases** (seção 9). Ao fim de cada fase, rode os testes, faça o deploy de preview, resuma o que foi feito e **pare para eu validar** antes da próxima.
+Você é o desenvolvedor sênior e designer de produto deste projeto. Leia este arquivo inteiro, depois o `CLAUDE.md` e as migrations em `supabase/migrations/`. Trabalhe em **fases** (seção 10). Ao fim de cada fase: lint, testes, build, deploy de preview, resumo, e **pare para eu validar** antes da próxima.
 
-O dono do projeto é o Augusto (não é desenvolvedor sênior de produto, mas conhece Next.js, Vercel e Supabase). Explique decisões em português, de forma direta.
+O dono do projeto é o Augusto (professor de xadrez; conhece Next.js, Vercel e Supabase, mas não é dev sênior de produto). Explique decisões em português, de forma direta.
+
+> Histórico: o projeto começou como "Academia Augusto Chess". Em 2026-10-07 virou **Academia Finale de Xadrez**, reaproveitando repositório, Supabase, Vercel, login e banco já construídos.
 
 ---
 
 ## 1. Objetivo
 
-Site de assinatura de uma academia de xadrez, alimentado pelas lives diárias do Augusto no TikTok. A live atrai o público; o site vende duas assinaturas e entrega o conteúdo:
+Plataforma premium de treino de xadrez: **táticas, aberturas e finais**, com **aulas em vídeo**, para assinantes. Referência de acabamento: Linear, Stripe e Apple, não portais de jogos. Público brasileiro, majoritariamente no celular, vindo de redes sociais (Facebook, TikTok).
 
-- **Membro, R$ 19/mês:** puzzles com rating e revisão de erros, aulas em vídeo (com material em PDF e PGN), lives exclusivas, ranking, torneios e grupo no WhatsApp.
-- **Intensivo, R$ 119/mês, turma limitada a 10 alunos:** tudo do Membro, mais o **Método Augusto Chess**, diagnóstico das partidas, plano de treino individual, revisões ao vivo na turma de até 10 alunos, grupo exclusivo da turma no WhatsApp, prioridade nas lives e **1 aula por mês com um mestre nacional em atividade** (conteúdo cadastrado no admin; sem nome de mestre no site por enquanto).
+**Planos (somente pagos, decisão de 2026-10-07):**
+- **Membro, R$ 19/mês:** táticas com rating e revisão de erros, aberturas, finais, aulas em vídeo (com PDF e PGN), lives exclusivas, ranking, torneios e grupo no WhatsApp.
+- **Intensivo, R$ 119/mês, turma limitada a 10 alunos:** tudo do Membro, mais o método de treino por ciclos (`[NOME DO MÉTODO DO INTENSIVO]`), diagnóstico das partidas, plano de treino individual, revisões ao vivo na turma, grupo exclusivo da turma no WhatsApp, prioridade nas lives e 1 aula por mês com um mestre nacional em atividade (sem nome de mestre no site até eu liberar).
 
-**Não existe plano gratuito.** Sem assinatura ativa, a conta existe mas não acessa nada além da Home, da página de planos e do puzzle do dia (isca pública).
+**Não existe plano gratuito.** Sem assinatura ativa, a conta existe mas só acessa Home, planos, páginas institucionais e o **puzzle do dia** (única parte pública jogável).
 
-O **Método Augusto Chess** é um treino por ciclos de repetição de táticas: o aluno refaz o mesmo conjunto várias vezes, cada ciclo mais rápido, e os erros voltam por repetição espaçada. O método é de longo prazo, cada aluno tem seu ritmo: **não há número fixo de ciclos nem prazo**. Não prometa ganho de rating em nenhum texto.
+Não prometa resultado (ex.: "suba X pontos de rating") em nenhum texto.
 
 ## 2. Stack (não troque sem me avisar)
 
-- Next.js (App Router) + TypeScript + Tailwind CSS
-- Supabase: Auth (e-mail/senha + Google), Postgres, RLS. Use `@supabase/ssr`.
-- Stripe: Checkout (assinatura), webhooks, Customer Portal
-- Tabuleiro: `react-chessboard` (MIT) + `chess.js` (BSD), com as peças Cburnett (licença BSD, em `public/pieces/cburnett/`). Decisão de 2026-10-07: o `chessground` foi descartado por ser GPL-3.0.
-- Vídeo das aulas: Bunny Stream (fase 4, com URLs assinadas geradas no servidor). Antes disso, deixe o campo `video_id` e um player placeholder.
-- Deploy: Vercel (repo no GitHub, deploy automático)
-- Testes: Vitest para a lógica pura (revisão espaçada, ciclos, validação de lances)
-- Fuso padrão para "dia" (puzzle do dia, sequência diária): `America/Sao_Paulo`
-- Stockfish no navegador: **fora do escopo agora** (futuro: finais; atenção à licença GPL)
+- Next.js 16 (App Router) + TypeScript + Tailwind CSS 4. No Next 16, `middleware.ts` virou `src/proxy.ts`.
+- Supabase: Auth (e-mail/senha + Google), Postgres, RLS, Storage. Use `@supabase/ssr`.
+- Tabuleiro: **`react-chessboard` (MIT) + `chess.js` (BSD)**, com as peças Cburnett (licença BSD, `public/pieces/cburnett/`). O `chessground` foi descartado por ser GPL-3.0 (decisão de 2026-10-07).
+- Motor: **Stockfish (WASM) isolado num Web Worker**, servido como arquivo próprio em `public/engine/`, comunicando-se só por mensagens UCI. Publicar o aviso da licença GPL do Stockfish e o link para o código-fonte dele em `/creditos`.
+- Animação: Framer Motion, sempre respeitando `prefers-reduced-motion`.
+- Vídeo: **YouTube não listado** no começo, atrás de uma interface própria (`src/lib/video/`) para trocar de provedor depois (Bunny Stream/Mux) sem refazer telas. YouTube não protege o conteúdo: quem tiver o link assiste.
+- Pagamento: provedor **a definir na Fase 4** (Pix + cartão recorrentes), atrás de `src/lib/payments/`. Consultar a documentação oficial antes de implementar Pix recorrente.
+- Deploy: Vercel (GitHub, deploy automático). Testes: Vitest para a lógica pura.
+- Fuso padrão para "dia" (puzzle do dia, sequência diária): `America/Sao_Paulo`.
 
-## 3. Identidade visual
+## 3. Identidade de marca
 
-Estilo escuro e elegante, verde profundo com dourado. Fontes: **Fraunces** (títulos) e **Manrope** (texto), via `next/font`.
+- **Nome:** Academia Finale de Xadrez. Nome curto na interface: **Finale**.
+- **Tom de voz:** português do Brasil, direto, elegante e motivador, sem gírias excessivas.
+- **Logo:** monograma "F" com referência a uma peça (cavalo), versão horizontal e ícone quadrado; favicon, ícones do PWA e imagem Open Graph.
+- **Paleta "Midnight Gold"** (tokens únicos no tema do Tailwind; modo escuro padrão, modo claro opcional, contraste AA no mínimo):
 
-| Token | Valor |
+| Token | Escuro |
 |---|---|
-| fundo | `#0E241D` |
-| fundo profundo (faixas) | `#0B1D17` |
-| superfície (cards) | `#143128` |
-| superfície alta (destaque) | `#1B3F33` |
-| borda | `#1F4538` |
-| borda forte | `#3C6B58` |
-| texto | `#F3EFE4` |
-| texto secundário | `#C9D6CE` |
-| texto discreto | `#A9B9B0` |
-| dourado (acento) | `#D4AF57` (texto escuro sobre dourado: `#0E241D`) |
-| tabuleiro claro / escuro | `#E8DDC0` / `#5E8B6F` |
+| fundo (`bg`) | `#0B0D12` |
+| superfície (`surface`) | `#141821` |
+| superfície 2 (`surface-2`) | `#1B2030` |
+| borda | `rgba(255,255,255,0.08)` |
+| texto | `#EDEFF5` |
+| texto secundário | `#9AA3B8` |
+| destaque (`accent`, dourado) | `#E8B84A` |
+| destaque 2 (`accent-2`, azul violeta) | `#6C7AE0` |
+| sucesso | `#3DDC97` |
+| perigo | `#FF5C6C` |
+| tabuleiro claro / escuro (tema padrão) | `#3B4466` / `#2A3045` |
 
-Regras: botões e áreas de toque com no mínimo 44px; contraste mínimo 4.5:1; layout responsivo (funciona bem em celular, boa parte do público vem do TikTok no telefone); `<button>`, `<a>`, `<label>` semânticos; sem emojis; ícones só em SVG.
-
-Os desenhos de referência (Home, Treino, Entrar) estão em `docs/design/`. Reproduza com fidelidade e adapte ao componente real.
+- **Tipografia:** Inter (interface) e Fraunces (títulos de destaque), via `next/font`.
+- **Estilo:** vidro fosco discreto, sombras suaves, bordas sutis, gradientes leves com dourado. Luxo é espaço e hierarquia, não excesso de efeito.
+- **Regras:** áreas de toque de no mínimo 44px; responsivo de 360px a telas grandes; navegação inferior no celular; `<button>`, `<a>`, `<label>` semânticos; foco visível; ícones só em SVG; sem emojis.
 
 ## 4. Planos e regras de acesso
 
 - `plans.rank`: Membro = 1, Intensivo = 2. Intensivo inclui tudo do Membro.
-- Acesso é decidido no **servidor** (e reforçado pelo RLS, já criado no SQL). Nunca confie só em esconder botão.
-- Status que dão acesso: `active`, `trialing`, `past_due` (com tolerância de 3 dias após `current_period_end`). Qualquer outro, sem acesso.
+- Acesso decidido no **servidor** e reforçado pelo RLS. Esconder botão não é proteção.
+- Status com acesso: `active`, `trialing`, `past_due` (tolerância de 3 dias após `current_period_end`).
 - Concessão manual pelo admin: linha em `subscriptions` com `source = 'manual'`.
-- Links dos grupos de WhatsApp ficam em `app_settings` (`whatsapp_membros_url`, `whatsapp_intensivo_url`). Mostre o convite só na área logada (página Comunidade e Conta), só para quem tem o plano correspondente, entregue por uma server action ou route handler. Nunca no HTML público.
+- Vagas do Intensivo: `intensivo_seats_left()` e `reserve_intensivo_seat()` (já no banco). Com 0 vagas, botão "Entrar na lista de espera" (`waitlist`).
+- Links dos grupos de WhatsApp em `app_settings`, entregues só no servidor a quem tem o plano.
 
-## 5. Telas
+## 5. Páginas
 
-**Públicas**
-- `/` **Home** (seções, nesta ordem): cabeçalho (logo, Puzzle do dia, Benefícios, Método, Planos, Dúvidas, Entrar, botão Assinar); herói ("Treine xadrez todo dia e evolua junto com a comunidade.", CTAs "Quero ser membro" e "Resolver o puzzle do dia", linha "Lives diárias no TikTok · @augustochess", com link para https://www.tiktok.com/@augustochess); tabuleiro do puzzle do dia; card "Próxima live" (lido de `live_events`); 6 benefícios; "Como entrar na academia" (3 passos); seção do **Método Augusto Chess** (4 fases: Diagnóstico, Seu conjunto de táticas, Ciclos de repetição, Revisão ao vivo); **Planos** (Membro e Intensivo); Dúvidas frequentes; chamada final; rodapé.
-- No card do **Intensivo**, mostre as vagas restantes ("Restam X de 10 vagas") usando `intensivo_seats_left()`. Com 0 vagas: botão vira "Entrar na lista de espera" (e-mail em `waitlist`).
-- `/puzzle-do-dia` puzzle do dia, público, jogável.
-- `/entrar` Login e Criar conta (abas), campos nome, e-mail, WhatsApp (opcional), senha, aceite dos termos, "Continuar com Google". Após cadastro, leve para `/planos`.
-- `/planos` escolha do plano e início do checkout. `/termos`, `/privacidade`.
+**Públicas:** Home (`/`: proposta de valor, demonstração do tabuleiro, módulos, planos, dúvidas), `/puzzle-do-dia`, `/planos`, `/entrar` (Entrar e Criar conta em abas; WhatsApp opcional com aviso de uso; aceite dos termos; Google), `/recuperar-senha`, `/sobre`, `/contato`, `/termos`, `/privacidade`, `/creditos`.
 
-**Área do aluno (logado, com plano)**
-- `/painel` resumo: sequência diária, rating, revisão de hoje, próxima live, continuar aula.
-- `/puzzles` treino por tema e dificuldade, com rating do aluno e erros indo para `review_state`.
-- `/aulas` e `/aulas/[id]` cursos, módulos, aulas com vídeo e tabuleiro (FEN/PGN) ao lado, marcar como concluída, baixar PDF/PGN. Curso exige `plan_required`.
-- `/treino` (**Intensivo**) Método Augusto Chess, ver 6.
-- `/comunidade` agenda de lives, ranking, convite do WhatsApp do plano.
-- `/conta` plano atual, próxima cobrança, botão "Gerenciar assinatura" (Stripe Customer Portal), convite do WhatsApp.
+**App (logado, com plano):** `/painel` (rating, sequência, revisão de hoje, próxima lição, trilhas), `/taticas`, `/aberturas` e `/aberturas/[repertorio]`, `/finais` e `/finais/[posicao]`, `/aulas` e `/aulas/[curso]/[aula]`, `/treino` (Intensivo), `/conta`, `/checkout`.
 
-**Admin (`/admin`, só quem está em `admins`)** fase 4: aulas (cursos, módulos, aulas, upload de vídeo e arquivos), puzzle do dia (calendário), conjuntos oficiais (escolher puzzles por tema e rating), lives, membros (lista, status, conceder/revogar acesso manual), configurações (links de WhatsApp), vagas do Intensivo e progresso dos alunos.
+**Admin (`/admin`, só quem está em `admins`):** cursos, módulos, aulas (vídeo e arquivos), puzzles e puzzle do dia, repertórios, finais, alunos e assinaturas, concessão manual, configurações, vagas do Intensivo. Tudo sem mexer em código.
 
-## 6. Método Augusto Chess (`/treino`)
+## 6. Módulos
 
-**Conceitos**
-- **Conjunto** (`puzzle_sets`): lista ordenada de puzzles. Pode ser **oficial** (criado por mim, `is_official`) ou **do aluno** (`owner_id`). O aluno do Intensivo pode adicionar táticas ao seu conjunto: a partir dos puzzles do banco, ou colando um **FEN + solução** (ou um PGN de partida dele, escolhendo a posição). Táticas custom são salvas em `puzzles` com `source = 'custom'` e `first_move_is_setup = false`.
-- **Ciclo** (`cycles`): uma passada completa pelo conjunto. O aluno refaz o conjunto quantas vezes quiser. A tela mostra **"Ciclo N"** (sem total), progresso "X de Y resolvidos", tempo do puzzle atual, tempo do ciclo atual, tempo do ciclo anterior e uma tabela de histórico (tempo total, acertos, diferença para o ciclo anterior).
-- Regra padrão: ordem fixa dentro de cada ciclo (opção de embaralhar nas configurações do conjunto). Lance errado: marca o puzzle como errado, mostra a solução, segue para o próximo. O ciclo termina quando todos os puzzles foram tentados; `total_seconds` é a soma dos tempos (cronômetro pausa se a aba ficar em segundo plano, e há um limite máximo por puzzle para ignorar abandono).
-- Cada tentativa grava em `attempts` (com `cycle_id`) e atualiza `review_state`.
+**Táticas:** tabuleiro com feedback imediato (acerto, erro, dica, mostrar solução); filtro por tema (garfo, cravada, ataque duplo, mate em N, desvio, raio-X…) e dificuldade; rating do aluno (Elo simplificado); sequência diária; revisão de erros com repetição espaçada (regras abaixo). Base: banco aberto do Lichess (CC0), importado por `scripts/import-lichess-puzzles.ts`. No Lichess, `moves[0]` é o lance do adversário aplicado automaticamente; o aluno joga a partir de `moves[1]`; qualquer lance que dê mate também vale.
 
-**Revisão espaçada (variação simples do SM-2), em função pura e testada:**
-- Erro: `repetitions = 0`, `interval_days = 0`, `lapses += 1`, `ease = max(1.3, ease - 0.2)`, `due_at = agora + 10 minutos`.
-- Acerto: `repetitions += 1`; `interval_days = 1` se repetitions = 1, `3` se = 2, senão `round(interval_days * ease)`; `due_at = agora + interval_days`.
-- Acerto muito mais rápido que a mediana do próprio aluno naquele puzzle: `ease += 0.05`.
-- O painel mostra "N puzzles com erro voltam hoje" (`due_at <= agora`) e o botão "Revisar agora" abre uma fila só desses.
+**Revisão espaçada (variação do SM-2, função pura testada):**
+- Erro: `repetitions = 0`, `interval_days = 0`, `lapses += 1`, `ease = max(1.3, ease - 0.2)`, `due_at = agora + 10 min`.
+- Acerto: `repetitions += 1`; `interval_days` = 1 (1ª), 3 (2ª), senão `round(interval_days * ease)`; `due_at = agora + interval_days`.
+- Acerto muito mais rápido que a mediana do aluno naquele puzzle: `ease += 0.05`.
 
-**Tabuleiro:** `react-chessboard` + `chess.js`. Orientação pelo lado que joga. Promoção com escolha de peça. Para puzzles do Lichess, `moves[0]` é o lance do adversário aplicado automaticamente; o aluno joga a partir de `moves[1]`. Resposta correta = lance da solução; no Lichess, qualquer lance que dê mate também vale como correto.
+**Aberturas:** repertórios em árvore de variantes, com comentário em português em cada lance. Modo treino: o app joga o adversário e o aluno precisa acertar a linha, com explicação. Nomes e códigos ECO do repositório aberto `lichess-org/chess-openings` (CC0).
 
-## 7. Pagamentos (Stripe)
+**Finais:** biblioteca de posições clássicas (Lucena, Philidor, rei e peão, torres…) por nível. Treino contra o Stockfish: converter ou segurar a posição, com avaliação dos lances.
 
-- Produtos e preços criados no painel do Stripe (**modo teste primeiro**). IDs em variáveis de ambiente (`STRIPE_PRICE_MEMBRO`, `STRIPE_PRICE_INTENSIVO`) e espelhados em `plans.stripe_price_id`.
-- `POST /api/checkout`: exige usuário logado; para o Intensivo, chame `reserve_intensivo_seat` (service role) **antes** de criar a sessão; se retornar `false`, responda "turma completa" e ofereça a lista de espera. Crie a Checkout Session em modo `subscription`, com `metadata.user_id` e `metadata.plan_id`, e `customer` reaproveitado quando existir.
-- **Pix:** a disponibilidade de Pix **recorrente** para assinaturas no Stripe Brasil muda com o tempo. Consulte a documentação atual do Stripe antes de implementar. Se Pix recorrente não estiver disponível: cartão com cobrança automática + opção de pagar um período via Pix avulso, que libera o acesso por 30 dias e dispara aviso de renovação. Me diga qual caminho foi possível antes de seguir.
-- `POST /api/stripe/webhook`: valide a assinatura com o corpo bruto (`STRIPE_WEBHOOK_SECRET`); registre o evento em `stripe_events` (ignore se já existir, idempotência). Trate: `checkout.session.completed`, `customer.subscription.created|updated|deleted`, `invoice.paid`, `invoice.payment_failed`. Faça upsert em `subscriptions` por `stripe_subscription_id` e apague a `seat_reservations` do usuário. Tudo com a service role, só no servidor.
-- Cancelamento e troca de cartão: Stripe Customer Portal. Ao cancelar, o acesso vai até o fim do período pago.
-- Pergunte-me antes de ligar o modo ao vivo. Antes disso, teste o fluxo completo em modo teste: compra, falha de pagamento, cancelamento, reativação, última vaga do Intensivo.
+**Aulas em vídeo:** cursos, módulos e aulas, com progresso (concluída, continuar de onde parou), materiais em PDF e PGN, e **tabuleiro sincronizado com o vídeo** (marcações de tempo ligadas a lances do PGN).
+
+**Método do Intensivo (`/treino`):** conjuntos de táticas (oficiais ou do aluno), ciclos de repetição com cronômetro (ciclo N sem total, tempo do puzzle, do ciclo atual e do anterior, histórico); lance errado mostra a solução e segue. Sem número fixo de ciclos nem prazo.
+
+## 7. Pagamentos (Fase 4)
+
+- Pix e cartão recorrentes; provedor a escolher comigo (Stripe, Mercado Pago ou Asaas), atrás de `src/lib/payments/`.
+- Checkout exige login; no Intensivo, reservar vaga antes de abrir o pagamento.
+- Webhook: validar assinatura com o corpo bruto, idempotência (tabela de eventos), upsert em `subscriptions`. Tudo com a service role, só no servidor.
+- Cancelamento: acesso até o fim do período pago. Não ligar modo real sem minha confirmação.
 
 ## 8. Segurança e qualidade (inegociável)
 
-1. Nenhuma chave no código nem no Git. `.env.local` fora do repositório; `.env.example` com os nomes. A `SUPABASE_SERVICE_ROLE_KEY` e as chaves do Stripe **nunca** vão para o navegador (sem `NEXT_PUBLIC_`).
-2. RLS ligado em todas as tabelas (já está no SQL). Qualquer tabela nova nasce com RLS e policies.
-3. Valide toda entrada no servidor (Zod). Nunca confie em `plan` ou `user_id` vindos do cliente.
-4. Webhook sempre com verificação de assinatura e idempotência.
-5. URLs de vídeo assinadas, geradas no servidor após checar o plano.
-6. LGPD: página de privacidade; WhatsApp opcional no cadastro, com aviso do uso; botão de excluir conta na `/conta` (fase 3 ou 4).
-7. Texto das páginas: sem promessas de resultado; placeholders entre colchetes (`[...]`) ficam visíveis em desenvolvimento e **bloqueiam o deploy de produção** (adicione uma checagem simples que falhe o build se achar `[` seguido de MAIÚSCULAS em strings da UI).
-8. Acessibilidade: foco visível, labels em todos os campos, alt em imagens.
+1. Nenhuma chave no código nem no Git; `.env.example` com os nomes. Segredos nunca com `NEXT_PUBLIC_`.
+2. RLS em todas as tabelas; mudanças de banco só por migration numerada.
+3. Toda entrada validada no servidor (Zod). Nunca confiar em `plan` ou `user_id` vindos do cliente.
+4. Vídeo premium: quando sair do YouTube, URLs assinadas geradas no servidor após checar o plano.
+5. LGPD: privacidade, WhatsApp opcional com aviso, exclusão de conta na `/conta`.
+6. Placeholders `[MAIÚSCULAS]` aparecem no preview e **bloqueiam o build de produção** (`scripts/check-placeholders.ts`).
+7. Licenças: só conteúdo aberto (Lichess CC0, `chess-openings` CC0) ou do Augusto. Nada copiado de livros ou cursos de terceiros.
+8. Acessibilidade: foco visível, teclado, labels, aria, contraste AA.
+9. Performance e SEO: Core Web Vitals, metadados, Open Graph, `sitemap`, `robots.txt`. PWA instalável.
 
-## 9. Fases (pare ao fim de cada uma)
+## 9. O que já existe (reaproveitado)
 
-**Fase 0, base (meio dia).** Criar o projeto Next.js + Tailwind + TypeScript, ESLint/Prettier, Vitest, `.env.example`, estrutura de pastas, `docs/design/`. Conectar ao Supabase e aplicar `0001_init.sql`. Primeiro deploy vazio na Vercel.
-*Pronto quando:* o site abre na URL da Vercel e as tabelas existem no Supabase com RLS ligado.
+Login completo (e-mail, confirmação, recuperar senha; Google pendente de credencial), proteção de rotas por sessão, migrations 0001 a 0003 (planos, assinaturas, vagas, puzzles, tentativas, revisão, conjuntos e ciclos, cursos, aulas, lives, configurações; perfil com WhatsApp e aceite dos termos), lógica pura testada em `src/lib/`, peças Cburnett.
 
-**Fase 1, Home, login e conta.** Layout e tokens, Home completa (com dados reais de `plans`, vagas do Intensivo e próxima live; puzzle do dia pode ser um registro de teste), `/entrar` (e-mail/senha, Google, confirmação por e-mail), `/planos` (sem checkout ainda), `/termos` e `/privacidade` (rascunho), proteção de rotas por sessão.
-*Pronto quando:* consigo criar conta, entrar, sair, e a Home está fiel ao desenho no celular e no desktop.
+## 10. Fases (pare ao fim de cada uma)
 
-**Fase 2, puzzles e Treino.** Script `scripts/import-lichess-puzzles.ts` (baixa o CSV do banco de puzzles do Lichess, licença CC0, filtra por popularidade e jogadas, importa entre 20 e 50 mil puzzles para caber no plano do Supabase). `/puzzle-do-dia`, `/puzzles`, `/painel` básico, `/treino` com conjuntos, ciclos, cronômetros, histórico, adicionar tática (FEN + solução) e revisão espaçada, com testes de unidade da lógica.
-*Pronto quando:* completo dois ciclos de um conjunto de 20 puzzles, vejo o tempo comparado e os erros voltando na fila de revisão.
+1. **Fundação:** marca Finale (logo, favicon, OG), design system Midnight Gold com tema claro/escuro, layout (cabeçalho no desktop, navegação inferior no celular), PWA, troca de marca nas telas existentes.
+2. **MVP:** tabuleiro, táticas com feedback e rating, puzzle do dia jogável, importação do Lichess, área de aulas com vídeo (YouTube).
+3. **Aberturas e finais:** repertórios e modo treino, biblioteca de finais, Stockfish no Worker.
+4. **Monetização:** planos, pagamento (Pix + cartão), vagas e lista de espera, controle de acesso, painel admin.
+5. **Retenção:** dashboard, sequência diária, revisão espaçada, trilhas, vídeo sincronizado, método do Intensivo, polimento de animações.
 
-**Fase 3, pagamento e liberação.** Stripe completo (seção 7), controle de vagas e lista de espera, `/conta`, convite do WhatsApp liberado por plano, guarda de rotas por plano.
-*Pronto quando:* em modo teste, a compra libera o plano sozinha, a falha de pagamento e o cancelamento retiram o acesso no prazo certo, e a 11ª pessoa não consegue comprar o Intensivo.
-
-**Fase 4, aulas e admin.** `/aulas` com player (Bunny), progresso, arquivos; `/comunidade` e ranking; painel `/admin` (seção 5).
-*Pronto quando:* publico uma aula com vídeo e PDF pelo admin, sem mexer em código, e um aluno do plano certo a assiste.
-
-**Depois:** Stockfish para finais, gamificação (sequências, ranking mais completo), página do mestre convidado (a pedido), e-mails transacionais.
-
-## 10. Variáveis de ambiente (`.env.example`)
+## 11. Variáveis de ambiente (`.env.example`)
 
 ```
 NEXT_PUBLIC_SITE_URL=
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-STRIPE_PRICE_MEMBRO=
-STRIPE_PRICE_INTENSIVO=
-BUNNY_STREAM_LIBRARY_ID=
-BUNNY_STREAM_API_KEY=
-BUNNY_TOKEN_AUTH_KEY=
+(pagamento e vídeo: nomes definidos nas fases 2 e 4)
 ```
 
-## 11. Pendências do Augusto (use placeholders até eu preencher)
+## 12. Pendências do Augusto (placeholders até preencher)
 
-- `[DIA E HORÁRIO DA LIVE]` (o TikTok já está definido: @augustochess)
-- Texto final do FAQ "O que muda para quem entra agora como fundador?"
-- Definir se o preço de lançamento é travado para os primeiros alunos
-- Nome, foto e currículo do mestre convidado (não publicar nada dele antes de eu liberar)
-- Domínio definitivo e e-mail de suporte
-- Conta Stripe verificada para operar no Brasil
+- `[NOME DO MÉTODO DO INTENSIVO]`
+- Dia e horário das lives; benefício de fundador; duração e estrutura do método
+- Aberturas e finais entram no Membro? (assumido: sim, até ele confirmar)
+- Provedor de pagamento (Fase 4); domínio definitivo e e-mail de suporte; SMTP próprio
+- Razão social, CNPJ e foro (termos e privacidade)
+- Credencial do Google (OAuth) no Supabase
 
-## 12. Como me responder
+## 13. Como me responder
 
-Antes de cada fase, diga em 5 linhas o que vai fazer e o que pode dar errado. Depois, entregue: o que mudou, como testar, o que ficou pendente. Se uma decisão minha for necessária, pergunte uma vez, de forma objetiva, com sua recomendação.
+Antes de cada fase, diga em 5 linhas o que vai fazer e o que pode dar errado. Depois: o que mudou, como testar, o que ficou pendente. Decisão minha necessária: pergunte uma vez, objetiva, com sua recomendação.
