@@ -4,6 +4,7 @@
 
 export const LICHESS_PUZZLES_URL =
   "https://database.lichess.org/lichess_db_puzzle.csv.zst";
+// Colunas que o script usa, nesta ordem (o Lichess pode acrescentar outras no fim).
 export const EXPECTED_HEADER =
   "PuzzleId,FEN,Moves,Rating,RatingDeviation,Popularity,NbPlays,Themes,GameUrl,OpeningTags";
 

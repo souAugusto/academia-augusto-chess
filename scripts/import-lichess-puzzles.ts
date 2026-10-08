@@ -14,11 +14,12 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
-import { Readable } from "node:stream";
+import { pipeline as pipe, Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import type { ReadableStream as WebReadableStream } from "node:stream/web";
 import { createZstdDecompress } from "node:zlib";
 import { createClient } from "@supabase/supabase-js";
+import { SkippableFrameStripper } from "../src/lib/zstd-frames.ts";
 import {
   BucketSampler,
   EXPECTED_HEADER,
@@ -64,9 +65,19 @@ async function main() {
   );
   await download();
 
-  const lines = createInterface({
-    input: createReadStream(CACHE).pipe(createZstdDecompress()),
-  });
+  // O arquivo vem do pzstd: tira os quadros de controle antes de descomprimir.
+  // Qualquer erro em qualquer etapa fica guardado e interrompe a importação.
+  let streamError: Error | null = null;
+  const decompressed = pipe(
+    createReadStream(CACHE),
+    new SkippableFrameStripper(),
+    createZstdDecompress(),
+    (error) => {
+      if (error && error.code !== "ERR_STREAM_PREMATURE_CLOSE")
+        streamError = error;
+    },
+  );
+  const lines = createInterface({ input: decompressed });
   const sampler = new BucketSampler(LIMIT);
   let batch: ReturnType<typeof toPuzzleRow>[] = [];
   let read = 0;
@@ -86,7 +97,7 @@ async function main() {
 
   for await (const line of lines) {
     if (header) {
-      if (line.trim() !== EXPECTED_HEADER)
+      if (!line.trim().startsWith(EXPECTED_HEADER))
         throw new Error(`Cabeçalho inesperado: ${line}`);
       header = false;
       continue;
@@ -99,8 +110,10 @@ async function main() {
     }
     if (sampler.full) break;
   }
-  await flush();
   lines.close();
+  decompressed.destroy();
+  if (streamError) throw streamError;
+  await flush();
   console.log(`Pronto: ${sampler.total} puzzles importados.`);
 }
 
