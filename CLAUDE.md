@@ -29,7 +29,7 @@ Next.js 16 (App Router) + TypeScript + Tailwind 4 · Supabase (Auth, Postgres, R
 - Lógica pura (rating, revisão espaçada, ciclos, validação de lances, árvore de aberturas) em `src/lib/` com testes em Vitest.
 - Componentes pequenos; tokens de cor e fontes definidos uma vez (Tailwind theme), nunca valores soltos repetidos.
 - Fuso padrão para datas de negócio: `America/Sao_Paulo`.
-- Textos da interface em português do Brasil. Placeholders entre colchetes (`[...]`) bloqueiam o deploy de produção.
+- Textos da interface em português do Brasil. Placeholders entre colchetes (`[...]`) bloqueiam o deploy de produção. **Exceção temporária:** desde 2026-10-09 a produção tem `ALLOW_PLACEHOLDERS=1` na Vercel (decisão do Augusto, para ver a Finale em construção). Remover antes de abrir para alunos.
 - Animações respeitam `prefers-reduced-motion`.
 
 ## Fluxo de trabalho
@@ -39,7 +39,8 @@ Next.js 16 (App Router) + TypeScript + Tailwind 4 · Supabase (Auth, Postgres, R
 - Dúvida de produto: perguntar uma vez, com recomendação. Não inventar regra de negócio.
 
 ## Onde está cada coisa
-- Schema e RLS: `supabase/migrations/` (0001 a 0003 aplicadas)
+- Schema e RLS: `supabase/migrations/` (0001 a 0004 aplicadas)
+- Vercel: projeto `finale-xadrez` (time sergio-codes), produção em https://finale-xadrez.vercel.app (o antigo academia-augusto-chess.vercel.app redireciona)
 - Peças do tabuleiro: `public/pieces/cburnett/` (licença BSD)
 - Desenhos antigos da Augusto Chess (referência histórica de layout): `docs/design/`
 - Script de importação do Lichess: `scripts/import-lichess-puzzles.ts` (Fase 2)

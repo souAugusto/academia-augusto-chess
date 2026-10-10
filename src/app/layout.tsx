@@ -15,8 +15,7 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ||
-      "https://academia-augusto-chess.vercel.app",
+    process.env.NEXT_PUBLIC_SITE_URL || "https://finale-xadrez.vercel.app",
   ),
   title: { default: `${BRAND.fullName}`, template: `%s · ${BRAND.shortName}` },
   description: BRAND.description,

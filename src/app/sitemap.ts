@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 
 const SITE =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://academia-augusto-chess.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://finale-xadrez.vercel.app";
 
 // Só páginas públicas. Entram mais à medida que as fases criam páginas.
 const PUBLIC_PATHS = [

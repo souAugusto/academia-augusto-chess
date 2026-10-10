@@ -26,9 +26,17 @@ const found = UI_DIRS.flatMap((dir) => listFiles(join(ROOT, dir))).flatMap(
 );
 
 const isProduction = process.env.VERCEL_ENV === "production";
+// Liberação temporária (decisão do Augusto em 2026-10-09): a produção mostra a
+// Finale em construção. Remover ALLOW_PLACEHOLDERS da Vercel antes do lançamento.
+const allowed = process.env.ALLOW_PLACEHOLDERS === "1";
 
 if (found.length === 0) {
   console.log("Placeholders: nenhum encontrado.");
+} else if (isProduction && allowed) {
+  console.warn(
+    "ATENÇÃO: trava de placeholders DESLIGADA (ALLOW_PLACEHOLDERS=1). Remova antes do lançamento. Pendentes:",
+  );
+  found.forEach((line) => console.warn(`  ${line}`));
 } else if (isProduction) {
   console.error("Deploy de produção bloqueado. Placeholders pendentes:");
   found.forEach((line) => console.error(`  ${line}`));
