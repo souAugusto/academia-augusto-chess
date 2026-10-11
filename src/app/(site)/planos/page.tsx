@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionHeading } from "@/components/home/Section";
 import { PlanCards } from "@/components/plans/PlanCards";
+import { WaitlistForm } from "@/components/plans/WaitlistForm";
 import { buttonClasses } from "@/components/ui/button";
 import { PLANS_SECTION } from "@/content/home";
 import { getIntensivoSeatsLeft, getPlans } from "@/lib/data/public";
@@ -20,6 +21,8 @@ export default async function PlanosPage({
     supabase.auth.getClaims(),
   ]);
   const isLoggedIn = Boolean(auth?.claims);
+  const email =
+    typeof auth?.claims?.email === "string" ? auth.claims.email : undefined;
   const chosen = plans.find((plan) => plan.id === params.plano);
   const nextHere = `/planos?plano=${chosen?.id ?? ""}`;
 
@@ -42,10 +45,18 @@ export default async function PlanosPage({
             </h2>
             <p className="text-[0.9375rem] text-muted">
               {isLoggedIn
-                ? "[PAGAMENTO ENTRA NA FASE 4]"
+                ? "Pague com Pix ou cartão na página segura do Asaas."
                 : "Crie sua conta para continuar. Depois do cadastro, você volta para cá."}
             </p>
           </div>
+          {isLoggedIn && (
+            <Link
+              href={`/checkout?plano=${chosen.id}`}
+              className={buttonClasses("primary")}
+            >
+              Ir para o pagamento
+            </Link>
+          )}
           {!isLoggedIn && (
             <Link
               href={`/entrar?aba=criar&next=${encodeURIComponent(nextHere)}`}
@@ -59,12 +70,22 @@ export default async function PlanosPage({
 
       <PlanCards plans={plans} seatsLeft={seatsLeft} />
 
-      <section
-        id="lista-de-espera"
-        className="scroll-mt-20 text-center text-sm text-muted"
-      >
-        {seatsLeft <= 0 && "[LISTA DE ESPERA DO INTENSIVO ENTRA NA FASE 4]"}
-      </section>
+      {seatsLeft <= 0 && (
+        <section
+          id="lista-de-espera"
+          aria-labelledby="lista-de-espera-titulo"
+          className="mx-auto flex w-full max-w-md scroll-mt-20 flex-col gap-4 rounded-card border border-border bg-surface p-6 text-center shadow-card"
+        >
+          <h2 id="lista-de-espera-titulo" className="text-lg font-semibold">
+            Lista de espera do Intensivo
+          </h2>
+          <p className="text-[0.9375rem] text-muted">
+            A turma está completa. Deixe seu e-mail e avisamos quando abrir
+            vaga.
+          </p>
+          <WaitlistForm email={email} />
+        </section>
+      )}
     </div>
   );
 }

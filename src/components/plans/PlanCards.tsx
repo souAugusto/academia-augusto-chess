@@ -10,7 +10,8 @@ type PlanCardsProps = {
   seatsLeft: number;
 };
 
-// Até a Fase 4 (checkout), os botões levam para /planos.
+// Os botões levam para /planos com o plano escolhido: lá a pessoa cria a conta
+// ou segue para o pagamento.
 function ctaHref(plan: Plan) {
   return `/planos?plano=${plan.id}`;
 }

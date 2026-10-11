@@ -74,7 +74,7 @@ export const PRIVACY: LegalSection[] = [
     paragraphs: [
       "Cadastro: nome, e-mail, senha (guardada de forma criptografada) e, se você quiser informar, o número de WhatsApp.",
       "Uso da plataforma: puzzles resolvidos, tempos, erros, aulas concluídas e participação no ranking.",
-      "Pagamento: processado pelo Stripe. Não guardamos o número do seu cartão; recebemos apenas o status da assinatura.",
+      "Pagamento: processado pelo Asaas. O CPF e os dados do cartão são informados ao Asaas, que os exige para emitir a cobrança; a Finale não guarda o seu CPF nem o número do seu cartão e recebe apenas o status da assinatura.",
       "Dados técnicos: registros de acesso, como endereço IP e data e hora, guardados conforme o Marco Civil da Internet.",
     ],
   },
@@ -89,7 +89,7 @@ export const PRIVACY: LegalSection[] = [
   {
     title: "4. Com quem compartilhamos",
     paragraphs: [
-      "Com prestadores que fazem o serviço funcionar: Supabase (banco de dados e login), Vercel (hospedagem), Stripe (pagamentos), Bunny (vídeos das aulas) e Google, se você escolher entrar com o Google. Alguns desses serviços guardam dados fora do Brasil, com as garantias previstas na LGPD.",
+      "Com prestadores que fazem o serviço funcionar: Supabase (banco de dados e login), Vercel (hospedagem), Asaas (pagamentos), YouTube (vídeos das aulas) e Google, se você escolher entrar com o Google. Alguns desses serviços guardam dados fora do Brasil, com as garantias previstas na LGPD.",
       "No ranking, outros membros podem ver o seu nome e a sua posição.",
     ],
   },

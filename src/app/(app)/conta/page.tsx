@@ -1,9 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { signOut } from "@/app/(auth)/actions";
+import { CancelSubscription } from "@/components/account/CancelSubscription";
+import { FormAlert } from "@/components/forms/Field";
 import { buttonClasses } from "@/components/ui/button";
 import { SectionLabel } from "@/components/ui/Label";
 import { PLAN_NAMES, requireUser } from "@/lib/data/account";
+import {
+  getMySubscriptions,
+  METHOD_LABELS,
+  STATUS_LABELS,
+  type MySubscription,
+} from "@/lib/data/billing";
+import { formatLongDate } from "@/lib/format";
+import { payPending } from "./actions";
 
 export const metadata: Metadata = {
   title: "Minha conta",
@@ -16,10 +26,37 @@ function formatWhatsapp(digits: string): string {
   return `(${ddd}) ${number.slice(0, -4)}-${number.slice(-4)}`;
 }
 
-// Fase 1: dados da conta e sair. Assinatura, convite do WhatsApp e exclusão de
-// conta entram na Fase 3.
-export default async function ContaPage() {
-  const user = await requireUser("/conta");
+function subscriptionRows(sub: MySubscription) {
+  const end = sub.currentPeriodEnd
+    ? formatLongDate(sub.currentPeriodEnd)
+    : null;
+  const rows = [
+    { label: "Plano", value: sub.planName },
+    {
+      label: "Situação",
+      value: sub.cancelAtPeriodEnd
+        ? "Cancelada (sem renovação)"
+        : STATUS_LABELS[sub.status],
+    },
+  ];
+  if (sub.billingType)
+    rows.push({ label: "Pagamento", value: METHOD_LABELS[sub.billingType] });
+  if (end)
+    rows.push({
+      label: sub.cancelAtPeriodEnd ? "Acesso até" : "Próxima renovação",
+      value: end,
+    });
+  if (sub.source === "manual")
+    rows.push({ label: "Origem", value: "Concedido pela Finale" });
+  return rows;
+}
+
+export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
+  const [user, subscriptions, params] = await Promise.all([
+    requireUser("/conta"),
+    getMySubscriptions(),
+    searchParams,
+  ]);
   const rows = [
     { label: "Nome", value: user.name },
     { label: "E-mail", value: user.email },
@@ -28,7 +65,7 @@ export default async function ContaPage() {
       value: user.whatsapp ? formatWhatsapp(user.whatsapp) : "Não informado",
     },
     {
-      label: "Plano",
+      label: "Acesso",
       value: PLAN_NAMES[user.planRank] ?? "Nenhum plano ativo",
     },
   ];
@@ -50,6 +87,65 @@ export default async function ContaPage() {
           </div>
         ))}
       </dl>
+
+      <section
+        aria-labelledby="assinatura"
+        className="flex max-w-[640px] flex-col gap-4"
+      >
+        <h2 id="assinatura" className="text-lg font-semibold">
+          Assinatura
+        </h2>
+        {params.pagamento === "indisponivel" && (
+          <FormAlert tone="erro">
+            Não encontramos uma cobrança em aberto agora. Tente de novo em
+            instantes.
+          </FormAlert>
+        )}
+        {subscriptions.length === 0 && (
+          <p className="text-muted">Você ainda não tem assinatura.</p>
+        )}
+        {subscriptions.map((sub) => (
+          <div
+            key={sub.id}
+            className="flex flex-col gap-4 rounded-card border border-border bg-surface p-6"
+          >
+            <dl className="flex flex-col">
+              {subscriptionRows(sub).map((row) => (
+                <div
+                  key={row.label}
+                  className="flex flex-wrap justify-between gap-2 border-b border-border py-3 last:border-b-0"
+                >
+                  <dt className="text-muted">{row.label}</dt>
+                  <dd className="font-semibold">{row.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="flex flex-wrap gap-3">
+              {(sub.status === "incomplete" || sub.status === "past_due") &&
+                sub.source === "asaas" &&
+                !sub.cancelAtPeriodEnd && (
+                  <form action={payPending}>
+                    <input type="hidden" name="subscriptionId" value={sub.id} />
+                    <button type="submit" className={buttonClasses("primary")}>
+                      Pagar agora
+                    </button>
+                  </form>
+                )}
+              {sub.source === "asaas" && !sub.cancelAtPeriodEnd && (
+                <CancelSubscription
+                  subscriptionId={sub.id}
+                  accessUntil={
+                    sub.status === "incomplete" || !sub.currentPeriodEnd
+                      ? null
+                      : formatLongDate(sub.currentPeriodEnd)
+                  }
+                />
+              )}
+            </div>
+          </div>
+        ))}
+      </section>
+
       <div className="flex flex-wrap gap-3">
         {user.planRank === 0 && (
           <Link href="/planos" className={buttonClasses("primary")}>

@@ -36,5 +36,4 @@ export const PLAN_COPY: Record<
   },
 };
 
-// Texto neutro até a Fase 4 confirmar as formas de pagamento.
-export const PAYMENT_NOTE = "Assinatura mensal · cancele quando quiser";
+export const PAYMENT_NOTE = "Pix ou cartão · cancele quando quiser";
