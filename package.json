@@ -15,7 +15,9 @@
     "prebuild": "npm run check:placeholders",
     "typecheck": "next typegen && tsc --noEmit",
     "import:puzzles": "node --env-file=.env.local scripts/import-lichess-puzzles.ts",
-    "schedule:daily": "node --env-file=.env.local scripts/schedule-daily-puzzles.ts"
+    "schedule:daily": "node --env-file=.env.local scripts/schedule-daily-puzzles.ts",
+    "import:openings": "node --env-file=.env.local scripts/import-openings.ts",
+    "seed:phase3": "node --env-file=.env.local scripts/seed-phase3.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
