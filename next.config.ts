@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Upload de PDF/PGN das aulas pelo admin. A Vercel aceita até 4,5 MB por requisição.
+    serverActions: { bodySizeLimit: "4mb" },
+  },
   async headers() {
     return [
       {
