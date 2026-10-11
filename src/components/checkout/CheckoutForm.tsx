@@ -17,7 +17,7 @@ const METHODS = [
   {
     id: "CREDIT_CARD",
     title: "Cartão de crédito",
-    text: "A renovação é automática no mesmo cartão, todo mês.",
+    text: "A renovação é automática no mesmo cartão, todo mês. Na página do Asaas, escolha “Cartão de Crédito”: no débito não há renovação automática.",
   },
 ] as const;
 
