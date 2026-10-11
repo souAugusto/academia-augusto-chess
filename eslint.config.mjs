@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Motor Stockfish compilado (GPL), servido como está.
+    "public/engine/**",
   ]),
 ]);
 

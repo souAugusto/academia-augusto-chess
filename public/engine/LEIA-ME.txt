@@ -1,0 +1,13 @@
+Motor de xadrez Stockfish 19 (versão "lite single-threaded"), compilado para
+WebAssembly por Nathan Rugg (projeto stockfish.js).
+
+Licença: GNU General Public License versão 3 (texto completo em COPYING.txt).
+Estes arquivos são distribuídos sem modificação, tal como publicados no pacote
+npm "stockfish" versão 19.0.1.
+
+Código-fonte correspondente:
+  https://github.com/nmrugg/stockfish.js/tree/v19.0.1
+  https://github.com/official-stockfish/Stockfish
+
+O motor roda como programa separado, num Web Worker, e se comunica com a
+Academia Finale de Xadrez apenas por mensagens no protocolo UCI.
