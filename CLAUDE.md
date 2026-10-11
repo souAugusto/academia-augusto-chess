@@ -39,7 +39,7 @@ Next.js 16 (App Router) + TypeScript + Tailwind 4 · Supabase (Auth, Postgres, R
 - Dúvida de produto: perguntar uma vez, com recomendação. Não inventar regra de negócio.
 
 ## Onde está cada coisa
-- Schema e RLS: `supabase/migrations/` (0001 a 0004 aplicadas)
+- Schema e RLS: `supabase/migrations/` (0001 a 0006 aplicadas)
 - Vercel: projeto `finale-xadrez` (time sergio-codes), produção em https://finale-xadrez.vercel.app (o antigo academia-augusto-chess.vercel.app redireciona)
 - Peças do tabuleiro: `public/pieces/cburnett/` (licença BSD)
 - Desenhos antigos da Augusto Chess (referência histórica de layout): `docs/design/`
