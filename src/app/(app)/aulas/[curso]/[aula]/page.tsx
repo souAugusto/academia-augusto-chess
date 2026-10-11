@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PlanRequired } from "@/components/app/PlanRequired";
+import { BoardStage } from "@/components/chess/BoardStage";
 import { StaticBoard } from "@/components/chess/StaticBoard";
 import { CompleteButton } from "@/components/lessons/CompleteButton";
 import { buttonClasses } from "@/components/ui/button";
@@ -42,77 +43,94 @@ export default async function AulaPage({
   const previous = ordered[index - 1];
   const next = ordered[index + 1];
 
+  const heading = (
+    <div className="flex flex-col gap-2">
+      <Link
+        href={`/aulas/${course.id}`}
+        className="text-sm text-muted hover:text-text"
+      >
+        ← {course.title}
+      </Link>
+      <SectionLabel>
+        Aula {index + 1} de {ordered.length}
+      </SectionLabel>
+      <h1 className="font-display text-page font-semibold tracking-tight">
+        {lesson.title}
+      </h1>
+    </div>
+  );
+
+  const video = (
+    <div className="aspect-video overflow-hidden rounded-card border border-border bg-surface shadow-card">
+      {embed ? (
+        <iframe
+          src={embed.src}
+          title={`Vídeo: ${lesson.title}`}
+          allow={embed.allow}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
+          className="size-full"
+        />
+      ) : (
+        <div className="flex size-full items-center justify-center p-6 text-center text-muted">
+          O vídeo desta aula ainda não foi publicado.
+        </div>
+      )}
+    </div>
+  );
+
+  const navigation = (
+    <>
+      <CompleteButton
+        lessonId={lesson.id}
+        completed={ordered[index].completed}
+        path={path}
+      />
+      {previous && (
+        <Link
+          href={`/aulas/${course.id}/${previous.id}`}
+          className={buttonClasses("secondary")}
+        >
+          Anterior
+        </Link>
+      )}
+      {next && (
+        <Link
+          href={`/aulas/${course.id}/${next.id}`}
+          className={buttonClasses("secondary")}
+        >
+          Próxima aula
+        </Link>
+      )}
+    </>
+  );
+
   return (
     <>
-      <div className="flex flex-col gap-2">
-        <Link
-          href={`/aulas/${course.id}`}
-          className="text-sm text-muted hover:text-text"
-        >
-          ← {course.title}
-        </Link>
-        <SectionLabel>
-          Aula {index + 1} de {ordered.length}
-        </SectionLabel>
-        <h1 className="font-display text-page font-semibold tracking-tight">
-          {lesson.title}
-        </h1>
-      </div>
-
-      <div
-        className={`grid gap-6 ${lesson.fen ? "lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]" : ""}`}
-      >
-        <div className="aspect-video overflow-hidden rounded-card border border-border bg-surface shadow-card">
-          {embed ? (
-            <iframe
-              src={embed.src}
-              title={`Vídeo: ${lesson.title}`}
-              allow={embed.allow}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="strict-origin-when-cross-origin"
-              className="size-full"
+      {lesson.fen ? (
+        // Vídeo e tabuleiro lado a lado, no mesmo bloco das telas de treino.
+        <BoardStage
+          variant="lesson"
+          board={
+            <StaticBoard
+              fen={lesson.fen}
+              orientation="w"
+              label={`Posição da aula ${lesson.title}`}
             />
-          ) : (
-            <div className="flex size-full items-center justify-center p-6 text-center text-muted">
-              O vídeo desta aula ainda não foi publicado.
-            </div>
-          )}
-        </div>
-        {lesson.fen && (
-          <StaticBoard
-            fen={lesson.fen}
-            orientation="w"
-            label={`Posição da aula ${lesson.title}`}
-          />
-        )}
-      </div>
-
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <CompleteButton
-          lessonId={lesson.id}
-          completed={ordered[index].completed}
-          path={path}
-        />
-        <div className="flex gap-2">
-          {previous && (
-            <Link
-              href={`/aulas/${course.id}/${previous.id}`}
-              className={buttonClasses("secondary")}
-            >
-              Anterior
-            </Link>
-          )}
-          {next && (
-            <Link
-              href={`/aulas/${course.id}/${next.id}`}
-              className={buttonClasses("secondary")}
-            >
-              Próxima aula
-            </Link>
-          )}
-        </div>
-      </div>
+          }
+          info={heading}
+          actions={navigation}
+        >
+          {video}
+        </BoardStage>
+      ) : (
+        <>
+          {heading}
+          {video}
+          <div className="flex flex-wrap items-start gap-2">{navigation}</div>
+        </>
+      )}
 
       {lesson.description && (
         <Card>

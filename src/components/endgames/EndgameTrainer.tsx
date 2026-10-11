@@ -2,9 +2,10 @@
 
 import { Chess, type Square } from "chess.js";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { Arrow } from "react-chessboard";
 import { recordEndgameAttempt } from "@/app/(app)/finais/actions";
+import { BoardStage } from "@/components/chess/BoardStage";
 import { MoveInput } from "@/components/chess/MoveInput";
 import {
   BOARD_COLORS,
@@ -31,6 +32,10 @@ type EndgameTrainerProps = {
   userColor: "white" | "black";
   goal: Goal;
   maxMoves: number;
+  title: ReactNode; // topo do painel (nome do final e de que lado o aluno joga)
+  // Explicação da posição: no painel no desktop; abaixo dos controles no celular
+  // e no tablet, para os botões ficarem perto do tabuleiro.
+  notes?: string | null;
 };
 
 // Tempo de análise por lance (curto para funcionar bem no celular).
@@ -47,6 +52,8 @@ export function EndgameTrainer({
   userColor,
   goal,
   maxMoves,
+  title,
+  notes,
 }: EndgameTrainerProps) {
   const userSide: Side = userColor === "white" ? "w" : "b";
   const chess = useRef(new Chess(startFen));
@@ -213,12 +220,15 @@ export function EndgameTrainer({
 
   if (engineState === "error") {
     return (
-      <Card>
-        <p className="leading-relaxed text-muted">
-          Não foi possível carregar o motor de xadrez neste navegador. Tente
-          atualizar o navegador ou usar outro aparelho.
-        </p>
-      </Card>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">{title}</div>
+        <Card>
+          <p className="leading-relaxed text-muted">
+            Não foi possível carregar o motor de xadrez neste navegador. Tente
+            atualizar o navegador ou usar outro aparelho.
+          </p>
+        </Card>
+      </div>
     );
   }
 
@@ -232,8 +242,8 @@ export function EndgameTrainer({
           : message || "Sua vez.";
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
-      <div className="mx-auto flex w-full max-w-[600px] flex-col gap-4">
+    <BoardStage
+      board={
         <PlayBoard
           id="finale-final"
           fen={fen}
@@ -243,17 +253,11 @@ export function EndgameTrainer({
           arrows={hint ? [hint] : []}
           onMove={onMove}
         />
-        <MoveInput
-          fen={fen}
-          disabled={!userTurn}
-          onMove={onMove}
-          onInvalid={setMessage}
-        />
-      </div>
-
-      <aside className="flex flex-col gap-4">
-        <Card className="flex flex-col gap-3">
-          <div className="flex items-center justify-between gap-3">
+      }
+      info={
+        <>
+          <div className="flex flex-col gap-1">{title}</div>
+          <div className="flex items-center justify-between gap-3 rounded-control bg-surface-2 px-3 py-2">
             <span className="text-sm font-semibold text-accent-text">
               {GOAL_LABELS[goal]}
             </span>
@@ -261,35 +265,10 @@ export function EndgameTrainer({
               {userMoves} de {maxMoves} lances
             </span>
           </div>
-          <p
-            aria-live="polite"
-            className={`min-h-6 font-medium ${
-              status.kind === "success"
-                ? "text-success"
-                : status.kind === "fail"
-                  ? "text-danger"
-                  : "text-text"
-            }`}
-          >
-            {statusText}
-          </p>
-          {quality && status.kind === "playing" && (
-            <p
-              className={`text-sm ${quality === "bom" ? "text-success" : quality === "imprecisao" ? "text-accent-text" : "text-danger"}`}
-            >
-              Seu último lance: {QUALITY_LABELS[quality]}
-            </p>
-          )}
-          {score && (
-            <p className="text-sm text-muted">
-              Avaliação (brancas):{" "}
-              <span className="font-mono tabular-nums">
-                {formatScore(score)}
-              </span>
-            </p>
-          )}
-        </Card>
-        <div className="flex flex-wrap gap-2">
+        </>
+      }
+      actions={
+        <>
           <button
             type="button"
             onClick={showHint}
@@ -313,8 +292,50 @@ export function EndgameTrainer({
               Outros finais
             </Link>
           )}
-        </div>
-      </aside>
-    </div>
+        </>
+      }
+      below={
+        notes && <p className="leading-relaxed text-muted lg:hidden">{notes}</p>
+      }
+    >
+      <div className="flex min-h-12 flex-col gap-1">
+        <p
+          aria-live="polite"
+          className={`font-medium ${
+            status.kind === "success"
+              ? "text-success"
+              : status.kind === "fail"
+                ? "text-danger"
+                : "text-text"
+          }`}
+        >
+          {statusText}
+        </p>
+        {quality && status.kind === "playing" && (
+          <p
+            className={`text-sm ${quality === "bom" ? "text-success" : quality === "imprecisao" ? "text-accent-text" : "text-danger"}`}
+          >
+            Seu último lance: {QUALITY_LABELS[quality]}
+          </p>
+        )}
+      </div>
+      {score && (
+        <p className="text-sm text-muted">
+          Avaliação (brancas):{" "}
+          <span className="font-mono tabular-nums">{formatScore(score)}</span>
+        </p>
+      )}
+      <MoveInput
+        fen={fen}
+        disabled={!userTurn}
+        onMove={onMove}
+        onInvalid={setMessage}
+      />
+      {notes && (
+        <p className="hidden text-sm leading-relaxed text-muted lg:block">
+          {notes}
+        </p>
+      )}
+    </BoardStage>
   );
 }

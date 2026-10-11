@@ -29,30 +29,29 @@ export default async function RepertorioPage({
   if (!repertoire) notFound();
 
   return (
-    <>
-      <div className="flex flex-col gap-2">
-        <Link href="/aberturas" className="text-sm text-muted hover:text-text">
-          ← Aberturas
-        </Link>
-        <SectionLabel>
-          {repertoire.color === "white" ? "Com as brancas" : "Com as pretas"}
-        </SectionLabel>
-        <h1 className="font-display text-page font-semibold tracking-tight">
-          {repertoire.title}
-        </h1>
-        {repertoire.description && (
-          <p className="max-w-2xl leading-relaxed text-muted">
-            {repertoire.description}
-          </p>
-        )}
-      </div>
-      <RepertoireTrainer
-        repertoireId={repertoire.id}
-        color={repertoire.color}
-        nodes={repertoire.nodes}
-        openingNames={repertoire.openingNames}
-        progress={repertoire.progress}
-      />
-    </>
+    <RepertoireTrainer
+      repertoireId={repertoire.id}
+      color={repertoire.color}
+      nodes={repertoire.nodes}
+      openingNames={repertoire.openingNames}
+      progress={repertoire.progress}
+      title={
+        <div className="flex flex-col gap-1">
+          <Link
+            href="/aberturas"
+            className="text-sm text-muted hover:text-text"
+          >
+            ← Aberturas
+          </Link>
+          <SectionLabel>
+            {repertoire.color === "white" ? "Com as brancas" : "Com as pretas"}
+          </SectionLabel>
+          <h1 className="font-display text-page font-semibold tracking-tight">
+            {repertoire.title}
+          </h1>
+        </div>
+      }
+      description={repertoire.description}
+    />
   );
 }

@@ -26,35 +26,31 @@ export default async function FinalPage({
   if (!endgame) notFound();
 
   return (
-    <>
-      <div className="flex flex-col gap-2">
-        <Link href="/finais" className="text-sm text-muted hover:text-text">
-          ← Finais
-        </Link>
-        <SectionLabel>
-          {endgame.category} ·{" "}
-          {LEVEL_LABELS[endgame.level] ?? `Nível ${endgame.level}`}
-        </SectionLabel>
-        <h1 className="font-display text-page font-semibold tracking-tight">
-          {endgame.title}
-        </h1>
-        {endgame.description && (
-          <p className="max-w-2xl leading-relaxed text-muted">
-            {endgame.description}
+    <EndgameTrainer
+      endgameId={endgame.id}
+      fen={endgame.fen}
+      userColor={endgame.userColor}
+      goal={endgame.goal}
+      maxMoves={endgame.maxMoves}
+      notes={endgame.description}
+      title={
+        <>
+          <Link href="/finais" className="text-sm text-muted hover:text-text">
+            ← Finais
+          </Link>
+          <SectionLabel>
+            {endgame.category} ·{" "}
+            {LEVEL_LABELS[endgame.level] ?? `Nível ${endgame.level}`}
+          </SectionLabel>
+          <h1 className="font-display text-page font-semibold tracking-tight">
+            {endgame.title}
+          </h1>
+          <p className="text-sm text-muted">
+            Você joga com as{" "}
+            {endgame.userColor === "white" ? "brancas" : "pretas"}.
           </p>
-        )}
-        <p className="text-sm text-muted">
-          Você joga com as{" "}
-          {endgame.userColor === "white" ? "brancas" : "pretas"}.
-        </p>
-      </div>
-      <EndgameTrainer
-        endgameId={endgame.id}
-        fen={endgame.fen}
-        userColor={endgame.userColor}
-        goal={endgame.goal}
-        maxMoves={endgame.maxMoves}
-      />
-    </>
+        </>
+      }
+    />
   );
 }
