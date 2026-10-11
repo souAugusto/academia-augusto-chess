@@ -99,6 +99,178 @@
   --spacing-bottom-nav: 4.5rem;
 }
 
+/*
+ * Telas com tabuleiro (inspiradas no Chess.com): tabuleiro e painel formam um bloco só.
+ * Escala única de espaçamento dessas telas; não usar outros valores nelas.
+ */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  --board-gap: 20px; /* entre tabuleiro e painel (desktop) */
+  --panel-pad: 16px; /* padding interno do painel */
+  --panel-gap: 12px; /* entre os blocos do painel */
+  --panel-width: clamp(300px, 28vw, 380px);
+  --page-pad: 16px; /* margem da página nas telas com tabuleiro */
+  --board-max: 720px;
+  --board-radius: 6px;
+
+  /* Cabeçalho fixo (logo de 44px + 2 × 10px + borda) e espaço acima do bloco
+     (o padding de cima do <main> do app). */
+  --header-h: 65px;
+  --stage-top: var(--space-6);
+
+  /* Desktop: o tabuleiro cabe inteiro na altura da janela e na largura que sobra
+     depois do painel. O 100% é a largura do próprio bloco (usado no grid). */
+  --board: min(
+    var(--board-max),
+    calc(100dvh - var(--header-h) - var(--stage-top) - var(--page-pad)),
+    calc(100% - var(--panel-width) - var(--board-gap))
+  );
+  /* Tablet (empilhado): o tabuleiro deixa altura para o painel (título,
+     feedback e ações primárias) caber logo abaixo, sem rolar. */
+  --stack-reserve: 24rem;
+  --board-stacked: min(
+    100%,
+    var(--board-max),
+    max(
+      320px,
+      calc(100dvh - var(--header-h) - var(--stage-top) - var(--stack-reserve))
+    )
+  );
+}
+
+/* Página pública com tabuleiro (puzzle do dia): o bloco começa logo abaixo do cabeçalho. */
+.board-page {
+  --stage-top: var(--page-pad);
+  padding: var(--page-pad) var(--page-pad) var(--space-6);
+}
+
+/* Celular (< 640px): tabuleiro de ponta a ponta; informação colada acima e
+   controles colados abaixo. O painel some como caixa e os filhos entram no fluxo. */
+.board-stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.board-stage__board {
+  margin-inline: calc(-1 * var(--page-pad));
+}
+.board-stage__panel {
+  display: contents;
+}
+.board-stage__info {
+  order: -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.board-stage__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.board-stage__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Moldura do tabuleiro: quadrado, raio pequeno, sombra suave. O quadrado é
+   reservado antes das peças carregarem (sem pulo de layout). */
+.board-frame {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--board-radius);
+  box-shadow:
+    0 0 0 1px var(--border),
+    0 12px 32px -20px var(--shadow-color);
+}
+
+@media (max-width: 639px) {
+  /* Celular: o bloco começa a --page-pad do cabeçalho (o <main> do app tem mais). */
+  .board-stage {
+    margin-top: calc(var(--page-pad) - var(--stage-top));
+  }
+  /* Ações logo abaixo do tabuleiro, antes do feedback: assim ficam acima da
+     barra de navegação fixa, sem rolar. */
+  .board-stage__actions {
+    order: 1;
+  }
+  .board-stage__body {
+    order: 2;
+  }
+  .board-stage .board-frame {
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* Tablet (640–1023px): empilhado, painel logo abaixo do tabuleiro. */
+@media (min-width: 640px) {
+  .board-stage {
+    align-items: center;
+    gap: var(--panel-gap);
+  }
+  .board-stage__board {
+    margin-inline: 0;
+    width: var(--board-stacked);
+  }
+  .board-stage__panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--panel-gap);
+    width: var(--board-stacked);
+    padding: var(--panel-pad);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+  .board-stage__info {
+    order: 0;
+  }
+}
+
+/* Desktop (≥ 1024px): tabuleiro à esquerda, painel à direita, mesma altura. */
+@media (min-width: 1024px) {
+  .board-stage {
+    display: grid;
+    grid-template-columns: var(--board) var(--panel-width);
+    gap: var(--board-gap);
+    justify-content: center;
+    align-items: stretch;
+  }
+  .board-stage__board,
+  .board-stage__panel {
+    width: auto;
+  }
+  /* O painel não estica a linha: a altura é a do tabuleiro. Se o conteúdo
+     passar disso, só o miolo rola; topo e ações ficam fixos. */
+  .board-stage__panel {
+    contain: size;
+    min-height: 0;
+  }
+  .board-stage__body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .board-stage__actions {
+    margin-top: auto;
+  }
+  /* Aula: o vídeo ocupa a coluna do painel, que cresce para o vídeo não ficar pequeno. */
+  .board-stage--lesson {
+    grid-template-columns: var(--board) minmax(var(--panel-width), 1fr);
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }

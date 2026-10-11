@@ -106,46 +106,44 @@ export function PlayBoard({
   }
 
   return (
-    <div className="relative">
-      <div className="overflow-hidden rounded-control shadow-board ring-1 ring-border">
-        <Chessboard
-          options={{
-            id,
-            position: fen,
-            boardOrientation: orientation === "w" ? "white" : "black",
-            pieces: CBURNETT_PIECES,
-            darkSquareStyle: { backgroundColor: "var(--color-board-dark)" },
-            lightSquareStyle: { backgroundColor: "var(--color-board-light)" },
-            // Coordenadas na cor da casa oposta (em vez do laranja padrão da biblioteca).
-            darkSquareNotationStyle: {
-              color: "var(--color-board-light)",
-              fontWeight: 600,
-            },
-            lightSquareNotationStyle: {
-              color: "var(--color-board-dark)",
-              fontWeight: 600,
-            },
-            squareStyles,
-            arrows,
-            allowDrawingArrows: true,
-            showAnimations: !reducedMotion,
-            animationDurationInMs: 220,
-            canDragPiece: ({ piece }) =>
-              canMove && piece.pieceType[0] === movableColor,
-            onPieceDrop: ({ sourceSquare, targetSquare }) =>
-              targetSquare
-                ? attempt(sourceSquare as Square, targetSquare as Square)
-                : false,
-            onSquareClick: ({ square }) => onSquareClick(square as Square),
-          }}
-        />
-      </div>
+    <div className="board-frame">
+      <Chessboard
+        options={{
+          id,
+          position: fen,
+          boardOrientation: orientation === "w" ? "white" : "black",
+          pieces: CBURNETT_PIECES,
+          darkSquareStyle: { backgroundColor: "var(--color-board-dark)" },
+          lightSquareStyle: { backgroundColor: "var(--color-board-light)" },
+          // Coordenadas na cor da casa oposta (em vez do laranja padrão da biblioteca).
+          darkSquareNotationStyle: {
+            color: "var(--color-board-light)",
+            fontWeight: 600,
+          },
+          lightSquareNotationStyle: {
+            color: "var(--color-board-dark)",
+            fontWeight: 600,
+          },
+          squareStyles,
+          arrows,
+          allowDrawingArrows: true,
+          showAnimations: !reducedMotion,
+          animationDurationInMs: 220,
+          canDragPiece: ({ piece }) =>
+            canMove && piece.pieceType[0] === movableColor,
+          onPieceDrop: ({ sourceSquare, targetSquare }) =>
+            targetSquare
+              ? attempt(sourceSquare as Square, targetSquare as Square)
+              : false,
+          onSquareClick: ({ square }) => onSquareClick(square as Square),
+        }}
+      />
 
       {promotion && movableColor && (
         <div
           role="dialog"
           aria-label="Escolha a peça da promoção"
-          className="absolute inset-0 flex items-center justify-center rounded-control bg-bg/70 backdrop-blur-sm"
+          className="absolute inset-0 flex items-center justify-center bg-bg/70 backdrop-blur-sm"
         >
           <div className="flex gap-2 rounded-card border border-border bg-surface p-3 shadow-card">
             {(["q", "r", "b", "n"] as const).map((piece) => (

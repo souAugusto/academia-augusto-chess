@@ -25,11 +25,7 @@ export function StaticBoard({
 }: StaticBoardProps) {
   const squares = boardSquares(fen, orientation);
   return (
-    <div
-      role="img"
-      aria-label={label}
-      className="grid grid-cols-8 overflow-hidden rounded-control shadow-board ring-1 ring-border"
-    >
+    <div role="img" aria-label={label} className="board-frame grid grid-cols-8">
       {squares.map(({ square, piece, isLight }) => (
         <div
           key={square}
