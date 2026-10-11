@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseTypedMove } from "./notation";
+import { parseTypedMove, sanToPortuguese } from "./notation";
 
 // Depois de 1.e4 e5 2.Bc4 Nc6 3.Qh5 Nf6: brancas jogam Dxf7#.
 const fen =
@@ -62,5 +62,17 @@ describe("parseTypedMove", () => {
     expect(parseTypedMove(fen, "Dxa8")).toBeNull();
     expect(parseTypedMove(fen, "banana")).toBeNull();
     expect(parseTypedMove(fen, "")).toBeNull();
+  });
+});
+
+describe("sanToPortuguese", () => {
+  it("troca as letras das peças para o português", () => {
+    expect(sanToPortuguese("Nf3")).toBe("Cf3");
+    expect(sanToPortuguese("Qxf7#")).toBe("Dxf7#");
+    expect(sanToPortuguese("Kg1")).toBe("Rg1");
+    expect(sanToPortuguese("Rxe8+")).toBe("Txe8+");
+    expect(sanToPortuguese("e8=Q+")).toBe("e8=D+");
+    expect(sanToPortuguese("O-O")).toBe("O-O");
+    expect(sanToPortuguese("Bb5")).toBe("Bb5");
   });
 });

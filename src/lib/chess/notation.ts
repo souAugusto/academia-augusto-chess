@@ -12,6 +12,21 @@ const PT_TO_EN: Record<string, string> = {
   C: "N",
 };
 
+const EN_TO_PT: Record<string, string> = {
+  K: "R",
+  Q: "D",
+  R: "T",
+  B: "B",
+  N: "C",
+};
+
+// Lance do chess.js para mostrar ao aluno: "Nf3" -> "Cf3", "e8=Q+" -> "e8=D+".
+export function sanToPortuguese(san: string): string {
+  return san
+    .replace(/^[KQRBN]/, (piece) => EN_TO_PT[piece])
+    .replace(/=([QRBN])/, (_, piece: string) => `=${EN_TO_PT[piece]}`);
+}
+
 function translatePortuguese(text: string): string {
   return text
     .replace(/^[RDTBC]/, (piece) => PT_TO_EN[piece])
