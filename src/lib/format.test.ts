@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { formatLiveDate, formatPriceBRL, todayInSaoPaulo } from "./format";
+import {
+  formatLiveDate,
+  formatLongDate,
+  formatPriceBRL,
+  todayInSaoPaulo,
+} from "./format";
 
 describe("formatPriceBRL", () => {
   it("omite centavos quando o valor é inteiro", () => {
@@ -35,6 +40,14 @@ describe("formatLiveDate", () => {
   it("mostra os minutos quando não são zero", () => {
     expect(formatLiveDate(new Date("2026-10-07T23:30:00Z"))).toBe(
       "Quarta-feira, 7 de outubro, às 20h30",
+    );
+  });
+});
+
+describe("formatLongDate", () => {
+  it("usa o dia de Brasília", () => {
+    expect(formatLongDate(new Date("2027-03-16T02:59:59Z"))).toBe(
+      "15 de março de 2027",
     );
   });
 });

@@ -44,3 +44,13 @@ export function formatLiveDate(date: Date): string {
     minute === "00" ? `${Number(get("hour"))}h` : `${get("hour")}h${minute}`;
   return `${weekday.charAt(0).toUpperCase()}${weekday.slice(1)}, ${get("day")} de ${get("month")}, às ${time}`;
 }
+
+// "15 de março de 2027"
+export function formatLongDate(date: Date): string {
+  return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: BUSINESS_TIME_ZONE,
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
