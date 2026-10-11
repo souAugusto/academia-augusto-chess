@@ -3,7 +3,7 @@
 Plataforma de assinatura de treino de xadrez (táticas, aberturas, finais e aulas em vídeo). Planos pagos: Membro R$ 19/mês e Intensivo R$ 119/mês com turma de 10. Detalhes completos em `PROMPT_MESTRE.md`. Em caso de conflito, o `PROMPT_MESTRE.md` manda.
 
 ## Stack
-Next.js 16 (App Router) + TypeScript + Tailwind 4 · Supabase (Auth, Postgres, RLS, `@supabase/ssr`) · react-chessboard (MIT) + chess.js (BSD) · Stockfish WASM em Web Worker · Framer Motion · Vercel · Vitest. Pagamento e vídeo ficam atrás de interfaces (`src/lib/payments/`, `src/lib/video/`).
+Next.js 16 (App Router) + TypeScript + Tailwind 4 · Supabase (Auth, Postgres, RLS, `@supabase/ssr`) · react-chessboard (MIT) + chess.js (BSD) · Stockfish WASM em Web Worker · Framer Motion · Vercel · Vitest. Pagamento (Asaas) e vídeo (YouTube) ficam atrás de interfaces (`src/lib/payments/`, `src/lib/video/`).
 
 ## Comandos
 - `npm run dev`: servidor local
@@ -39,7 +39,9 @@ Next.js 16 (App Router) + TypeScript + Tailwind 4 · Supabase (Auth, Postgres, R
 - Dúvida de produto: perguntar uma vez, com recomendação. Não inventar regra de negócio.
 
 ## Onde está cada coisa
-- Schema e RLS: `supabase/migrations/` (0001 a 0006 aplicadas)
+- Schema e RLS: `supabase/migrations/` (0001 a 0006 aplicadas; 0007 e 0008 da Fase 4 aguardando aplicação)
+- Pagamento: Asaas, webhook em `/api/pagamentos/asaas` (token no header `asaas-access-token`, idempotência em `payment_events`)
+- Painel admin: `/admin` (só quem está na tabela `admins`)
 - Vercel: projeto `finale-xadrez` (time sergio-codes), produção em https://finale-xadrez.vercel.app (o antigo academia-augusto-chess.vercel.app redireciona)
 - Peças do tabuleiro: `public/pieces/cburnett/` (licença BSD)
 - Desenhos antigos da Augusto Chess (referência histórica de layout): `docs/design/`

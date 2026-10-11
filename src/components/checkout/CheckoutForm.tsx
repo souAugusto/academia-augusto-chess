@@ -49,8 +49,8 @@ export function CheckoutForm({ planId }: { planId: string }) {
             key={item.id}
             className={`flex cursor-pointer gap-3 rounded-control border p-4 transition ${
               method === item.id
-                ? "border-accent bg-surface-2"
-                : "border-border-strong hover:border-accent"
+                ? "border-accent bg-surface-2 ring-1 ring-accent"
+                : "border-border hover:border-border-strong"
             }`}
           >
             <input

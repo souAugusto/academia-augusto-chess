@@ -1,5 +1,6 @@
 import "server-only";
 import type { SubscriptionStatus } from "@/lib/payments/rules";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
 // Assinatura do aluno logado (RLS: cada um lê só as suas).
@@ -65,3 +66,23 @@ export const STATUS_LABELS: Record<SubscriptionStatus, string> = {
 };
 
 export const METHOD_LABELS = { PIX: "Pix", CREDIT_CARD: "Cartão de crédito" };
+
+export type GroupLink = { label: string; url: string };
+
+// Links dos grupos do WhatsApp. app_settings não tem policy de aluno: lê pela
+// service role, só depois de conferir o plano no servidor.
+export async function getGroupLinks(planRank: number): Promise<GroupLink[]> {
+  if (planRank < 1) return [];
+  const { data } = await createAdminClient()
+    .from("app_settings")
+    .select("key, value")
+    .in("key", ["whatsapp_membros_url", "whatsapp_intensivo_url"]);
+  const url = (key: string) => data?.find((row) => row.key === key)?.value;
+  const links: GroupLink[] = [];
+  const members = url("whatsapp_membros_url");
+  const intensive = url("whatsapp_intensivo_url");
+  if (members) links.push({ label: "Grupo dos membros", url: members });
+  if (intensive && planRank >= 2)
+    links.push({ label: "Grupo da turma do Intensivo", url: intensive });
+  return links;
+}

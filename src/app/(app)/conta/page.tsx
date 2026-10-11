@@ -7,6 +7,7 @@ import { buttonClasses } from "@/components/ui/button";
 import { SectionLabel } from "@/components/ui/Label";
 import { PLAN_NAMES, requireUser } from "@/lib/data/account";
 import {
+  getGroupLinks,
   getMySubscriptions,
   METHOD_LABELS,
   STATUS_LABELS,
@@ -57,6 +58,7 @@ export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
     getMySubscriptions(),
     searchParams,
   ]);
+  const groups = await getGroupLinks(user.planRank);
   const rows = [
     { label: "Nome", value: user.name },
     { label: "E-mail", value: user.email },
@@ -145,6 +147,30 @@ export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
           </div>
         ))}
       </section>
+
+      {groups.length > 0 && (
+        <section
+          aria-labelledby="grupos"
+          className="flex max-w-[640px] flex-col gap-3"
+        >
+          <h2 id="grupos" className="text-lg font-semibold">
+            Grupos no WhatsApp
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {groups.map((group) => (
+              <a
+                key={group.url}
+                href={group.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonClasses("outline-accent")}
+              >
+                {group.label}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="flex flex-wrap gap-3">
         {user.planRank === 0 && (

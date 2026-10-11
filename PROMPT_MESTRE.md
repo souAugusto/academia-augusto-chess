@@ -28,7 +28,7 @@ Não prometa resultado (ex.: "suba X pontos de rating") em nenhum texto.
 - Motor: **Stockfish (WASM) isolado num Web Worker**, servido como arquivo próprio em `public/engine/`, comunicando-se só por mensagens UCI. Publicar o aviso da licença GPL do Stockfish e o link para o código-fonte dele em `/creditos`.
 - Animação: Framer Motion, sempre respeitando `prefers-reduced-motion`.
 - Vídeo: **YouTube não listado** no começo, atrás de uma interface própria (`src/lib/video/`) para trocar de provedor depois (Bunny Stream/Mux) sem refazer telas. YouTube não protege o conteúdo: quem tiver o link assiste.
-- Pagamento: provedor **a definir na Fase 4** (Pix + cartão recorrentes), atrás de `src/lib/payments/`. Consultar a documentação oficial antes de implementar Pix recorrente.
+- Pagamento: **Asaas** (decidido em 2026-10-11), Pix e cartão recorrentes, atrás de `src/lib/payments/`. O aluno paga na página do Asaas (a Finale não vê o cartão); o CPF vai só para o Asaas.
 - Deploy: Vercel (GitHub, deploy automático). Testes: Vitest para a lógica pura.
 - Fuso padrão para "dia" (puzzle do dia, sequência diária): `America/Sao_Paulo`.
 
@@ -93,7 +93,7 @@ Não prometa resultado (ex.: "suba X pontos de rating") em nenhum texto.
 
 ## 7. Pagamentos (Fase 4)
 
-- Pix e cartão recorrentes; provedor a escolher comigo (Stripe, Mercado Pago ou Asaas), atrás de `src/lib/payments/`.
+- Pix e cartão recorrentes pelo **Asaas** (assinatura mensal; Pix gera uma cobrança por mês, cartão renova sozinho), atrás de `src/lib/payments/`.
 - Checkout exige login; no Intensivo, reservar vaga antes de abrir o pagamento.
 - Webhook: validar assinatura com o corpo bruto, idempotência (tabela de eventos), upsert em `subscriptions`. Tudo com a service role, só no servidor.
 - Cancelamento: acesso até o fim do período pago. Não ligar modo real sem minha confirmação.
@@ -129,7 +129,10 @@ NEXT_PUBLIC_SITE_URL=
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
-(pagamento e vídeo: nomes definidos nas fases 2 e 4)
+ASAAS_API_KEY=
+ASAAS_API_URL=          # vazio = sandbox
+ASAAS_WEBHOOK_TOKEN=
+PAYMENTS_LIVE=          # "1" só com confirmação do Augusto
 ```
 
 ## 12. Pendências do Augusto (placeholders até preencher)
@@ -137,7 +140,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 - `[NOME DO MÉTODO DO INTENSIVO]`
 - Dia e horário das lives; benefício de fundador; duração e estrutura do método
 - Aberturas e finais entram no Membro? (assumido: sim, até ele confirmar)
-- Provedor de pagamento (Fase 4); domínio definitivo e e-mail de suporte; SMTP próprio
+- Conta do Asaas (sandbox para testes; produção só com confirmação); domínio definitivo e e-mail de suporte; SMTP próprio
 - Razão social, CNPJ e foro (termos e privacidade)
 - Credencial do Google (OAuth) no Supabase
 
