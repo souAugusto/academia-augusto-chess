@@ -3,8 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { publicEnv } from "@/lib/env";
 
-// Cliente com a service role: ignora o RLS. Só para o servidor (webhook do
-// Stripe, reserva de vagas, admin). Nunca importar em Client Components.
+// Cliente com a service role: ignora o RLS. Só para o servidor (webhook de
+// pagamento, reserva de vagas, admin). Nunca importar em Client Components.
 export function createAdminClient() {
   const serviceRoleKey = z
     .string()
