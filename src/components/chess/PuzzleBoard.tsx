@@ -7,11 +7,13 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type ReactNode,
 } from "react";
 import type { Arrow } from "react-chessboard";
 import { buttonClasses } from "@/components/ui/button";
 import type { PuzzleRecord } from "@/lib/chess/puzzle";
 import { judgeMove, solutionLine, uciToMove } from "@/lib/chess/solver";
+import { BoardStage } from "./BoardStage";
 import { MoveInput } from "./MoveInput";
 import { BOARD_COLORS, PlayBoard } from "./PlayBoard";
 import { useReducedMotion } from "./useReducedMotion";
@@ -30,6 +32,12 @@ type PuzzleBoardProps = {
   // Chamado uma vez, no primeiro momento decisivo (primeiro erro ou solução).
   onOutcome?: (outcome: PuzzleOutcome) => void;
   onPhaseChange?: (phase: PuzzlePhase) => void;
+  // Partes do painel que cada tela completa (título e rating, resultado, filtros).
+  title?: ReactNode;
+  stats?: ReactNode;
+  result?: ReactNode;
+  extraActions?: ReactNode;
+  below?: ReactNode;
 };
 
 type Game = {
@@ -51,6 +59,11 @@ export function PuzzleBoard({
   puzzle,
   onOutcome,
   onPhaseChange,
+  title,
+  stats,
+  result,
+  extraActions,
+  below,
 }: PuzzleBoardProps) {
   const { startFen, line } = useMemo(() => solutionLine(puzzle), [puzzle]);
   const playerColor = new Chess(startFen).turn();
@@ -221,21 +234,53 @@ export function PuzzleBoard({
           : message || `${turnLabel}. Encontre o melhor lance.`;
 
   return (
-    <div className="flex flex-col gap-4">
-      <PlayBoard
-        id="finale-puzzle"
-        fen={game.fen}
-        orientation={playerColor}
-        movableColor={active ? playerColor : null}
-        lastMove={game.lastMove}
-        highlights={highlights}
-        arrows={arrows}
-        onMove={tryMove}
-      />
-
+    <BoardStage
+      board={
+        <PlayBoard
+          id="finale-puzzle"
+          fen={game.fen}
+          orientation={playerColor}
+          movableColor={active ? playerColor : null}
+          lastMove={game.lastMove}
+          highlights={highlights}
+          arrows={arrows}
+          onMove={tryMove}
+        />
+      }
+      info={
+        <>
+          <div className="flex flex-col gap-1">{title}</div>
+          <span className="text-sm font-semibold text-muted">{turnLabel}</span>
+          {stats}
+        </>
+      }
+      actions={
+        <>
+          <button
+            type="button"
+            onClick={showHint}
+            disabled={!active}
+            className={buttonClasses("secondary")}
+          >
+            Dica
+          </button>
+          <button
+            type="button"
+            onClick={revealSolution}
+            disabled={!active}
+            className={buttonClasses("secondary")}
+          >
+            Ver solução
+          </button>
+          {extraActions}
+        </>
+      }
+      below={below}
+    >
+      {/* Altura mínima fixa: o painel não pula quando a mensagem muda. */}
       <p
         aria-live="polite"
-        className={`min-h-6 text-[0.9375rem] font-medium ${
+        className={`min-h-12 text-[0.9375rem] font-medium ${
           game.phase === "solved"
             ? "text-success"
             : game.phase === "failed"
@@ -245,32 +290,13 @@ export function PuzzleBoard({
       >
         {statusText}
       </p>
-
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={showHint}
-          disabled={!active}
-          className={buttonClasses("secondary")}
-        >
-          Dica
-        </button>
-        <button
-          type="button"
-          onClick={revealSolution}
-          disabled={!active}
-          className={buttonClasses("secondary")}
-        >
-          Ver solução
-        </button>
-      </div>
-
+      {result}
       <MoveInput
         fen={game.fen}
         disabled={!active}
         onMove={tryMove}
         onInvalid={setMessage}
       />
-    </div>
+    </BoardStage>
   );
 }

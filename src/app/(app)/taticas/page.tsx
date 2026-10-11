@@ -20,17 +20,17 @@ export default async function TaticasPage() {
 
   const stats = await getMyTacticStats();
   return (
-    <>
-      <div className="flex flex-col gap-2">
-        <SectionLabel>Treino</SectionLabel>
-        <h1 className="font-display text-page font-semibold tracking-tight">
-          Táticas
-        </h1>
-      </div>
-      <TacticsTrainer
-        initialRating={stats.rating}
-        initialSolved={stats.solved}
-      />
-    </>
+    <TacticsTrainer
+      initialRating={stats.rating}
+      initialSolved={stats.solved}
+      title={
+        <>
+          <SectionLabel>Treino</SectionLabel>
+          <h1 className="font-display text-page font-semibold tracking-tight">
+            Táticas
+          </h1>
+        </>
+      }
+    />
   );
 }

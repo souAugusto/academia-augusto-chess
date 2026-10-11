@@ -22,21 +22,27 @@ export default async function PuzzleDoDiaPage() {
       }).format(new Date(`${record.day}T00:00:00Z`))
     : null;
 
+  const title = (
+    <>
+      <SectionLabel>
+        {day ? `Puzzle do dia · ${day}` : "Puzzle do dia"}
+      </SectionLabel>
+      <h1 className="font-display text-page font-semibold tracking-tight">
+        {record?.themeLabel ?? "Encontre o melhor lance"}
+      </h1>
+    </>
+  );
+
   return (
     <div className="bg-aurora">
-      <div className="mx-auto flex max-w-xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
-        <div className="flex flex-col gap-2">
-          <SectionLabel>
-            {day ? `Puzzle do dia · ${day}` : "Puzzle do dia"}
-          </SectionLabel>
-          <h1 className="font-display text-page font-semibold tracking-tight">
-            {record?.themeLabel ?? "Encontre o melhor lance"}
-          </h1>
-        </div>
+      <div className="board-page mx-auto max-w-6xl">
         {record ? (
-          <DailyPuzzlePlayer puzzle={record.puzzle} />
+          <DailyPuzzlePlayer puzzle={record.puzzle} title={title} />
         ) : (
-          <p className="text-muted">O puzzle do dia volta em breve.</p>
+          <div className="flex flex-col gap-2">
+            {title}
+            <p className="text-muted">O puzzle do dia volta em breve.</p>
+          </div>
         )}
       </div>
     </div>
