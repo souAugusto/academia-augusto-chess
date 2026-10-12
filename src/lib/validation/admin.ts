@@ -201,3 +201,52 @@ export const dailySchema = z.object({
       "O código do puzzle do Lichess tem 5 letras/números.",
     ),
 });
+
+// Códigos de puzzle do Lichess separados por espaço, vírgula ou linha
+// (aceita também o link lichess.org/training/código).
+export function parsePuzzleIds(text: string): string[] {
+  const ids = text
+    .split(/[\s,;]+/)
+    .map((token) => token.trim().replace(/^.*\/training\//, ""))
+    .filter((token) => /^[A-Za-z0-9]{5}$/.test(token));
+  return [...new Set(ids)];
+}
+
+export const officialSetSchema = z.object({
+  name: z.string().trim().min(2, "Escreva o nome do conjunto.").max(80),
+  description: optionalText(500),
+  position,
+  puzzleIds: z
+    .string()
+    .transform(parsePuzzleIds)
+    .refine((ids) => ids.length >= 3, "Cole pelo menos 3 códigos de puzzle.")
+    .refine((ids) => ids.length <= 200, "Use no máximo 200 puzzles."),
+});
+
+export const trailSchema = z.object({
+  slug,
+  title,
+  description: optionalText(1000),
+  planRequired,
+  position,
+  isPublished: checkbox,
+});
+
+export const STEP_KINDS = ["lesson", "repertoire", "endgame", "set"] as const;
+
+// O select manda "tipo:id" (ex.: "lesson:3f2c...").
+export const stepSchema = z.object({
+  trailId: z.uuid(),
+  ref: z
+    .string()
+    .regex(
+      /^(lesson|repertoire|endgame|set):[0-9a-f-]{36}$/i,
+      "Escolha a etapa.",
+    )
+    .transform((value) => {
+      const [kind, id] = value.split(":");
+      return { kind: kind as (typeof STEP_KINDS)[number], id };
+    }),
+  title: z.string().trim().max(120).optional().default(""),
+  position,
+});

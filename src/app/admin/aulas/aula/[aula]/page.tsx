@@ -88,6 +88,8 @@ export default async function AulaAdminPage({
             name="pgn"
             label="Partida (PGN, opcional)"
             defaultValue={lesson.pgn ?? ""}
+            hint="Para o tabuleiro acompanhar o vídeo, ponha o tempo depois do lance: 1. e4 {[%t 0:45] Abre o centro} e5 {[%t 1:02]}"
+            rows={6}
           />
           <div className="grid gap-4 sm:grid-cols-2">
             <AdminSelect

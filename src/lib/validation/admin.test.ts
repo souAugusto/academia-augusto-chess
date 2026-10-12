@@ -113,3 +113,35 @@ describe("grantSchema e liveSchema", () => {
     ).toBe("2027-03-15T23:00:00.000Z");
   });
 });
+
+describe("conjuntos e trilhas", () => {
+  it("lê códigos de puzzle em qualquer formato, sem repetir", async () => {
+    const { parsePuzzleIds } = await import("./admin");
+    expect(
+      parsePuzzleIds(
+        "00sHx, 00sJ9\nhttps://lichess.org/training/00sO1 00sHx xx",
+      ),
+    ).toEqual(["00sHx", "00sJ9", "00sO1"]);
+  });
+
+  it("etapa de trilha vem como tipo:id", async () => {
+    const { stepSchema } = await import("./admin");
+    const parsed = stepSchema.parse({
+      trailId: "6f1c2a4e-1b2c-4d5e-8f90-123456789abc",
+      ref: "endgame:6f1c2a4e-1b2c-4d5e-8f90-123456789abd",
+      position: "2",
+    });
+    expect(parsed.ref).toEqual({
+      kind: "endgame",
+      id: "6f1c2a4e-1b2c-4d5e-8f90-123456789abd",
+    });
+    expect(parsed.title).toBe("");
+    expect(
+      stepSchema.safeParse({
+        trailId: parsed.trailId,
+        ref: "aula:1",
+        position: "0",
+      }).success,
+    ).toBe(false);
+  });
+});

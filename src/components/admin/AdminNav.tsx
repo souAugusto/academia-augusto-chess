@@ -10,6 +10,8 @@ const LINKS = [
   { href: "/admin/aulas", label: "Aulas" },
   { href: "/admin/aberturas", label: "Aberturas" },
   { href: "/admin/finais", label: "Finais" },
+  { href: "/admin/conjuntos", label: "Conjuntos" },
+  { href: "/admin/trilhas", label: "Trilhas" },
   { href: "/admin/puzzle-do-dia", label: "Puzzle do dia" },
   { href: "/admin/configuracoes", label: "Lives e grupos" },
 ];
