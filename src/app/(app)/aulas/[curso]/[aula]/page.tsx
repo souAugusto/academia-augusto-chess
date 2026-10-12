@@ -5,12 +5,14 @@ import { PlanRequired } from "@/components/app/PlanRequired";
 import { BoardStage } from "@/components/chess/BoardStage";
 import { StaticBoard } from "@/components/chess/StaticBoard";
 import { CompleteButton } from "@/components/lessons/CompleteButton";
+import { LessonSync } from "@/components/lessons/LessonSync";
 import { buttonClasses } from "@/components/ui/button";
 import { Card } from "@/components/ui/Card";
 import { SectionLabel } from "@/components/ui/Label";
 import { requireUser } from "@/lib/data/account";
 import { getCourse, getLesson, isUuid } from "@/lib/data/courses";
-import { videoEmbed } from "@/lib/video";
+import { videoEmbed, youtubeId } from "@/lib/video";
+import { parseLessonPgn } from "@/lib/video/sync";
 
 export const metadata: Metadata = { title: "Aula" };
 
@@ -80,8 +82,9 @@ export default async function AulaPage({
     </div>
   );
 
+  // Um div só (não fragmento): também vai para um Client Component.
   const navigation = (
-    <>
+    <div className="flex flex-wrap gap-2">
       <CompleteButton
         lessonId={lesson.id}
         completed={ordered[index].completed}
@@ -103,12 +106,24 @@ export default async function AulaPage({
           Próxima aula
         </Link>
       )}
-    </>
+    </div>
   );
+  const synced = lesson.pgn ? parseLessonPgn(lesson.pgn, lesson.fen) : null;
+  const youtube = lesson.videoId ? youtubeId(lesson.videoId) : null;
 
   return (
     <>
-      {lesson.fen ? (
+      {synced && lesson.pgn && lesson.videoProvider === "youtube" ? (
+        // Partida da aula sincronizada com o vídeo.
+        <LessonSync
+          videoId={youtube}
+          pgn={lesson.pgn}
+          fen={lesson.fen}
+          title={lesson.title}
+          info={heading}
+          actions={navigation}
+        />
+      ) : lesson.fen ? (
         // Vídeo e tabuleiro lado a lado, no mesmo bloco das telas de treino.
         <BoardStage
           variant="lesson"
@@ -128,7 +143,7 @@ export default async function AulaPage({
         <>
           {heading}
           {video}
-          <div className="flex flex-wrap items-start gap-2">{navigation}</div>
+          {navigation}
         </>
       )}
 

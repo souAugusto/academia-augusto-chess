@@ -93,6 +93,7 @@ export type LessonDetail = {
   videoProvider: string;
   videoId: string | null;
   fen: string | null;
+  pgn: string | null;
   files: { id: string; name: string; kind: "pdf" | "pgn" }[];
 };
 
@@ -103,7 +104,7 @@ export async function getLesson(
   const { data } = await supabase
     .from("lessons")
     .select(
-      "id, title, description, video_provider, video_id, fen, lesson_files (id, name, kind)",
+      "id, title, description, video_provider, video_id, fen, pgn, lesson_files (id, name, kind)",
     )
     .eq("id", lessonId)
     .maybeSingle();
@@ -115,6 +116,7 @@ export async function getLesson(
     videoProvider: data.video_provider,
     videoId: data.video_id,
     fen: data.fen,
+    pgn: data.pgn,
     files: (data.lesson_files ?? []) as LessonDetail["files"],
   };
 }
