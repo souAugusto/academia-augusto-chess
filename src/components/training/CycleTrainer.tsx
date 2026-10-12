@@ -45,6 +45,7 @@ export function CycleTrainer({
     { ok: true }
   > | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [answeredSeconds, setAnsweredSeconds] = useState<number | null>(null);
   const [startedAt, setStartedAt] = useState(0);
   const [now, setNow] = useState(0);
   const [loading, startLoading] = useTransition();
@@ -63,8 +64,13 @@ export function CycleTrainer({
     };
   }, []);
 
+  // Depois da resposta, o cronômetro do puzzle para no tempo que ele levou.
   const elapsed =
-    answer || !startedAt ? 0 : Math.max(0, (now - startedAt) / 1000);
+    answeredSeconds !== null
+      ? answeredSeconds
+      : startedAt
+        ? Math.max(0, (now - startedAt) / 1000)
+        : 0;
   const previous = history[0]?.seconds ?? null;
   const justFinished =
     progress.done === 0 && history.length > 0 ? history[0] : null;
@@ -81,6 +87,7 @@ export function CycleTrainer({
       setError(response.error);
       return;
     }
+    setAnsweredSeconds(outcome.seconds);
     setAnswer(response);
     setProgress(response.progress);
   }
@@ -95,7 +102,7 @@ export function CycleTrainer({
       <Timer label="Puzzle" seconds={elapsed} />
       <Timer
         label={`Ciclo ${cycleNumber}`}
-        seconds={progress.seconds + elapsed}
+        seconds={progress.seconds + (answer ? 0 : elapsed)}
       />
       <Timer label="Ciclo anterior" seconds={previous} />
     </div>
@@ -140,16 +147,6 @@ export function CycleTrainer({
           justFinished,
           cycleDelta(justFinished.seconds, history[1]?.seconds ?? null),
         )}
-      {answer && (
-        <p
-          aria-live="polite"
-          className={`font-semibold ${answer.solved ? "text-success" : "text-danger"}`}
-        >
-          {answer.solved
-            ? "Resolvido."
-            : "Não resolvido: veja a solução no tabuleiro."}
-        </p>
-      )}
       {answer?.cycleFinished &&
         cycleSummary(
           {
