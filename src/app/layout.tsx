@@ -1,3 +1,4 @@
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
@@ -51,7 +52,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>
       <body className="flex min-h-full flex-col">
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         <ServiceWorkerRegister />
       </body>
     </html>

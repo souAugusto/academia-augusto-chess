@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { APP_SECTIONS } from "@/components/app/modules";
 import { FormAlert } from "@/components/forms/Field";
+import { ProgressFill, Reveal } from "@/components/motion/Reveal";
 import { StreakWeek } from "@/components/progress/StreakWeek";
 import { buttonClasses } from "@/components/ui/button";
 import { Card } from "@/components/ui/Card";
@@ -68,82 +69,93 @@ export default async function PainelPage({
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="flex flex-col gap-3">
-          <span className="text-sm text-muted">Sequência</span>
-          <span className="font-display text-4xl font-semibold tabular-nums">
-            {streak.current} {streak.current === 1 ? "dia" : "dias"}
-          </span>
-          <StreakWeek days={streak.week} />
-          <span className="text-sm text-muted">
-            {streak.trainedToday
-              ? "Hoje já conta."
-              : "Treine hoje para manter a sequência."}{" "}
-            Recorde: {streak.best}.
-          </span>
-        </Card>
-
-        <Card className="flex flex-col gap-3">
-          <span className="text-sm text-muted">Rating de táticas</span>
-          <span className="font-display text-4xl font-semibold tabular-nums">
-            {stats.rating}
-          </span>
-          <span className="text-sm text-muted">
-            {stats.solved} puzzles resolvidos · plano {plan}
-          </span>
-          <Link
-            href="/taticas"
-            className={buttonClasses("secondary", "md", "mt-auto self-start")}
-          >
-            Treinar táticas
-          </Link>
-        </Card>
-
-        <Card className="flex flex-col gap-3" highlight={reviewDue > 0}>
-          <span className="text-sm text-muted">Revisão de hoje</span>
-          <span className="font-display text-4xl font-semibold tabular-nums">
-            {reviewDue}
-          </span>
-          <span className="text-sm text-muted">
-            {reviewDue > 0
-              ? "Puzzles que você errou voltando na hora certa."
-              : "Nada para revisar agora."}
-          </span>
-          {reviewDue > 0 && (
-            <Link
-              href="/taticas?modo=revisao"
-              className={buttonClasses("primary", "md", "mt-auto self-start")}
-            >
-              Revisar agora
-            </Link>
-          )}
-        </Card>
-
-        <Card className="flex flex-col gap-3">
-          <span className="text-sm text-muted">Próxima aula</span>
-          {nextLesson ? (
-            <>
-              <span className="font-semibold">{nextLesson.lessonTitle}</span>
-              <span className="text-sm text-muted">
-                {nextLesson.courseTitle} · {nextLesson.done} de{" "}
-                {nextLesson.total}
-              </span>
-              <Link
-                href={`/aulas/${nextLesson.courseId}/${nextLesson.lessonId}`}
-                className={buttonClasses(
-                  "secondary",
-                  "md",
-                  "mt-auto self-start",
-                )}
-              >
-                {nextLesson.done > 0 ? "Continuar" : "Começar"}
-              </Link>
-            </>
-          ) : (
-            <span className="text-sm text-muted">
-              Nenhuma aula pendente por enquanto.
+        <Reveal index={0} className="flex">
+          <Card className="flex w-full flex-col gap-3">
+            <span className="text-sm text-muted">Sequência</span>
+            <span className="font-display text-4xl font-semibold tabular-nums">
+              {streak.current} {streak.current === 1 ? "dia" : "dias"}
             </span>
-          )}
-        </Card>
+            <StreakWeek days={streak.week} />
+            <span className="text-sm text-muted">
+              {streak.trainedToday
+                ? "Hoje já conta."
+                : "Treine hoje para manter a sequência."}{" "}
+              Recorde: {streak.best}.
+            </span>
+          </Card>
+        </Reveal>
+
+        <Reveal index={1} className="flex">
+          <Card className="flex w-full flex-col gap-3">
+            <span className="text-sm text-muted">Rating de táticas</span>
+            <span className="font-display text-4xl font-semibold tabular-nums">
+              {stats.rating}
+            </span>
+            <span className="text-sm text-muted">
+              {stats.solved} puzzles resolvidos · plano {plan}
+            </span>
+            <Link
+              href="/taticas"
+              className={buttonClasses("secondary", "md", "mt-auto self-start")}
+            >
+              Treinar táticas
+            </Link>
+          </Card>
+        </Reveal>
+
+        <Reveal index={2} className="flex">
+          <Card
+            className="flex w-full flex-col gap-3"
+            highlight={reviewDue > 0}
+          >
+            <span className="text-sm text-muted">Revisão de hoje</span>
+            <span className="font-display text-4xl font-semibold tabular-nums">
+              {reviewDue}
+            </span>
+            <span className="text-sm text-muted">
+              {reviewDue > 0
+                ? "Puzzles que você errou voltando na hora certa."
+                : "Nada para revisar agora."}
+            </span>
+            {reviewDue > 0 && (
+              <Link
+                href="/taticas?modo=revisao"
+                className={buttonClasses("primary", "md", "mt-auto self-start")}
+              >
+                Revisar agora
+              </Link>
+            )}
+          </Card>
+        </Reveal>
+
+        <Reveal index={3} className="flex">
+          <Card className="flex w-full flex-col gap-3">
+            <span className="text-sm text-muted">Próxima aula</span>
+            {nextLesson ? (
+              <>
+                <span className="font-semibold">{nextLesson.lessonTitle}</span>
+                <span className="text-sm text-muted">
+                  {nextLesson.courseTitle} · {nextLesson.done} de{" "}
+                  {nextLesson.total}
+                </span>
+                <Link
+                  href={`/aulas/${nextLesson.courseId}/${nextLesson.lessonId}`}
+                  className={buttonClasses(
+                    "secondary",
+                    "md",
+                    "mt-auto self-start",
+                  )}
+                >
+                  {nextLesson.done > 0 ? "Continuar" : "Começar"}
+                </Link>
+              </>
+            ) : (
+              <span className="text-sm text-muted">
+                Nenhuma aula pendente por enquanto.
+              </span>
+            )}
+          </Card>
+        </Reveal>
       </div>
 
       {user.planRank >= 2 && (
@@ -185,10 +197,7 @@ export default async function PainelPage({
                     aria-valuenow={trail.progress.percent}
                     className="h-2 overflow-hidden rounded-full bg-surface-2"
                   >
-                    <div
-                      className="h-full rounded-full bg-accent"
-                      style={{ width: `${trail.progress.percent}%` }}
-                    />
+                    <ProgressFill percent={trail.progress.percent} />
                   </div>
                   {trail.description && (
                     <p className="text-sm leading-relaxed text-muted">
