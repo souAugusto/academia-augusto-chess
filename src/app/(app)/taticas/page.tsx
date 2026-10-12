@@ -3,12 +3,18 @@ import { PlanRequired } from "@/components/app/PlanRequired";
 import { TacticsTrainer } from "@/components/tactics/TacticsTrainer";
 import { SectionLabel } from "@/components/ui/Label";
 import { requireUser } from "@/lib/data/account";
+import { getReviewDueCount } from "@/lib/data/progress";
 import { getMyTacticStats } from "@/lib/data/tactics";
 
 export const metadata: Metadata = { title: "Táticas" };
 
-export default async function TaticasPage() {
-  const user = await requireUser("/taticas");
+export default async function TaticasPage({
+  searchParams,
+}: PageProps<"/taticas">) {
+  const [user, params] = await Promise.all([
+    requireUser("/taticas"),
+    searchParams,
+  ]);
   if (user.planRank < 1) {
     return (
       <PlanRequired
@@ -18,11 +24,16 @@ export default async function TaticasPage() {
     );
   }
 
-  const stats = await getMyTacticStats();
+  const [stats, reviewDue] = await Promise.all([
+    getMyTacticStats(),
+    getReviewDueCount(),
+  ]);
   return (
     <TacticsTrainer
       initialRating={stats.rating}
       initialSolved={stats.solved}
+      initialMode={params.modo === "revisao" ? "revisao" : "livre"}
+      initialReviewDue={reviewDue}
       title={
         <>
           <SectionLabel>Treino</SectionLabel>

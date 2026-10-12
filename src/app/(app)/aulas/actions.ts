@@ -30,6 +30,7 @@ export async function setLessonCompleted(input: {
         .upsert({ user_id: access.userId, lesson_id: lessonId })
     : await supabase.from("lesson_progress").delete().eq("lesson_id", lessonId);
   if (error) return { ok: false };
+  if (completed) await supabase.rpc("mark_activity");
   revalidatePath(path);
   return { ok: true };
 }

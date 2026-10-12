@@ -10,6 +10,7 @@ import {
 } from "react";
 import {
   getNextPuzzle,
+  getNextReviewPuzzle,
   submitPuzzleAttempt,
   type AttemptResult,
 } from "@/app/(app)/taticas/actions";
@@ -24,17 +25,27 @@ import { THEME_FILTERS, themeLabel } from "@/lib/chess/themes";
 import type { TacticPuzzle } from "@/lib/data/tactics";
 import { DIFFICULTIES, type Difficulty } from "@/lib/rating";
 
+type Mode = "livre" | "revisao";
+
 type TacticsTrainerProps = {
   initialRating: number;
   initialSolved: number;
+  initialMode: Mode;
+  initialReviewDue: number;
   title: ReactNode;
 };
 
 export function TacticsTrainer({
   initialRating,
   initialSolved,
+  initialMode,
+  initialReviewDue,
   title,
 }: TacticsTrainerProps) {
+  const [mode, setMode] = useState<Mode>(
+    initialMode === "revisao" && initialReviewDue > 0 ? "revisao" : "livre",
+  );
+  const [reviewLeft, setReviewLeft] = useState(initialReviewDue);
   const [rating, setRating] = useState(initialRating);
   const [solvedCount, setSolvedCount] = useState(initialSolved);
   const [theme, setTheme] = useState<string | null>(null);
@@ -64,8 +75,40 @@ export function TacticsTrainer({
     [],
   );
 
+  // Revisão de hoje: só os erros que já venceram, um de cada vez.
+  const loadReview = useCallback((skip: string | null) => {
+    startLoading(async () => {
+      setResult(null);
+      setError(null);
+      const response = await getNextReviewPuzzle({ skip });
+      if (!response.ok) {
+        setPuzzle(null);
+        setError(response.error);
+        return;
+      }
+      setReviewLeft(response.remaining);
+      setPuzzle(response.puzzle);
+      if (!response.puzzle)
+        setError(
+          "Revisão de hoje concluída. Volte amanhã ou siga no treino livre.",
+        );
+    });
+  }, []);
+
+  function next() {
+    if (mode === "revisao") loadReview(puzzle?.id ?? null);
+    else load(theme, difficulty);
+  }
+
+  function switchMode(value: Mode) {
+    setMode(value);
+    if (value === "revisao") loadReview(null);
+    else load(theme, difficulty);
+  }
+
   useEffect(() => {
-    load(theme, difficulty);
+    if (mode === "revisao") loadReview(null);
+    else load(theme, difficulty);
     // Só no primeiro carregamento; depois, os filtros chamam `load` direto.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -129,18 +172,14 @@ export function TacticsTrainer({
   );
 
   const nextAction = result ? (
-    <button
-      type="button"
-      onClick={() => load(theme, difficulty)}
-      className={buttonClasses("primary")}
-    >
+    <button type="button" onClick={next} className={buttonClasses("primary")}>
       Próximo puzzle
     </button>
   ) : (
     puzzle && (
       <button
         type="button"
-        onClick={() => load(theme, difficulty)}
+        onClick={next}
         disabled={loading}
         className={buttonClasses("ghost")}
       >
@@ -149,56 +188,98 @@ export function TacticsTrainer({
     )
   );
 
-  const filters = (
-    <Card className="flex flex-col gap-4 sm:flex-row sm:items-end">
-      <fieldset className="flex flex-1 flex-col gap-2">
-        <legend className="mb-2 text-sm font-semibold">Dificuldade</legend>
-        <div className="grid grid-cols-3 gap-1 rounded-control bg-surface-2 p-1">
-          {DIFFICULTIES.map((option) => (
-            <button
-              key={option.id}
-              type="button"
-              aria-pressed={difficulty === option.id}
-              onClick={() => {
-                setDifficulty(option.id);
-                load(theme, option.id);
-              }}
-              className={`min-h-touch rounded-[0.6rem] text-sm font-semibold transition ${
-                difficulty === option.id
-                  ? "bg-accent text-on-accent"
-                  : "text-muted hover:text-text"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      </fieldset>
-
-      <div className="flex flex-1 flex-col gap-2">
-        <label htmlFor={themeId} className="text-sm font-semibold">
-          Tema
-        </label>
-        <select
-          id={themeId}
-          value={theme ?? ""}
-          onChange={(event) => {
-            const value = event.target.value || null;
-            setTheme(value);
-            load(value, difficulty);
-          }}
-          className="min-h-touch rounded-control border border-border-strong bg-surface px-3 text-base text-text"
+  const modeSwitch = (
+    <div
+      role="tablist"
+      aria-label="Tipo de treino"
+      className="grid grid-cols-2 gap-1 rounded-control bg-surface-2 p-1"
+    >
+      {(
+        [
+          ["livre", "Treino livre"],
+          ["revisao", `Revisão de hoje (${reviewLeft})`],
+        ] as const
+      ).map(([value, label]) => (
+        <button
+          key={value}
+          type="button"
+          role="tab"
+          aria-selected={mode === value}
+          onClick={() => switchMode(value)}
+          className={`min-h-touch rounded-[0.6rem] text-sm font-semibold transition ${
+            mode === value
+              ? "bg-accent text-on-accent"
+              : "text-muted hover:text-text"
+          }`}
         >
-          <option value="">Todos os temas</option>
-          {THEME_FILTERS.map((id) => (
-            <option key={id} value={id}>
-              {themeLabel(id)}
-            </option>
-          ))}
-        </select>
-      </div>
-    </Card>
+          {label}
+        </button>
+      ))}
+    </div>
   );
+
+  const filters =
+    mode === "revisao" ? (
+      <Card className="flex flex-col gap-3">
+        {modeSwitch}
+        <p className="text-sm text-muted">
+          Puzzles que você errou voltam em intervalos cada vez maiores conforme
+          você acerta.
+        </p>
+      </Card>
+    ) : (
+      <Card className="flex flex-col gap-4">
+        {modeSwitch}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+          <fieldset className="flex flex-1 flex-col gap-2">
+            <legend className="mb-2 text-sm font-semibold">Dificuldade</legend>
+            <div className="grid grid-cols-3 gap-1 rounded-control bg-surface-2 p-1">
+              {DIFFICULTIES.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  aria-pressed={difficulty === option.id}
+                  onClick={() => {
+                    setDifficulty(option.id);
+                    load(theme, option.id);
+                  }}
+                  className={`min-h-touch rounded-[0.6rem] text-sm font-semibold transition ${
+                    difficulty === option.id
+                      ? "bg-accent text-on-accent"
+                      : "text-muted hover:text-text"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          <div className="flex flex-1 flex-col gap-2">
+            <label htmlFor={themeId} className="text-sm font-semibold">
+              Tema
+            </label>
+            <select
+              id={themeId}
+              value={theme ?? ""}
+              onChange={(event) => {
+                const value = event.target.value || null;
+                setTheme(value);
+                load(value, difficulty);
+              }}
+              className="min-h-touch rounded-control border border-border-strong bg-surface px-3 text-base text-text"
+            >
+              <option value="">Todos os temas</option>
+              {THEME_FILTERS.map((id) => (
+                <option key={id} value={id}>
+                  {themeLabel(id)}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </Card>
+    );
 
   const below = (
     <div className="flex flex-col gap-3">

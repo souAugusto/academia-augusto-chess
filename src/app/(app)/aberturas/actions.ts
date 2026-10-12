@@ -47,5 +47,6 @@ export async function recordLineResult(input: {
     mistake_count: (current?.mistake_count ?? 0) + (mistakes > 0 ? 1 : 0),
     last_trained_at: new Date().toISOString(),
   });
+  if (!error) await supabase.rpc("mark_activity");
   return { ok: !error };
 }

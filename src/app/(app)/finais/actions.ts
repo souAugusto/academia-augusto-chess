@@ -29,5 +29,6 @@ export async function recordEndgameAttempt(input: {
     success: parsed.data.success,
     moves: parsed.data.moves,
   });
+  if (!error) await supabase.rpc("mark_activity");
   return { ok: !error };
 }

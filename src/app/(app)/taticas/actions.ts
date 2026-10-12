@@ -68,6 +68,44 @@ export async function getNextPuzzle(input: {
   };
 }
 
+// Revisão de hoje: o erro que venceu há mais tempo. `skip` evita repetir o
+// puzzle que acabou de ser feito (o vencimento novo ainda pode estar no passado).
+export async function getNextReviewPuzzle(input: {
+  skip: string | null;
+}): Promise<
+  { ok: true; puzzle: TacticPuzzle | null; remaining: number } | Failure
+> {
+  const skip = z.string().max(64).nullable().safeParse(input.skip);
+  if (!skip.success) return { ok: false, error: "Pedido inválido." };
+  const access = await checkPlan(1);
+  if (!access.ok) return { ok: false, error: ACCESS_ERRORS[access.reason] };
+
+  const supabase = await createClient();
+  let query = supabase
+    .from("review_state")
+    .select("puzzle_id", { count: "exact" })
+    .lte("due_at", new Date().toISOString())
+    .order("due_at")
+    .limit(1);
+  if (skip.data) query = query.neq("puzzle_id", skip.data);
+  const { data: due, count, error } = await query;
+  if (error)
+    return { ok: false, error: "Não foi possível carregar a revisão agora." };
+  if (!due?.length) return { ok: true, puzzle: null, remaining: 0 };
+
+  const { data: puzzle } = await supabase
+    .from("puzzles")
+    .select("id, fen, moves, first_move_is_setup, rating, themes")
+    .eq("id", due[0].puzzle_id)
+    .maybeSingle();
+  if (!puzzle) return { ok: true, puzzle: null, remaining: 0 };
+  return {
+    ok: true,
+    puzzle: toTacticPuzzle(puzzle as Parameters<typeof toTacticPuzzle>[0]),
+    remaining: count ?? 1,
+  };
+}
+
 const UCI = /^[a-h][1-8][a-h][1-8][qrbn]?$/;
 // Tempo acima disso é tratado como abandono e não distorce as medianas.
 const MAX_SECONDS = 600;
@@ -163,6 +201,8 @@ export async function submitPuzzleAttempt(input: {
   });
   if (attemptError)
     return { ok: false, error: "Não foi possível salvar a tentativa." };
+  // Sequência diária: conta o dia de hoje.
+  await supabase.rpc("mark_activity");
 
   // Revisão espaçada: entra quando erra; depois de entrar, acompanha os acertos.
   if (!solved || review) {
