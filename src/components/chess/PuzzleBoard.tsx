@@ -38,6 +38,9 @@ type PuzzleBoardProps = {
   result?: ReactNode;
   extraActions?: ReactNode;
   below?: ReactNode;
+  // Método do Intensivo: lance errado já mostra a solução (sem nova tentativa).
+  revealOnMistake?: boolean;
+  hideHelp?: boolean; // sem "Dica" e "Ver solução"
 };
 
 type Game = {
@@ -64,6 +67,8 @@ export function PuzzleBoard({
   result,
   extraActions,
   below,
+  revealOnMistake = false,
+  hideHelp = false,
 }: PuzzleBoardProps) {
   const { startFen, line } = useMemo(() => solutionLine(puzzle), [puzzle]);
   const playerColor = new Chess(startFen).turn();
@@ -136,6 +141,11 @@ export function PuzzleBoard({
 
     if (verdict.kind === "wrong") {
       if (game.phase === "playing") report(false, [...game.userMoves, uci]);
+      if (revealOnMistake) {
+        revealSolution();
+        setMessage("Não era esse lance. Veja a solução.");
+        return false;
+      }
       setGame((current) => ({
         ...current,
         phase: "failed",
@@ -256,22 +266,26 @@ export function PuzzleBoard({
       }
       actions={
         <>
-          <button
-            type="button"
-            onClick={showHint}
-            disabled={!active}
-            className={buttonClasses("secondary")}
-          >
-            Dica
-          </button>
-          <button
-            type="button"
-            onClick={revealSolution}
-            disabled={!active}
-            className={buttonClasses("secondary")}
-          >
-            Ver solução
-          </button>
+          {!hideHelp && (
+            <>
+              <button
+                type="button"
+                onClick={showHint}
+                disabled={!active}
+                className={buttonClasses("secondary")}
+              >
+                Dica
+              </button>
+              <button
+                type="button"
+                onClick={revealSolution}
+                disabled={!active}
+                className={buttonClasses("secondary")}
+              >
+                Ver solução
+              </button>
+            </>
+          )}
           {extraActions}
         </>
       }

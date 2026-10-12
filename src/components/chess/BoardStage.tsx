@@ -32,7 +32,8 @@ export function BoardStage({
           {actions && <div className="board-stage__actions">{actions}</div>}
         </div>
       </div>
-      {below}
+      {/* Embrulhado num div: o conteúdo pode vir de um Server Component. */}
+      {below && <div className="flex flex-col gap-4">{below}</div>}
     </>
   );
 }
