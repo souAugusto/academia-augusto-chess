@@ -11,6 +11,7 @@ import { inglesa } from "./inglesa.ts";
 import { sistemaLondres } from "./sistema-londres.ts";
 import { catala } from "./catala.ts";
 import { gambitoDoRei } from "./gambito-do-rei.ts";
+import { sicilianaNajdorf } from "./siciliana-najdorf.ts";
 
 // Lições de aberturas, na ordem em que aparecem no site. Cada lição fica no
 // próprio arquivo desta pasta.
@@ -27,4 +28,5 @@ export const OPENING_LESSONS: OpeningLesson[] = [
   sistemaLondres,
   catala,
   gambitoDoRei,
+  sicilianaNajdorf,
 ];
