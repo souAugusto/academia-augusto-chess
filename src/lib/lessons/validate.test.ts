@@ -131,6 +131,13 @@ describe("validateOpening", () => {
   });
 });
 
+describe("alfabeto", () => {
+  it("acusa letra cirílica no texto", () => {
+    const lesson = { ...opening, summary: "Pressão com ...Dа5" };
+    expect(validateLessons([lesson]).join(" ")).toContain("outro alfabeto");
+  });
+});
+
 describe("estilos", () => {
   it("acusa estilo que não existe no questionário", () => {
     const lesson = {

@@ -246,13 +246,26 @@ function proseOf(lesson: Lesson): string[] {
 const ENGLISH_SAN =
   /(?:^|[\s(.,;:"“'])(?:\d+\.{1,3})?[KQN][a-h1-8]?x?[a-h][1-8](?:=[QRBN])?[+#]?(?=$|[\s).,;:!?"”'])/;
 
+// Letras de outros alfabetos (ex.: "а" cirílico no lugar de "a") passam
+// despercebidas no editor e quebram a busca e a leitura em voz alta.
+const FOREIGN_LETTER = /[Ͱ-ϿЀ-ӿ]/;
+
 export function checkNotation(lesson: Lesson): string[] {
-  return proseOf(lesson)
-    .filter((text) => ENGLISH_SAN.test(text))
-    .map(
-      (text) =>
-        `${lesson.slug}: use notação em português no texto (R, D, T, B, C): "${text.slice(0, 80)}"`,
-    );
+  const prose = proseOf(lesson);
+  return [
+    ...prose
+      .filter((text) => ENGLISH_SAN.test(text))
+      .map(
+        (text) =>
+          `${lesson.slug}: use notação em português no texto (R, D, T, B, C): "${text.slice(0, 80)}"`,
+      ),
+    ...prose
+      .filter((text) => FOREIGN_LETTER.test(text))
+      .map(
+        (text) =>
+          `${lesson.slug}: letra de outro alfabeto no texto: "${text.slice(0, 80)}"`,
+      ),
+  ];
 }
 
 export function validateLessons(lessons: Lesson[]): string[] {
