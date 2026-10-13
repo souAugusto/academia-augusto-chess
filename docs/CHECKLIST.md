@@ -141,4 +141,4 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Ciclo 3
 
 ## 8. Entrega
-- [ ] PROGRESSO.md final e resumo
+- [x] PROGRESSO.md final e resumo
