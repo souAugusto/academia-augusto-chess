@@ -27,7 +27,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Italiana: Giuoco Pianissimo
 - [x] Espanhola: Defesa Berlim
 - [x] Espanhola: Fechada
-- [ ] Espanhola: Aberta
+- [x] Espanhola: Aberta
 - [ ] Escocesa
 - [ ] Gambito da Dama Aceito
 - [ ] Gambito da Dama Recusado
