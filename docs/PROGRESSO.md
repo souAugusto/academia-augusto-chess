@@ -2,7 +2,7 @@
 
 ## Estado atual
 - Em andamento: infraestrutura das lições (CHECKLIST, seção 1).
-- Próximo item exato: "Migration aditiva 0011: progresso de estudo por lição".
+- Próximo item exato: "Páginas /licoes, /licoes/aberturas, /licoes/finais e /licoes/[slug]".
 - Decisões abertas: nenhuma.
 - Arquivos parcialmente escritos: nenhum.
 
