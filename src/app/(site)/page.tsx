@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionIcon } from "@/components/app/SectionIcon";
 import { Hero } from "@/components/home/Hero";
+import {
+  AnalysisSection,
+  EquationSection,
+  ImportSection,
+  LessonsSection,
+  ProblemSection,
+  StyleSection,
+} from "@/components/home/LandingSections";
 import { Section, SectionHeading } from "@/components/home/Section";
 import { PlanCards } from "@/components/plans/PlanCards";
 import { buttonClasses } from "@/components/ui/button";
@@ -12,11 +21,34 @@ import {
   MODULES,
   PLANS_SECTION,
 } from "@/content/home";
+import { contentCounts } from "@/content/licoes";
+import { BRAND } from "@/content/brand";
+import { ANALYSIS_IS_FREE } from "@/lib/analysis/config";
 import {
   getDailyPuzzle,
   getIntensivoSeatsLeft,
   getPlans,
 } from "@/lib/data/public";
+import { homeJsonLd, serializeJsonLd } from "@/lib/seo/jsonld";
+
+const SITE =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://finale-xadrez.vercel.app";
+
+const DESCRIPTION =
+  "Treino de xadrez com método: lições de aberturas e finais, táticas, análise das suas partidas com motor e um plano sob medida para o seu estilo.";
+
+export const metadata: Metadata = {
+  description: DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: BRAND.fullName,
+    title: BRAND.fullName,
+    description: DESCRIPTION,
+    url: "/",
+  },
+};
 
 // Dados públicos: recalcula a cada minuto (vagas e puzzle do dia).
 export const revalidate = 60;
@@ -30,7 +62,22 @@ export default async function HomePage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(
+            homeJsonLd({
+              siteUrl: SITE,
+              name: BRAND.fullName,
+              description: DESCRIPTION,
+              faq: FAQ.items,
+            }),
+          ),
+        }}
+      />
       <Hero puzzle={puzzle} />
+
+      <ProblemSection />
 
       <Section id="modulos" className="py-20">
         <SectionHeading label={MODULES.label} title={MODULES.title} />
@@ -48,6 +95,12 @@ export default async function HomePage() {
           })}
         </ul>
       </Section>
+
+      <StyleSection />
+      <ImportSection />
+      <AnalysisSection free={ANALYSIS_IS_FREE} />
+      <EquationSection />
+      <LessonsSection counts={contentCounts()} />
 
       <Section id="como-funciona" className="pb-20">
         <SectionHeading label={HOW_IT_WORKS.label} title={HOW_IT_WORKS.title} />

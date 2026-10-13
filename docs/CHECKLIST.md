@@ -127,13 +127,13 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Pendências jurídicas e de hospedagem em PENDENCIAS.md
 
 ## 6. Landing page
-- [ ] Seção do problema (estudar sem direção)
-- [ ] Seção do teste de estilo com preview do resultado
-- [ ] Seção de importação de partidas com mockup
-- [ ] Seção de análise com motor (gratuidade lida da constante)
-- [ ] Seção "estilo + dados + análise = treino sob medida"
-- [ ] Seções de lições de aberturas e finais com contagem real
-- [ ] SEO: metadados, Open Graph e dados estruturados
+- [x] Seção do problema (estudar sem direção)
+- [x] Seção do teste de estilo com preview do resultado
+- [x] Seção de importação de partidas com mockup
+- [x] Seção de análise com motor (gratuidade lida da constante)
+- [x] Seção "estilo + dados + análise = treino sob medida"
+- [x] Seções de lições de aberturas e finais com contagem real
+- [x] SEO: metadados, Open Graph e dados estruturados
 
 ## 7. Melhoria contínua
 - [ ] Ciclo 1
