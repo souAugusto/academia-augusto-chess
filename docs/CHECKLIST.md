@@ -25,7 +25,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 ### Com brancas
 - [x] Italiana: Giuoco Piano
 - [x] Italiana: Giuoco Pianissimo
-- [ ] Espanhola: Defesa Berlim
+- [x] Espanhola: Defesa Berlim
 - [ ] Espanhola: Fechada
 - [ ] Espanhola: Aberta
 - [ ] Escocesa
