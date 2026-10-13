@@ -69,7 +69,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Oposição distante
 - [x] Oposição diagonal
 - [x] Regra do quadrado
-- [ ] Peão de torre
+- [x] Peão de torre
 - [x] Peão central e casas-chave
 - [x] Regra de Réti
 - [x] Triangulação
