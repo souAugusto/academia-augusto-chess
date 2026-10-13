@@ -8,6 +8,7 @@ import { escocesa } from "./escocesa.ts";
 import { gambitoDamaAceito } from "./gambito-dama-aceito.ts";
 import { gambitoDamaRecusado } from "./gambito-dama-recusado.ts";
 import { inglesa } from "./inglesa.ts";
+import { sistemaLondres } from "./sistema-londres.ts";
 
 // Lições de aberturas, na ordem em que aparecem no site. Cada lição fica no
 // próprio arquivo desta pasta.
@@ -21,4 +22,5 @@ export const OPENING_LESSONS: OpeningLesson[] = [
   gambitoDamaAceito,
   gambitoDamaRecusado,
   inglesa,
+  sistemaLondres,
 ];
