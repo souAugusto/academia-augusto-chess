@@ -54,7 +54,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Índia da Dama
 - [x] Grünfeld
 - [x] Petroff
-- [ ] Defesa Philidor
+- [x] Defesa Philidor
 - [ ] Defesa Holandesa
 
 ## 3. Lições de finais (uma por tópico, 5 a 10 posições cada)
