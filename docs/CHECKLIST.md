@@ -37,7 +37,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Gambito do Rei (visão geral)
 ### Com pretas
 - [x] Siciliana Najdorf
-- [ ] Siciliana Dragão
+- [x] Siciliana Dragão
 - [ ] Siciliana Scheveningen
 - [ ] Siciliana Clássica
 - [ ] Siciliana Fechada
