@@ -86,7 +86,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [ ] 4 contra 3 e 3 contra 2 na mesma ala
 ### Finais de bispos
 - [ ] Bispos da mesma cor
-- [ ] Bispos de cores opostas
+- [x] Bispos de cores opostas
 - [ ] Bispo bom contra bispo mau
 - [ ] Bispo contra cavalo
 ### Finais de cavalos

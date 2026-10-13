@@ -21,6 +21,7 @@ import { damaContraTorre } from "./dama-contra-torre.ts";
 import { xequePerpetuo } from "./xeque-perpetuo.ts";
 import { zugzwang } from "./zugzwang.ts";
 import { peoesPassados } from "./peoes-passados.ts";
+import { bisposCoresOpostas } from "./bispos-cores-opostas.ts";
 
 // Lições de finais, do básico ao avançado. Cada lição fica no próprio arquivo.
 export const ENDGAME_LESSONS: EndgameLesson[] = [
@@ -46,4 +47,5 @@ export const ENDGAME_LESSONS: EndgameLesson[] = [
   xequePerpetuo,
   zugzwang,
   peoesPassados,
+  bisposCoresOpostas,
 ];
