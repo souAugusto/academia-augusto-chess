@@ -50,7 +50,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Defesa Eslava
 - [x] Semi-Eslava
 - [x] Nimzo-Índia
-- [ ] Índia do Rei
+- [x] Índia do Rei
 - [ ] Índia da Dama
 - [ ] Grünfeld
 - [ ] Petroff
