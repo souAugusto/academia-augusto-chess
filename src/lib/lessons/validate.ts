@@ -137,7 +137,10 @@ export function validateOpening(lesson: OpeningLesson): string[] {
     checkText(drill.why, `${at} explicação`, errors);
     const chess = playLine(null, drill.before, at, errors);
     if (!chess) return;
-    for (const san of [drill.answer, ...(drill.alternatives ?? [])]) {
+    const answers = [drill.answer, ...(drill.alternatives ?? [])];
+    if (new Set(answers).size !== answers.length)
+      errors.push(`${at}: resposta repetida nas alternativas`);
+    for (const san of answers) {
       try {
         new Chess(chess.fen()).move(san);
       } catch {
