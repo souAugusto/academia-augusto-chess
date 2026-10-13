@@ -30,7 +30,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Espanhola: Aberta
 - [x] Escocesa
 - [x] Gambito da Dama Aceito
-- [ ] Gambito da Dama Recusado
+- [x] Gambito da Dama Recusado
 - [ ] Inglesa
 - [ ] Sistema Londres
 - [ ] Catalã
