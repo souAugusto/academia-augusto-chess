@@ -98,7 +98,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Xeque perpétuo
 ### Finais combinados
 - [x] Torre e peça menor
-- [ ] Conversão de vantagem material
+- [x] Conversão de vantagem material
 - [x] Como empatar: fortalezas e afogamento
 
 ## 4. Análise de partidas
