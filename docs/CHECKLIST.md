@@ -137,7 +137,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 
 ## 7. Melhoria contínua
 - [x] Ciclo 1
-- [ ] Ciclo 2
+- [x] Ciclo 2
 - [ ] Ciclo 3
 
 ## 8. Entrega

@@ -169,6 +169,6 @@ export const LESSONS_SECTION = {
   },
   endgames: {
     title: "Lições de finais",
-    text: "Dos mates básicos aos finais de torre, com teoria curta e posições para praticar.",
+    text: "Dos mates básicos aos finais de torre, de dama e combinados, com teoria curta e posições para praticar.",
   },
 };
