@@ -21,14 +21,22 @@ function playLine(
 ): Chess | null {
   const chess = start ? new Chess(start) : new Chess();
   for (const [index, san] of sans.entries()) {
+    let played: string;
     try {
-      chess.move(san);
+      played = chess.move(san).san;
     } catch {
       errors.push(
         `${where}: lance ${index + 1} "${san}" é ilegal na posição ${chess.fen()}`,
       );
       return null;
     }
+    // O texto não pode prometer xeque ou mate que não existe (nem esconder um).
+    const mark = (text: string) =>
+      text.endsWith("#") ? "#" : text.endsWith("+") ? "+" : "";
+    if (mark(san) !== mark(played))
+      errors.push(
+        `${where}: lance ${index + 1} escrito "${san}", mas o certo é "${played}"`,
+      );
   }
   return chess;
 }

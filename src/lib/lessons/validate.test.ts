@@ -85,7 +85,7 @@ const endgame: EndgameLesson = {
     "6k1/8/6K1/8/8/8/8/7Q w - - 0 1",
     "7k/8/6K1/8/8/8/8/1Q6 w - - 0 1",
     "k7/8/1K6/8/8/8/8/7Q w - - 0 1",
-    "7k/8/5K2/8/8/8/8/Q7 w - - 0 1",
+    "7k/8/6K1/8/8/8/8/Q7 w - - 0 1",
     "k7/8/2K5/8/8/8/8/7Q w - - 0 1",
   ].map((fen, index) => ({
     level: index < 2 ? "facil" : "medio",
@@ -93,7 +93,7 @@ const endgame: EndgameLesson = {
     goal: "vencer",
     solution: [
       index === 0
-        ? "Qh7#"
+        ? "Qa8#"
         : index === 1
           ? "Qb8#"
           : index === 2
@@ -158,6 +158,24 @@ describe("conteúdo publicado", () => {
   it("acusa slug repetido", () => {
     expect(validateLessons([opening, opening]).join()).toContain(
       "slug repetido",
+    );
+  });
+});
+
+describe("notação de xeque e mate", () => {
+  it("acusa xeque ou mate escrito errado", () => {
+    const wrongMate: OpeningLesson = {
+      ...opening,
+      traps: [
+        {
+          name: "x",
+          moves: ["e4", "e5", "Qh5", "Nc6", "Bc4", "Nf6", "Qxf7+"],
+          text: "Mate.",
+        },
+      ],
+    };
+    expect(validateOpening(wrongMate).join()).toContain(
+      'escrito "Qxf7+", mas o certo é "Qxf7#"',
     );
   });
 });
