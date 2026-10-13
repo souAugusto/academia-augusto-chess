@@ -2,7 +2,7 @@
 
 ## Estado atual
 - Em andamento: infraestrutura das lições (CHECKLIST, seção 1).
-- Próximo item exato: "Tipos do conteúdo (aberturas e finais) em src/content/licoes".
+- Próximo item exato: "Validação pura (chess.js) em src/lib/lessons/validate.ts com testes".
 - Decisões abertas: nenhuma.
 - Arquivos parcialmente escritos: nenhum.
 

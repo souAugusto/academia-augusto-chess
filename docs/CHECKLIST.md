@@ -9,7 +9,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Reconhecimento do repositório (registrado em PROGRESSO.md)
 
 ## 1. Infraestrutura das lições
-- [ ] Tipos do conteúdo (aberturas e finais) em src/content/licoes
+- [x] Tipos do conteúdo (aberturas e finais) em src/content/licoes
 - [ ] Validação pura (chess.js) em src/lib/lessons/validate.ts com testes
 - [ ] Script scripts/validar-conteudo.ts ligado ao prebuild e ao npm test
 - [ ] Script offline scripts/verificar-motor.ts (Stockfish via npm, local)
