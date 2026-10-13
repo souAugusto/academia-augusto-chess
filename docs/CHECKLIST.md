@@ -112,7 +112,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Tela: tabuleiro, navegação por teclado, barra de avaliação, seta do melhor lance
 - [x] Lista de lances com ícones de classificação
 - [x] Gráfico de avaliação clicável
-- [ ] Resumo: precisão, contagens e 3 momentos críticos
+- [x] Resumo: precisão, contagens e 3 momentos críticos
 - [ ] Modo "Tente de novo"
 - [ ] Limite por plano configurável (constante) com mensagem de upgrade
 - [ ] "Analisar esta partida" nas partidas importadas
