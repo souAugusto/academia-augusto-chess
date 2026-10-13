@@ -21,6 +21,11 @@ const NOT_LOSING = 30; // chance mínima para chamar de "segura o empate"
 const MAX_LOSS_ENDGAME = 8; // pontos de chance que o lance do aluno pode perder
 const MAX_LOSS_OPENING = 10;
 const WARN_LOSS_OPENING = 6;
+// Linhas explicadas (principal e variantes): nenhum lance pode ser um erro claro.
+const LINE_DEPTH = 13;
+const MAX_LOSS_LINE = 15;
+const WARN_LOSS_LINE = 9;
+const TRAP_EDGE = 65; // chance mínima do lado favorecido no fim da armadilha
 
 const CACHE_FILE = "scripts/.cache/motor.json";
 const cache: Record<string, EngineScore> = existsSync(CACHE_FILE)
@@ -122,6 +127,17 @@ async function checkEndgame(lesson: EndgameLesson) {
 }
 
 async function checkOpening(lesson: OpeningLesson) {
+  await checkLine(
+    lesson.mainLine.map((move) => move.san),
+    `${lesson.slug} linha principal`,
+  );
+  for (const variation of lesson.variations)
+    await checkLine(
+      variation.moves.map((move) => move.san),
+      `${lesson.slug} variante "${variation.name}"`,
+    );
+  for (const trap of lesson.traps)
+    await checkTrap(trap, `${lesson.slug} armadilha "${trap.name}"`);
   for (const [index, drill] of lesson.practice.entries()) {
     const chess = new Chess();
     for (const san of drill.before) chess.move(san);
@@ -137,6 +153,45 @@ async function checkOpening(lesson: OpeningLesson) {
         warnings.push(`${where}: perde ${loss.toFixed(1)} pontos`);
     }
   }
+}
+
+async function checkLine(moves: string[], where: string) {
+  const chess = new Chess();
+  for (const [ply, san] of moves.entries()) {
+    const fen = chess.fen();
+    const best = await scoreOf(fen, LINE_DEPTH);
+    const mine = await scoreOf(fen, LINE_DEPTH, uciOf(fen, san));
+    const loss = winChance(best) - winChance(mine);
+    const label = `${where} lance ${Math.floor(ply / 2) + 1}${ply % 2 ? "..." : "."}${san} (${show(mine)}, melhor ${show(best)})`;
+    if (loss > MAX_LOSS_LINE)
+      problems.push(`${label}: perde ${loss.toFixed(1)}`);
+    else if (loss > WARN_LOSS_LINE)
+      warnings.push(`${label}: perde ${loss.toFixed(1)}`);
+    chess.move(san);
+  }
+}
+
+async function checkTrap(trap: OpeningLesson["traps"][number], where: string) {
+  const chess = new Chess();
+  for (const san of trap.moves) chess.move(san);
+  const whiteFavored = trap.favors === "brancas";
+  if (chess.isCheckmate()) {
+    // Quem acabou de dar mate é o lado que NÃO está na vez.
+    const winnerIsWhite = chess.turn() === "b";
+    if (winnerIsWhite !== whiteFavored)
+      problems.push(`${where}: termina em mate para o lado errado`);
+    return;
+  }
+  const score = await scoreOf(chess.fen(), OPENING_DEPTH);
+  // Pontuação do motor é do lado que joga; converte para o lado favorecido.
+  const sideToMoveIsFavored = (chess.turn() === "w") === whiteFavored;
+  const chance = sideToMoveIsFavored
+    ? winChance(score)
+    : 100 - winChance(score);
+  if (chance < TRAP_EDGE)
+    problems.push(
+      `${where}: no fim da linha o lado favorecido tem só ${chance.toFixed(0)}% (${show(score)} para quem joga)`,
+    );
 }
 
 const filter = process.argv.slice(2);

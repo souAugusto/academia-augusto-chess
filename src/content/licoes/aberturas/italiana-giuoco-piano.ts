@@ -190,6 +190,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
         "Be2",
         "Nf3#",
       ],
+      favors: "pretas",
       text: "3...Cd4 deixa o peão e5 pendurado de propósito. Se as brancas pegam com 4.Cxe5?, vem 4...Dg5! atacando o cavalo e g2. Aceitar o desafio com 5.Cxf7?? termina em mate. Contra 3...Cd4 o melhor é 4.Cxd4 exd4 5.O-O ou 4.c3, com vantagem tranquila.",
     },
     {
@@ -215,6 +216,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
         "Bxc3",
         "Ba3",
       ],
+      favors: "brancas",
       text: "No Ataque Møller, 9...Bxc3? pega mais um peão e ameaça a torre de a1, mas 10.Ba3! impede o roque preto. Se as pretas ainda pegarem a torre, Te1+ abre a coluna e contra o rei, e o ataque branco vale muito mais do que o material. O certo para as pretas é 9...d5!, devolvendo material para desenvolver.",
     },
   ],

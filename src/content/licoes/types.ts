@@ -44,7 +44,13 @@ export type OpeningLesson = {
   structure: string; // estrutura de peões típica
   mainLine: ExplainedMove[]; // linha principal, desde o 1º lance
   variations: { name: string; moves: ExplainedMove[]; text: string }[]; // desde o 1º lance
-  traps: { name: string; moves: string[]; text: string }[]; // desde o 1º lance
+  // Desde o 1º lance. `favors`: quem fica melhor no fim da linha (o motor confere).
+  traps: {
+    name: string;
+    moves: string[];
+    text: string;
+    favors: "brancas" | "pretas";
+  }[];
   mistakes: string[];
   practice: OpeningDrill[];
   quiz: QuizQuestion[];

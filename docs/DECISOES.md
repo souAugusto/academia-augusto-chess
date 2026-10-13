@@ -12,3 +12,6 @@ Formato: data · dúvida · escolha · motivo.
   
   Motivo: comparar chance de vitória (curva do Lichess) evita falso alarme quando há vários lances ganhadores.
 - 2026-10-13 · Pacote `stockfish` no projeto. · Entra como devDependency (19.0.1, exata), usado só nos scripts locais. Os arquivos servidos ao navegador continuam em `public/engine/`, copiados sem modificação. · Mantém o motor fora do bundle e permite repetir a verificação.
+
+## Motor também confere linhas explicadas e armadilhas (2026-10-13)
+O `verify:engine` passou a checar, além da prática: cada lance da linha principal e das variantes (profundidade 13; erro se perder mais de 15 pontos de chance, aviso acima de 9) e o fim de cada armadilha, que agora declara `favors` (brancas/pretas). O lado favorecido precisa ter ao menos 65% de chance (ou ter dado mate). Gambitos teóricos (ex.: Gambito do Rei) ficam abaixo do limite de erro.

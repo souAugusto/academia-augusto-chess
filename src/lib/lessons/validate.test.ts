@@ -36,6 +36,7 @@ const opening: OpeningLesson = {
       name: "Mate pastor",
       moves: ["e4", "e5", "Qh5", "Nc6", "Bc4", "Nf6", "Qxf7#"],
       text: "Cuidado com f7.",
+      favors: "brancas",
     },
   ],
   mistakes: ["Esquecer f7."],
@@ -171,6 +172,7 @@ describe("notação de xeque e mate", () => {
           name: "x",
           moves: ["e4", "e5", "Qh5", "Nc6", "Bc4", "Nf6", "Qxf7+"],
           text: "Mate.",
+          favors: "brancas",
         },
       ],
     };
