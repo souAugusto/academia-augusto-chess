@@ -48,7 +48,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Caro-Kann: Avanço
 - [x] Escandinava
 - [x] Defesa Eslava
-- [ ] Semi-Eslava
+- [x] Semi-Eslava
 - [ ] Nimzo-Índia
 - [ ] Índia do Rei
 - [ ] Índia da Dama
