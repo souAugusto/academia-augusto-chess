@@ -107,7 +107,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Cache longo dos arquivos do motor
 - [x] Cloud eval do Lichess nas primeiras jogadas, com fallback
 - [ ] Entrada: colar PGN (validação) e escolher partida importada (busca do PGN)
-- [ ] Reaproveitar avaliações do Lichess quando existirem
+- [x] Reaproveitar avaliações do Lichess quando existirem
 - [x] Migration aditiva 0012: análises salvas (JSON compacto, RLS)
 - [ ] Tela: tabuleiro, navegação por teclado, barra de avaliação, seta do melhor lance
 - [ ] Lista de lances com ícones de classificação
