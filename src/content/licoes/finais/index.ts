@@ -23,6 +23,7 @@ import { zugzwang } from "./zugzwang.ts";
 import { peoesPassados } from "./peoes-passados.ts";
 import { bisposCoresOpostas } from "./bispos-cores-opostas.ts";
 import { bisposMesmaCor } from "./bispos-mesma-cor.ts";
+import { bispoBomMau } from "./bispo-bom-mau.ts";
 
 // Lições de finais, do básico ao avançado. Cada lição fica no próprio arquivo.
 export const ENDGAME_LESSONS: EndgameLesson[] = [
@@ -50,4 +51,5 @@ export const ENDGAME_LESSONS: EndgameLesson[] = [
   peoesPassados,
   bisposCoresOpostas,
   bisposMesmaCor,
+  bispoBomMau,
 ];
