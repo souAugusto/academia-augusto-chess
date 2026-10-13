@@ -1,9 +1,9 @@
 # Progresso da rodada autônoma
 
 ## Estado atual
-- Em andamento: lições de finais (CHECKLIST, seção 3). Seções 1 e 2 concluídas (32 lições de aberturas, 253 exercícios, todas conferidas pelo motor).
-- Próximo item exato: "Rei e torre contra rei".
-- Ferramenta: `node scripts/buscar-armadilhas.ts <brancas|pretas> "linha"` lista capturas que perdem (candidatas a armadilha).
+- Em andamento: lições de finais (seção 3) intercaladas com a análise de partidas (seção 4). Prontas: 19 lições de finais. Faltam: Triangulação, Zugzwang, Peões ligados e passados, Torre ativa contra torre passiva, 4 contra 3 e 3 contra 2, os 4 de bispos, os 2 de cavalos, Xeque perpétuo, Torre e peça menor, Conversão de vantagem material, Como empatar.
+- Buscas de posições rodando em segundo plano (scripts/buscar-posicoes.ts, buscar-triangulacao.ts); resultados no rascunho da sessão. Se a sessão cair, rode de novo as buscas.
+- Próximo item exato da análise: "Configuração ANALYSIS_MIN_PLAN_RANK".
 - Rotina por lição: escrever o arquivo em `src/content/licoes/aberturas/`, registrar no `index.ts`, rodar typecheck, `npm run validate:content` e `npm run verify:engine -- <slug>` (confere prática, linhas explicadas e armadilhas), corrigir e só então fazer o commit.
 - Atenção: `scripts/avaliar.ts` mostra a avaliação do ponto de vista de quem joga (se a vez é das pretas, número positivo = pretas melhores).
 - Decisões abertas: nenhuma.
