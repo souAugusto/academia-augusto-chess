@@ -109,7 +109,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Entrada: colar PGN (validação) e escolher partida importada (busca do PGN)
 - [x] Reaproveitar avaliações do Lichess quando existirem
 - [x] Migration aditiva 0012: análises salvas (JSON compacto, RLS)
-- [ ] Tela: tabuleiro, navegação por teclado, barra de avaliação, seta do melhor lance
+- [x] Tela: tabuleiro, navegação por teclado, barra de avaliação, seta do melhor lance
 - [ ] Lista de lances com ícones de classificação
 - [ ] Gráfico de avaliação clicável
 - [ ] Resumo: precisão, contagens e 3 momentos críticos
