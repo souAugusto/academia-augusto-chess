@@ -24,7 +24,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 ## 2. Lições de aberturas (uma por item)
 ### Com brancas
 - [x] Italiana: Giuoco Piano
-- [ ] Italiana: Giuoco Pianissimo
+- [x] Italiana: Giuoco Pianissimo
 - [ ] Espanhola: Defesa Berlim
 - [ ] Espanhola: Fechada
 - [ ] Espanhola: Aberta
