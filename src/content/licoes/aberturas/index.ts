@@ -19,6 +19,7 @@ import { sicilianaFechada } from "./siciliana-fechada.ts";
 import { francesaAvanco } from "./francesa-avanco.ts";
 import { francesaTroca } from "./francesa-troca.ts";
 import { francesaTarrasch } from "./francesa-tarrasch.ts";
+import { caroKannClassica } from "./caro-kann-classica.ts";
 
 // Lições de aberturas, na ordem em que aparecem no site. Cada lição fica no
 // próprio arquivo desta pasta.
@@ -43,4 +44,5 @@ export const OPENING_LESSONS: OpeningLesson[] = [
   francesaAvanco,
   francesaTroca,
   francesaTarrasch,
+  caroKannClassica,
 ];
