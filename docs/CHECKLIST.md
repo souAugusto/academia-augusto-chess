@@ -91,7 +91,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Bispo contra cavalo
 ### Finais de cavalos
 - [x] Finais de cavalo
-- [ ] Cavalo contra bispo
+- [x] Cavalo contra bispo
 ### Finais de dama
 - [x] Dama contra peão na 7ª fileira
 - [x] Dama contra torre
