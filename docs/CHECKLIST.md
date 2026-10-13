@@ -103,7 +103,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 
 ## 4. Análise de partidas
 - [x] Lógica pura: chance de vitória, classificação, precisão, momentos críticos (com testes)
-- [ ] Cliente do motor com profundidade e multipv, cancelamento
+- [x] Cliente do motor com profundidade e multipv, cancelamento
 - [ ] Cache longo dos arquivos do motor
 - [ ] Cloud eval do Lichess nas primeiras jogadas, com fallback
 - [ ] Entrada: colar PGN (validação) e escolher partida importada (busca do PGN)

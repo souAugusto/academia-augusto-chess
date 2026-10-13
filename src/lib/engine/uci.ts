@@ -3,7 +3,12 @@
 export type Score =
   { kind: "cp"; value: number } | { kind: "mate"; value: number };
 
-export type InfoLine = { depth: number; score: Score; pv: string[] };
+export type InfoLine = {
+  depth: number;
+  score: Score;
+  pv: string[];
+  multipv: number; // 1 = melhor linha
+};
 
 // "info depth 18 ... score cp -34 ... pv e2e4 e7e5" -> { depth, score, pv }
 export function parseInfo(line: string): InfoLine | null {
@@ -12,10 +17,12 @@ export function parseInfo(line: string): InfoLine | null {
   const depth = /\bdepth (\d+)/.exec(line);
   if (!score || !depth || /\b(lowerbound|upperbound)\b/.test(line)) return null;
   const pv = /\bpv (.+)$/.exec(line);
+  const multipv = /\bmultipv (\d+)/.exec(line);
   return {
     depth: Number(depth[1]),
     score: { kind: score[1] as Score["kind"], value: Number(score[2]) },
     pv: pv ? pv[1].trim().split(/\s+/) : [],
+    multipv: multipv ? Number(multipv[1]) : 1,
   };
 }
 
