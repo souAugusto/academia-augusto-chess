@@ -123,7 +123,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] /creditos com versão exata, código-fonte e aviso de software livre
 - [x] THIRD_PARTY_LICENSES gerado com license-checker
 - [x] Lista de licenças permitidas, falhando o build no inesperado
-- [ ] Cláusula de componentes de terceiros nos Termos de Uso
+- [x] Cláusula de componentes de terceiros nos Termos de Uso
 - [ ] Pendências jurídicas e de hospedagem em PENDENCIAS.md
 
 ## 6. Landing page
