@@ -65,7 +65,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Mate com dois bispos
 - [x] Mate com bispo e cavalo (técnica)
 ### Finais de peões
-- [ ] Oposição direta
+- [x] Oposição direta
 - [ ] Oposição distante
 - [ ] Oposição diagonal
 - [ ] Regra do quadrado
