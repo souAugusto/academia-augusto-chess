@@ -14,8 +14,15 @@ const SECTIONS = [
   {
     title: "Motor de xadrez Stockfish",
     paragraphs: [
-      "O treino de finais usa o Stockfish 19 (versão lite, compilada para WebAssembly por Nathan Rugg no projeto stockfish.js), distribuído sem modificações sob a GNU General Public License versão 3. O motor roda separado do site, no seu navegador, e se comunica só por mensagens no protocolo UCI.",
-      "Licença completa: /engine/COPYING.txt. Código-fonte: github.com/nmrugg/stockfish.js (versão v19.0.1) e github.com/official-stockfish/Stockfish.",
+      "A análise de partidas e o treino de finais usam o Stockfish 19, versão lite de uma linha de execução (arquivo stockfish-19-lite-single), compilada para WebAssembly no projeto stockfish.js de Nathan Rugg e publicada no pacote npm stockfish, versão 19.0.1. Os arquivos são distribuídos sem nenhuma modificação.",
+      "O Stockfish é software livre, sob a GNU General Public License versão 3 (GPL-3.0). Você pode usá-lo, estudá-lo, copiá-lo e redistribuí-lo nos termos dessa licença. O motor roda separado do site, no seu navegador (num Web Worker), e se comunica com a Finale só por mensagens no protocolo UCI.",
+      "Licença completa: /licencas/stockfish-GPL-3.0.txt (também em /engine/COPYING.txt). Código-fonte correspondente: github.com/nmrugg/stockfish.js/tree/v19.0.1 e github.com/official-stockfish/Stockfish. Autores do Stockfish: T. Romstad, M. Costalba, J. Kiiski, G. Linscott e colaboradores.",
+    ],
+  },
+  {
+    title: "Avaliações do Lichess",
+    paragraphs: [
+      "Nas primeiras jogadas, a análise de partidas consulta a nuvem de avaliações pública do Lichess (lichess.org), um serviço gratuito e de código aberto. Em partidas importadas do Lichess que já foram analisadas lá, reaproveitamos essas avaliações.",
     ],
   },
   {
@@ -29,6 +36,8 @@ const SECTIONS = [
     title: "Bibliotecas",
     paragraphs: [
       "chess.js (licença BSD de 2 cláusulas), react-chessboard (MIT), Next.js e React (MIT), Supabase (MIT e Apache 2.0), Tailwind CSS (MIT).",
+      "Dados de compatibilidade de navegadores do caniuse-lite (CC-BY 4.0, por Alexis Deveria e colaboradores do Can I Use).",
+      "Lista completa das bibliotecas, com versões e licenças: /licencas/THIRD_PARTY_LICENSES.txt.",
     ],
   },
 ];

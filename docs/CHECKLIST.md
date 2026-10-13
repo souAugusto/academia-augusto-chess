@@ -120,7 +120,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 
 ## 5. Licenças
 - [x] /public/licencas com o LICENSE do pacote do motor
-- [ ] /creditos com versão exata, código-fonte e aviso de software livre
+- [x] /creditos com versão exata, código-fonte e aviso de software livre
 - [x] THIRD_PARTY_LICENSES gerado com license-checker
 - [x] Lista de licenças permitidas, falhando o build no inesperado
 - [ ] Cláusula de componentes de terceiros nos Termos de Uso
