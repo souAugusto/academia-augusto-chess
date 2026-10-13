@@ -1,8 +1,9 @@
 # Progresso da rodada autônoma
 
 ## Estado atual
-- Em andamento: lições de aberturas com brancas (CHECKLIST, seção 2). Infraestrutura das lições (seção 1) concluída.
-- Próximo item exato: "Sistema Londres".
+- Em andamento: lições de finais (CHECKLIST, seção 3). Seções 1 e 2 concluídas (32 lições de aberturas, 253 exercícios, todas conferidas pelo motor).
+- Próximo item exato: "Rei e torre contra rei".
+- Ferramenta: `node scripts/buscar-armadilhas.ts <brancas|pretas> "linha"` lista capturas que perdem (candidatas a armadilha).
 - Rotina por lição: escrever o arquivo em `src/content/licoes/aberturas/`, registrar no `index.ts`, rodar typecheck, `npm run validate:content` e `npm run verify:engine -- <slug>` (confere prática, linhas explicadas e armadilhas), corrigir e só então fazer o commit.
 - Atenção: `scripts/avaliar.ts` mostra a avaliação do ponto de vista de quem joga (se a vez é das pretas, número positivo = pretas melhores).
 - Decisões abertas: nenhuma.
