@@ -110,7 +110,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Reaproveitar avaliações do Lichess quando existirem
 - [x] Migration aditiva 0012: análises salvas (JSON compacto, RLS)
 - [x] Tela: tabuleiro, navegação por teclado, barra de avaliação, seta do melhor lance
-- [ ] Lista de lances com ícones de classificação
+- [x] Lista de lances com ícones de classificação
 - [ ] Gráfico de avaliação clicável
 - [ ] Resumo: precisão, contagens e 3 momentos críticos
 - [ ] Modo "Tente de novo"
