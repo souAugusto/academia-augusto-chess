@@ -53,7 +53,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Índia do Rei
 - [x] Índia da Dama
 - [x] Grünfeld
-- [ ] Petroff
+- [x] Petroff
 - [ ] Defesa Philidor
 - [ ] Defesa Holandesa
 
