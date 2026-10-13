@@ -39,19 +39,24 @@ let found = 0;
 try {
   for (let i = 0; i < total; i++) {
     const board: Record<string, string> = {};
-    // Par bloqueado: peão branco numa fileira, peão preto logo à frente.
-    const f = rand(8);
-    const r = 2 + rand(3);
-    board[sq(f, r)] = "P";
-    board[sq(f, r + 1)] = "p";
-    // Um peão branco extra às vezes (mais chances de vitória).
-    if (rand(2)) {
-      const ef = rand(8);
-      const er = 1 + rand(4);
-      if (!board[sq(ef, er)]) board[sq(ef, er)] = "P";
+    // Dois pares de peões bloqueados (frente a frente), em colunas próximas.
+    const f1 = rand(7);
+    const f2 = Math.min(7, f1 + 1 + rand(3));
+    for (const f of [f1, f2]) {
+      const r = 2 + rand(3);
+      board[sq(f, r)] = "P";
+      board[sq(f, r + 1)] = "p";
     }
-    const wk = sq(rand(8), rand(8));
-    const bk = sq(rand(8), rand(8));
+    // Reis perto dos peões (até duas casas de distância de algum deles).
+    const nearPawns = () => {
+      const pawns = Object.keys(board);
+      const base = pawns[rand(pawns.length)];
+      const f = Math.max(0, Math.min(7, base.charCodeAt(0) - 97 + rand(5) - 2));
+      const r = Math.max(0, Math.min(7, Number(base[1]) - 1 + rand(5) - 2));
+      return sq(f, r);
+    };
+    const wk = nearPawns();
+    const bk = nearPawns();
     if (board[wk] || board[bk] || wk === bk || near(wk, bk)) continue;
     board[wk] = "K";
     board[bk] = "k";

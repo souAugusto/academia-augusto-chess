@@ -5,7 +5,8 @@
 //   material: letras das peças além do rei, ex. "RPPP:RPP" ou "BP:N"
 //   temas: qualquer | rei | peao | torre7 | xeque | captura | sacrificio | dama
 // Exemplo: node scripts/buscar-posicoes.ts RPP:RP torre7 400
-// Variável BISPOS=opostas|mesma filtra a cor dos bispos.
+// Variável BISPOS=opostas|mesma filtra a cor dos bispos; ALA=rei põe os
+// peões só na ala do rei.
 import { Chess, type Move } from "chess.js";
 import { winChance } from "../src/lib/analysis/winprob.ts";
 import { NodeEngine } from "./motor-node.ts";
@@ -51,7 +52,9 @@ function place(board: Map<string, string>, piece: string, white: boolean) {
   for (let tries = 0; tries < 50; tries++) {
     const isPawn = piece.toLowerCase() === "p";
     const rank = isPawn ? 1 + rand(6) : rand(8);
-    const sq = square(rand(8), rank);
+    // ALA=rei: peões só nas colunas e a h (finais com peões numa ala só).
+    const file = isPawn && process.env.ALA === "rei" ? 4 + rand(4) : rand(8);
+    const sq = square(file, rank);
     if (board.has(sq)) continue;
     board.set(sq, white ? piece.toUpperCase() : piece.toLowerCase());
     return true;
