@@ -16,7 +16,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Migration aditiva 0011: progresso de estudo por lição
 - [x] Páginas /licoes, /licoes/aberturas, /licoes/finais e /licoes/[slug]
 - [x] Componente da lição: introdução, passo a passo, armadilhas
-- [ ] Prática interativa por níveis (fácil, médio, difícil) com dica e explicação
+- [x] Prática interativa por níveis (fácil, médio, difícil) com dica e explicação
 - [ ] Mini-quiz com correção
 - [ ] Progresso salvo e selo de lição concluída
 - [ ] Ligações a partir de /aberturas e /finais
