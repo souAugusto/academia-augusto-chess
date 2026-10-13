@@ -2,7 +2,7 @@
 
 ## Estado atual
 - Em andamento: infraestrutura das lições (CHECKLIST, seção 1).
-- Próximo item exato: "Script offline scripts/verificar-motor.ts (Stockfish via npm, local)".
+- Próximo item exato: "Migration aditiva 0011: progresso de estudo por lição".
 - Decisões abertas: nenhuma.
 - Arquivos parcialmente escritos: nenhum.
 

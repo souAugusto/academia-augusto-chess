@@ -12,7 +12,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Tipos do conteúdo (aberturas e finais) em src/content/licoes
 - [x] Validação pura (chess.js) em src/lib/lessons/validate.ts com testes
 - [x] Script scripts/validar-conteudo.ts ligado ao prebuild e ao npm test
-- [ ] Script offline scripts/verificar-motor.ts (Stockfish via npm, local)
+- [x] Script offline scripts/verificar-motor.ts (Stockfish via npm, local)
 - [ ] Migration aditiva 0011: progresso de estudo por lição
 - [ ] Páginas /licoes, /licoes/aberturas, /licoes/finais e /licoes/[slug]
 - [ ] Componente da lição: introdução, passo a passo, armadilhas
