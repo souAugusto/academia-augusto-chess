@@ -124,7 +124,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] THIRD_PARTY_LICENSES gerado com license-checker
 - [x] Lista de licenças permitidas, falhando o build no inesperado
 - [x] Cláusula de componentes de terceiros nos Termos de Uso
-- [ ] Pendências jurídicas e de hospedagem em PENDENCIAS.md
+- [x] Pendências jurídicas e de hospedagem em PENDENCIAS.md
 
 ## 6. Landing page
 - [ ] Seção do problema (estudar sem direção)
