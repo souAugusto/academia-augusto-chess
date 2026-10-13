@@ -88,7 +88,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Bispos da mesma cor
 - [x] Bispos de cores opostas
 - [x] Bispo bom contra bispo mau
-- [ ] Bispo contra cavalo
+- [x] Bispo contra cavalo
 ### Finais de cavalos
 - [ ] Finais de cavalo
 - [ ] Cavalo contra bispo
