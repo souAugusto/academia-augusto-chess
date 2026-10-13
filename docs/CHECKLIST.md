@@ -52,7 +52,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Nimzo-Índia
 - [x] Índia do Rei
 - [x] Índia da Dama
-- [ ] Grünfeld
+- [x] Grünfeld
 - [ ] Petroff
 - [ ] Defesa Philidor
 - [ ] Defesa Holandesa
