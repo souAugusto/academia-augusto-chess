@@ -22,6 +22,7 @@ import { francesaTarrasch } from "./francesa-tarrasch.ts";
 import { caroKannClassica } from "./caro-kann-classica.ts";
 import { caroKannAvanco } from "./caro-kann-avanco.ts";
 import { escandinava } from "./escandinava.ts";
+import { eslava } from "./eslava.ts";
 
 // Lições de aberturas, na ordem em que aparecem no site. Cada lição fica no
 // próprio arquivo desta pasta.
@@ -49,4 +50,5 @@ export const OPENING_LESSONS: OpeningLesson[] = [
   caroKannClassica,
   caroKannAvanco,
   escandinava,
+  eslava,
 ];
