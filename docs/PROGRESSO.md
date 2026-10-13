@@ -2,7 +2,7 @@
 
 ## Estado atual
 - Em andamento: infraestrutura das lições (CHECKLIST, seção 1).
-- Próximo item exato: "Script scripts/validar-conteudo.ts ligado ao prebuild e ao npm test".
+- Próximo item exato: "Script offline scripts/verificar-motor.ts (Stockfish via npm, local)".
 - Decisões abertas: nenhuma.
 - Arquivos parcialmente escritos: nenhum.
 
