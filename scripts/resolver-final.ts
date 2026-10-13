@@ -17,7 +17,30 @@ const show = (s: { kind: string; value: number }) =>
 
 try {
   for (const fen of fens) {
-    const chess = new Chess(fen);
+    let chess: Chess;
+    try {
+      chess = new Chess(fen);
+    } catch (error) {
+      console.log(`
+${fen}
+  FEN inválido: ${(error as Error).message}`);
+      continue;
+    }
+    // O lado que não joga não pode estar em xeque (o motor não aceita).
+    const turn = fen.split(" ")[1];
+    const flipped = fen.replace(` ${turn} `, ` ${turn === "w" ? "b" : "w"} `);
+    let illegal = false;
+    try {
+      illegal = new Chess(flipped).inCheck();
+    } catch {
+      illegal = true;
+    }
+    if (illegal) {
+      console.log(`
+${fen}
+  posição ilegal: o lado que não joga está em xeque`);
+      continue;
+    }
     const lines = await engine.analyse(fen, {
       depth: DEPTH,
       multipv: Math.min(8, chess.moves().length),

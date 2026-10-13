@@ -77,7 +77,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [ ] Peões ligados e passados
 - [ ] Brecha (peão de rompimento)
 ### Finais de torre
-- [ ] Posição de Lucena
+- [x] Posição de Lucena
 - [ ] Posição de Philidor
 - [ ] Torre atrás do peão passado
 - [ ] Rei cortado
