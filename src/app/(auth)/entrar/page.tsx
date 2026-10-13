@@ -29,7 +29,9 @@ export default async function EntrarPage({
         notice={erro ? NOTICES[erro] : undefined}
       />
       <OrDivider />
-      <GoogleButton next={tab === "criar" ? "/planos" : next} />
+      <GoogleButton
+        next={tab === "criar" ? "/questionario?next=%2Fplanos" : next}
+      />
     </>
   );
 }

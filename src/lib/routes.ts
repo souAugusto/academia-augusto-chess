@@ -11,6 +11,8 @@ const PROTECTED_PREFIXES = [
   "/treino",
   "/conta",
   "/checkout",
+  "/questionario",
+  "/partidas",
   "/admin",
   "/redefinir-senha",
 ];

@@ -4,12 +4,14 @@ import {
   AdminInput,
   AdminSelect,
 } from "@/components/admin/AdminForm";
+import { StyleBadge } from "@/components/style/StyleBadge";
 import { Card } from "@/components/ui/Card";
 import { SectionLabel } from "@/components/ui/Label";
 import { requireAdmin } from "@/lib/data/admin";
 import { METHOD_LABELS, STATUS_LABELS } from "@/lib/data/billing";
 import { formatLongDate } from "@/lib/format";
 import type { SubscriptionStatus } from "@/lib/payments/rules";
+import type { ResultStyle } from "@/lib/style/styles";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { grantPlan, revokeGrant, stopRenewal } from "./actions";
 
@@ -54,18 +56,27 @@ export default async function AlunosPage({
   const search = typeof q === "string" ? q.trim().toLowerCase() : "";
 
   const admin = createAdminClient();
-  const [{ data: list }, { data: profiles }, { data: subs }, { data: admins }] =
-    await Promise.all([
-      admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
-      admin.from("profiles").select("id, name, whatsapp, created_at"),
-      admin
-        .from("subscriptions")
-        .select(
-          "id, user_id, plan_id, status, source, billing_type, current_period_end, cancel_at_period_end",
-        )
-        .in("status", ["active", "trialing", "past_due", "incomplete"]),
-      admin.from("admins").select("user_id"),
-    ]);
+  const [
+    { data: list },
+    { data: profiles },
+    { data: subs },
+    { data: admins },
+    { data: styles },
+  ] = await Promise.all([
+    admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+    admin.from("profiles").select("id, name, whatsapp, created_at"),
+    admin
+      .from("subscriptions")
+      .select(
+        "id, user_id, plan_id, status, source, billing_type, current_period_end, cancel_at_period_end",
+      )
+      .in("status", ["active", "trialing", "past_due", "incomplete"]),
+    admin.from("admins").select("user_id"),
+    admin.from("player_styles").select("user_id, style"),
+  ]);
+  const styleById = new Map(
+    (styles ?? []).map((row) => [row.user_id, row.style as ResultStyle]),
+  );
 
   const profileById = new Map((profiles ?? []).map((row) => [row.id, row]));
   const adminIds = new Set((admins ?? []).map((row) => row.user_id));
@@ -132,6 +143,14 @@ export default async function AlunosPage({
                       {adminIds.has(user.id) && (
                         <span className="ml-2 text-xs text-accent-text">
                           admin
+                        </span>
+                      )}
+                      {styleById.has(user.id) && (
+                        <span className="ml-2 align-middle">
+                          <StyleBadge
+                            style={styleById.get(user.id)!}
+                            size="sm"
+                          />
                         </span>
                       )}
                     </span>

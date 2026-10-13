@@ -3,6 +3,7 @@ import Link from "next/link";
 import { signOut } from "@/app/(auth)/actions";
 import { CancelSubscription } from "@/components/account/CancelSubscription";
 import { FormAlert } from "@/components/forms/Field";
+import { StyleBadge } from "@/components/style/StyleBadge";
 import { buttonClasses } from "@/components/ui/button";
 import { SectionLabel } from "@/components/ui/Label";
 import { PLAN_NAMES, requireUser } from "@/lib/data/account";
@@ -13,7 +14,9 @@ import {
   STATUS_LABELS,
   type MySubscription,
 } from "@/lib/data/billing";
+import { getMyStyleHistory } from "@/lib/data/style";
 import { formatLongDate } from "@/lib/format";
+import { STYLES } from "@/lib/style/styles";
 import { payPending } from "./actions";
 
 export const metadata: Metadata = {
@@ -53,11 +56,13 @@ function subscriptionRows(sub: MySubscription) {
 }
 
 export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
-  const [user, subscriptions, params] = await Promise.all([
+  const [user, subscriptions, params, styles] = await Promise.all([
     requireUser("/conta"),
     getMySubscriptions(),
     searchParams,
+    getMyStyleHistory(),
   ]);
+  const currentStyle = styles[0];
   const groups = await getGroupLinks(user.planRank);
   const rows = [
     { label: "Nome", value: user.name },
@@ -89,6 +94,59 @@ export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
           </div>
         ))}
       </dl>
+
+      <section
+        aria-labelledby="estilo"
+        className="flex max-w-[640px] flex-col gap-4 rounded-card border border-border bg-surface p-6"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="estilo" className="text-lg font-semibold">
+            Estilo de jogo
+          </h2>
+          {currentStyle && <StyleBadge style={currentStyle.style} />}
+        </div>
+        {currentStyle ? (
+          <>
+            <p className="text-[0.9375rem] leading-relaxed text-muted">
+              {STYLES[currentStyle.style].description}
+            </p>
+            {styles.length > 1 && (
+              <ol
+                className="flex flex-col gap-1 text-sm"
+                aria-label="Histórico"
+              >
+                {styles.map((item) => (
+                  <li key={item.id} className="flex justify-between gap-3">
+                    <span>{STYLES[item.style].name}</span>
+                    <span className="text-muted">
+                      {formatLongDate(item.createdAt)}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            )}
+            <Link
+              href="/questionario?next=%2Fconta"
+              className={buttonClasses("secondary", "md", "self-start")}
+            >
+              Refazer o questionário
+            </Link>
+          </>
+        ) : (
+          <>
+            <FormAlert tone="sucesso">
+              Faça seu questionário: em 2 minutos você descobre seu estilo de
+              jogo.
+            </FormAlert>
+            <Link
+              href="/questionario?next=%2Fconta"
+              className={buttonClasses("primary", "md", "self-start")}
+            >
+              Fazer o questionário
+            </Link>
+          </>
+        )}
+      </section>
 
       <section
         aria-labelledby="assinatura"

@@ -21,6 +21,8 @@ export type FormState = {
 };
 
 const PLANOS = "/planos";
+// Conta nova: questionário de estilo (pode pular) e depois os planos.
+const ONBOARDING = `/questionario?next=${encodeURIComponent(PLANOS)}`;
 
 function text(formData: FormData, key: string): string {
   const value = formData.get(key);
@@ -80,7 +82,7 @@ export async function signup(
     password,
     options: {
       data: { name, whatsapp: whatsapp ?? "", terms_accepted: true },
-      emailRedirectTo: confirmUrl(await siteOrigin(), PLANOS),
+      emailRedirectTo: confirmUrl(await siteOrigin(), ONBOARDING),
     },
   });
   if (error) {
@@ -100,8 +102,8 @@ export async function signup(
     };
   }
 
-  // Confirmação de e-mail desligada no Supabase: já entra e segue para os planos.
-  if (data.session) redirect(PLANOS);
+  // Confirmação de e-mail desligada no Supabase: já entra e segue para o questionário.
+  if (data.session) redirect(ONBOARDING);
 
   // Mesma resposta para e-mail novo ou já cadastrado (não revela quem tem conta).
   return {
