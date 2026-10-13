@@ -41,7 +41,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Siciliana Scheveningen
 - [x] Siciliana Clássica
 - [x] Siciliana Fechada
-- [ ] Francesa: Avanço
+- [x] Francesa: Avanço
 - [ ] Francesa: Troca
 - [ ] Francesa: Tarrasch
 - [ ] Caro-Kann: Clássica
