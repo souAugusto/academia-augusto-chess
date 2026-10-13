@@ -81,7 +81,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Posição de Philidor
 - [x] Torre atrás do peão passado
 - [x] Rei cortado
-- [ ] Torre e peão de torre
+- [x] Torre e peão de torre
 - [ ] Torre ativa contra torre passiva
 - [ ] 4 contra 3 e 3 contra 2 na mesma ala
 ### Finais de bispos
