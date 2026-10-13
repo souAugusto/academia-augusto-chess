@@ -67,7 +67,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 ### Finais de peões
 - [x] Oposição direta
 - [x] Oposição distante
-- [ ] Oposição diagonal
+- [x] Oposição diagonal
 - [x] Regra do quadrado
 - [ ] Peão de torre
 - [x] Peão central e casas-chave
