@@ -14,12 +14,14 @@
     "check:placeholders": "node scripts/check-placeholders.ts",
     "validate:content": "node scripts/validar-conteudo.ts",
     "verify:engine": "node scripts/verificar-motor.ts",
-    "prebuild": "npm run check:placeholders && npm run validate:content",
+    "prebuild": "npm run check:placeholders && npm run validate:content && npm run licenses:check",
     "typecheck": "next typegen && tsc --noEmit",
     "import:puzzles": "node --env-file=.env.local scripts/import-lichess-puzzles.ts",
     "schedule:daily": "node --env-file=.env.local scripts/schedule-daily-puzzles.ts",
     "import:openings": "node --env-file=.env.local scripts/import-openings.ts",
-    "seed:phase3": "node --env-file=.env.local scripts/seed-phase3.ts"
+    "seed:phase3": "node --env-file=.env.local scripts/seed-phase3.ts",
+    "licenses:check": "node scripts/licencas.ts",
+    "licenses:write": "node scripts/licencas.ts --write"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -41,6 +43,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
     "eslint-config-prettier": "^10.1.8",
+    "license-checker-rseidelsohn": "5.0.1",
     "prettier": "^3.9.9",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "stockfish": "19.0.1",
