@@ -19,7 +19,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Prática interativa por níveis (fácil, médio, difícil) com dica e explicação
 - [x] Mini-quiz com correção
 - [x] Progresso salvo e selo de lição concluída
-- [ ] Ligações a partir de /aberturas e /finais
+- [x] Ligações a partir de /aberturas e /finais
 
 ## 2. Lições de aberturas (uma por item)
 ### Com brancas

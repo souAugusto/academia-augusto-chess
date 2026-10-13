@@ -30,7 +30,15 @@ export default async function AberturasPage() {
         </h1>
         <p className="max-w-2xl leading-relaxed text-muted">
           Estude cada repertório lance a lance e depois treine: o app joga o
-          adversário e você precisa acertar a sua linha.
+          adversário e você precisa acertar a sua linha. Para aprender as
+          ideias de cada abertura com exercícios e quiz, veja{" "}
+          <Link
+            href="/licoes/aberturas"
+            className="text-accent-text underline-offset-4 hover:underline"
+          >
+            as lições de aberturas
+          </Link>
+          .
         </p>
       </div>
 
