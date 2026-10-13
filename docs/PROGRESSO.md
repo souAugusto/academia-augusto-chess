@@ -2,7 +2,7 @@
 
 ## Estado atual
 - Em andamento: infraestrutura das lições (CHECKLIST, seção 1).
-- Próximo item exato: "Validação pura (chess.js) em src/lib/lessons/validate.ts com testes".
+- Próximo item exato: "Script scripts/validar-conteudo.ts ligado ao prebuild e ao npm test".
 - Decisões abertas: nenhuma.
 - Arquivos parcialmente escritos: nenhum.
 
