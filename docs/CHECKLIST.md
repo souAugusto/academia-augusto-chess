@@ -17,8 +17,8 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Páginas /licoes, /licoes/aberturas, /licoes/finais e /licoes/[slug]
 - [x] Componente da lição: introdução, passo a passo, armadilhas
 - [x] Prática interativa por níveis (fácil, médio, difícil) com dica e explicação
-- [ ] Mini-quiz com correção
-- [ ] Progresso salvo e selo de lição concluída
+- [x] Mini-quiz com correção
+- [x] Progresso salvo e selo de lição concluída
 - [ ] Ligações a partir de /aberturas e /finais
 
 ## 2. Lições de aberturas (uma por item)
