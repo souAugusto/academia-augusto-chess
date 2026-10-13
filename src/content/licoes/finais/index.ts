@@ -3,6 +3,7 @@ import { mateDama } from "./mate-dama.ts";
 import { mateTorre } from "./mate-torre.ts";
 import { mateDuasTorres } from "./mate-duas-torres.ts";
 import { mateDoisBispos } from "./mate-dois-bispos.ts";
+import { mateBispoCavalo } from "./mate-bispo-cavalo.ts";
 
 // Lições de finais, do básico ao avançado. Cada lição fica no próprio arquivo.
 export const ENDGAME_LESSONS: EndgameLesson[] = [
@@ -10,4 +11,5 @@ export const ENDGAME_LESSONS: EndgameLesson[] = [
   mateTorre,
   mateDuasTorres,
   mateDoisBispos,
+  mateBispoCavalo,
 ];

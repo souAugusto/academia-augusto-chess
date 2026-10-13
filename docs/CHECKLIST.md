@@ -63,7 +63,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Rei e torre contra rei
 - [x] Mate com duas torres
 - [x] Mate com dois bispos
-- [ ] Mate com bispo e cavalo (técnica)
+- [x] Mate com bispo e cavalo (técnica)
 ### Finais de peões
 - [ ] Oposição direta
 - [ ] Oposição distante
