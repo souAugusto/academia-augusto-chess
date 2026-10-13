@@ -7,6 +7,8 @@ import { SectionLabel } from "@/components/ui/Label";
 import { ANALYSIS_MIN_PLAN_RANK } from "@/lib/analysis/config";
 import { requireUser } from "@/lib/data/account";
 import { getAnalysis } from "@/lib/data/analyses";
+import { getStudyProgress } from "@/lib/data/lessons";
+import { lessonIndex } from "@/lib/data/lesson-index";
 import { createClient } from "@/lib/supabase/server";
 import { analysisUpgradeText } from "../gate";
 
@@ -39,6 +41,11 @@ export default async function AnaliseSalvaPage({
     if (data?.color === "black") orientation = "b";
   }
 
+  const progress = await getStudyProgress();
+  const completed = [...progress]
+    .filter(([, item]) => item.completed)
+    .map(([slug]) => slug);
+
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -56,6 +63,9 @@ export default async function AnaliseSalvaPage({
           data: analysis.data,
           orientation,
         }}
+        lessons={lessonIndex()}
+        completed={completed}
+        userColor={analysis.importedGameId ? orientation : null}
       />
     </>
   );

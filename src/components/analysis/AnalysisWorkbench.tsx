@@ -29,6 +29,7 @@ import {
   reviewMoves,
   type ReviewedMove,
 } from "@/lib/analysis/review";
+import { suggestLessons, type LessonIndexEntry } from "@/lib/analysis/suggest";
 import {
   formatEval,
   winChance,
@@ -97,7 +98,17 @@ function sanOf(fen: string, uci: string | null): string | null {
   }
 }
 
-export function AnalysisWorkbench({ initial }: { initial: Initial }) {
+export function AnalysisWorkbench({
+  initial,
+  lessons = [],
+  completed = [],
+  userColor = null,
+}: {
+  initial: Initial;
+  lessons?: LessonIndexEntry[];
+  completed?: string[];
+  userColor?: Side | null; // cor do aluno, quando se sabe (partida importada)
+}) {
   const [pgn, setPgn] = useState("");
   const [depth, setDepth] = useState<number>(DEFAULT_ANALYSIS_DEPTH);
   const [status, setStatus] = useState<Status>(
@@ -339,6 +350,9 @@ export function AnalysisWorkbench({ initial }: { initial: Initial }) {
       showBest={showBest}
       setShowBest={setShowBest}
       getEngine={getEngine}
+      lessons={lessons}
+      completed={completed}
+      userColor={userColor}
       saveSlot={
         saved && "id" in saved ? (
           <p className="text-sm text-success">
@@ -424,6 +438,9 @@ function AnalysisView({
   showBest,
   setShowBest,
   getEngine,
+  lessons,
+  completed,
+  userColor,
   saveSlot,
 }: {
   loaded: Loaded;
@@ -436,6 +453,9 @@ function AnalysisView({
   showBest: boolean;
   setShowBest: (value: boolean) => void;
   getEngine: () => StockfishClient;
+  lessons: LessonIndexEntry[];
+  completed: string[];
+  userColor: Side | null;
   saveSlot: ReactNode;
 }) {
   const { game } = loaded;
@@ -468,6 +488,18 @@ function AnalysisView({
   }, [lastIndex, setIndex]);
 
   const critical = criticalMoments(reviewed);
+  const suggestions = useMemo(
+    () =>
+      suggestLessons({
+        moves: game.ucis,
+        fens: game.fens,
+        reviewed,
+        lessons,
+        userColor,
+        completed: new Set(completed),
+      }),
+    [game, reviewed, lessons, userColor, completed],
+  );
   const fen = retry ? game.fens[retry.ply] : game.fens[index];
   const lastUci = !retry && index > 0 ? game.ucis[index - 1] : null;
   const bestHere = data.best[index] ?? null;
@@ -810,6 +842,31 @@ function AnalysisView({
           )}
         </div>
       </section>
+
+      {suggestions.length > 0 && (
+        <section aria-labelledby="sugestoes" className="flex flex-col gap-3">
+          <h3 id="sugestoes" className="font-semibold">
+            O que estudar agora
+          </h3>
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {suggestions.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="flex h-full flex-col gap-1 rounded-card border border-border bg-surface p-4 transition hover:border-border-strong"
+                >
+                  <span className="font-semibold text-accent-text">
+                    {item.title}
+                  </span>
+                  <span className="text-sm leading-relaxed text-muted">
+                    {item.reason}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

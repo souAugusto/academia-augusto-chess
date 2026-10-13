@@ -7,6 +7,8 @@ import { ANALYSIS_MIN_PLAN_RANK } from "@/lib/analysis/config";
 import { requireUser } from "@/lib/data/account";
 import { listAnalyses } from "@/lib/data/analyses";
 import { formatDate } from "@/lib/format";
+import { getStudyProgress } from "@/lib/data/lessons";
+import { lessonIndex } from "@/lib/data/lesson-index";
 import { createClient } from "@/lib/supabase/server";
 import { analysisUpgradeText } from "./gate";
 
@@ -43,7 +45,13 @@ export default async function AnalisePage({
         label: `${data.opening_name ?? "Partida"} · ${formatDate(data.played_at)}`,
       };
   }
-  const saved = await listAnalyses(20);
+  const [saved, progress] = await Promise.all([
+    listAnalyses(20),
+    getStudyProgress(),
+  ]);
+  const completed = [...progress]
+    .filter(([, item]) => item.completed)
+    .map(([slug]) => slug);
 
   return (
     <>
@@ -65,6 +73,9 @@ export default async function AnalisePage({
             ? { kind: "importada", gameId: imported.id, color: imported.color }
             : { kind: "nova" }
         }
+        lessons={lessonIndex()}
+        completed={completed}
+        userColor={imported?.color ?? null}
       />
       <section aria-labelledby="salvas" className="flex flex-col gap-3">
         <h2 id="salvas" className="text-lg font-semibold">

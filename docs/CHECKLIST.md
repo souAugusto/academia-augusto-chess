@@ -116,7 +116,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Modo "Tente de novo"
 - [x] Limite por plano configurável (constante) com mensagem de upgrade
 - [x] "Analisar esta partida" nas partidas importadas
-- [ ] Sugestões de lições a partir da análise
+- [x] Sugestões de lições a partir da análise
 
 ## 5. Licenças
 - [ ] /public/licencas com o LICENSE do pacote do motor
