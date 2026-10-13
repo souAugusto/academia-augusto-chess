@@ -82,7 +82,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Torre atrás do peão passado
 - [x] Rei cortado
 - [x] Torre e peão de torre
-- [ ] Torre ativa contra torre passiva
+- [x] Torre ativa contra torre passiva
 - [ ] 4 contra 3 e 3 contra 2 na mesma ala
 ### Finais de bispos
 - [x] Bispos da mesma cor
