@@ -49,6 +49,12 @@ const EXCEPTIONS: { prefix: string; license: string; reason: string }[] = [
     reason:
       "biblioteca de imagens do Next.js (libvips, LGPL) usada só no servidor, como biblioteca dinâmica",
   },
+  {
+    // No Linux (build da Vercel) a libvips vem num pacote separado, só LGPL.
+    prefix: "@img/sharp-libvips-",
+    license: "LGPL-3.0-or-later",
+    reason: "a mesma libvips, empacotada à parte no Linux",
+  },
 ];
 
 const OUTPUT = "public/licencas/THIRD_PARTY_LICENSES.txt";

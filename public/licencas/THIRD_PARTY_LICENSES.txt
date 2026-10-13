@@ -131,3 +131,4 @@ zod@4.6.5
 
 Exceções aceitas:
   @img/sharp-*: Apache-2.0 AND LGPL-3.0-or-later (biblioteca de imagens do Next.js (libvips, LGPL) usada só no servidor, como biblioteca dinâmica)
+  @img/sharp-libvips-*: LGPL-3.0-or-later (a mesma libvips, empacotada à parte no Linux)
