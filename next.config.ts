@@ -16,6 +16,17 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // Arquivos do motor (versão no nome do arquivo): cache longo no navegador
+        // e na CDN. Se a versão mudar, o nome do arquivo muda junto.
+        source: "/engine/:file*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
         // O service worker nunca fica em cache, para as atualizações chegarem logo.
         source: "/sw.js",
         headers: [
