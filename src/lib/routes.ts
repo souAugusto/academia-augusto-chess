@@ -13,6 +13,8 @@ const PROTECTED_PREFIXES = [
   "/checkout",
   "/questionario",
   "/partidas",
+  "/licoes",
+  "/analise",
   "/admin",
   "/redefinir-senha",
 ];
