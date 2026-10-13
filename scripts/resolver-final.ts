@@ -2,7 +2,7 @@
 // linha principal do motor e os lances do primeiro movimento que mantêm o
 // mesmo resultado (bons candidatos para "accept").
 // Uso: node scripts/resolver-final.ts <vencer|empatar> "FEN" ["FEN" ...]
-//   env DEPTH (padrão 20), PLIES (tamanho da linha, padrão 6)
+//   env DEPTH (padrão 20), PLIES (tamanho da linha, padrão 6), MULTIPV (padrão 8)
 import { Chess } from "chess.js";
 import { winChance } from "../src/lib/analysis/winprob.ts";
 import { NodeEngine } from "./motor-node.ts";
@@ -43,7 +43,7 @@ ${fen}
     }
     const lines = await engine.analyse(fen, {
       depth: DEPTH,
-      multipv: Math.min(8, chess.moves().length),
+      multipv: Math.min(Number(process.env.MULTIPV ?? 8), chess.moves().length),
       maxMs: 30_000,
     });
     const best = lines[0];
