@@ -79,7 +79,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 ### Finais de torre
 - [x] Posição de Lucena
 - [x] Posição de Philidor
-- [ ] Torre atrás do peão passado
+- [x] Torre atrás do peão passado
 - [ ] Rei cortado
 - [ ] Torre e peão de torre
 - [ ] Torre ativa contra torre passiva

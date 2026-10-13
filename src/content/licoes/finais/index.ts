@@ -11,6 +11,7 @@ import { lucena } from "./lucena.ts";
 import { philidorTorre } from "./philidor-torre.ts";
 import { casasChave } from "./casas-chave.ts";
 import { brecha } from "./brecha.ts";
+import { torreAtrasDoPassado } from "./torre-atras-do-passado.ts";
 
 // Lições de finais, do básico ao avançado. Cada lição fica no próprio arquivo.
 export const ENDGAME_LESSONS: EndgameLesson[] = [
@@ -26,4 +27,5 @@ export const ENDGAME_LESSONS: EndgameLesson[] = [
   philidorTorre,
   casasChave,
   brecha,
+  torreAtrasDoPassado,
 ];
