@@ -39,7 +39,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Siciliana Najdorf
 - [x] Siciliana Dragão
 - [x] Siciliana Scheveningen
-- [ ] Siciliana Clássica
+- [x] Siciliana Clássica
 - [ ] Siciliana Fechada
 - [ ] Francesa: Avanço
 - [ ] Francesa: Troca
