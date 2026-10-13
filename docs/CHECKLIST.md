@@ -31,7 +31,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Escocesa
 - [x] Gambito da Dama Aceito
 - [x] Gambito da Dama Recusado
-- [ ] Inglesa
+- [x] Inglesa
 - [ ] Sistema Londres
 - [ ] Catalã
 - [ ] Gambito do Rei (visão geral)
