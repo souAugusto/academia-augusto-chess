@@ -14,6 +14,7 @@ import { brecha } from "./brecha.ts";
 import { torreAtrasDoPassado } from "./torre-atras-do-passado.ts";
 import { reiCortado } from "./rei-cortado.ts";
 import { torrePeaoDeTorre } from "./torre-peao-de-torre.ts";
+import { oposicaoDistante } from "./oposicao-distante.ts";
 
 // Lições de finais, do básico ao avançado. Cada lição fica no próprio arquivo.
 export const ENDGAME_LESSONS: EndgameLesson[] = [
@@ -32,4 +33,5 @@ export const ENDGAME_LESSONS: EndgameLesson[] = [
   torreAtrasDoPassado,
   reiCortado,
   torrePeaoDeTorre,
+  oposicaoDistante,
 ];
