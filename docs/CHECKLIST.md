@@ -97,7 +97,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Dama contra torre
 - [x] Xeque perpétuo
 ### Finais combinados
-- [ ] Torre e peça menor
+- [x] Torre e peça menor
 - [ ] Conversão de vantagem material
 - [x] Como empatar: fortalezas e afogamento
 
