@@ -71,7 +71,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Regra do quadrado
 - [ ] Peão de torre
 - [ ] Peão central e casas-chave
-- [ ] Regra de Réti
+- [x] Regra de Réti
 - [ ] Triangulação
 - [ ] Zugzwang
 - [ ] Peões ligados e passados
