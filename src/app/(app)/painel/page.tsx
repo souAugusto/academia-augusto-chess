@@ -162,7 +162,7 @@ export default async function PainelPage({
         <section className="flex flex-wrap items-center justify-between gap-5 rounded-card border border-accent bg-surface-2 p-6 shadow-card">
           <div className="flex flex-col gap-1">
             <h2 className="text-lg font-semibold">
-              [NOME DO MÉTODO DO INTENSIVO]
+              Método Padrão Finale
             </h2>
             <p className="text-[0.9375rem] text-muted">
               Seus conjuntos de táticas em ciclos de repetição, com cronômetro.

@@ -24,7 +24,7 @@ export const PLAN_COPY: Record<
     tagline: "Treino guiado, em turma pequena",
     features: [
       "Tudo do plano Membro",
-      "[NOME DO MÉTODO DO INTENSIVO]: treino de táticas por ciclos",
+      "Método Padrão Finale: treino de táticas por ciclos",
       "Diagnóstico das suas partidas",
       "Plano de treino individual por nível",
       "Revisões ao vivo na turma de até 10 alunos",

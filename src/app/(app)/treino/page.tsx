@@ -15,7 +15,7 @@ export default async function TreinoPage() {
   if (user.planRank < 2) {
     return (
       <PlanRequired
-        title="[NOME DO MÉTODO DO INTENSIVO]"
+        title="Método Padrão Finale"
         text="O treino por ciclos de repetição faz parte do plano Intensivo."
       />
     );
@@ -29,7 +29,7 @@ export default async function TreinoPage() {
       <div className="flex flex-col gap-2">
         <SectionLabel>Intensivo</SectionLabel>
         <h1 className="font-display text-page font-semibold tracking-tight">
-          [NOME DO MÉTODO DO INTENSIVO]
+          Método Padrão Finale
         </h1>
         <p className="max-w-2xl leading-relaxed text-muted">
           Escolha um conjunto e resolva todos os puzzles, na mesma ordem, ciclo

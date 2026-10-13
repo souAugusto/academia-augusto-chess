@@ -14,7 +14,7 @@ Plataforma premium de treino de xadrez: **táticas, aberturas e finais**, com **
 
 **Planos (somente pagos, decisão de 2026-10-07):**
 - **Membro, R$ 19/mês:** táticas com rating e revisão de erros, aberturas, finais, aulas em vídeo (com PDF e PGN), lives exclusivas, ranking, torneios e grupo no WhatsApp.
-- **Intensivo, R$ 119/mês, turma limitada a 10 alunos:** tudo do Membro, mais o método de treino por ciclos (`[NOME DO MÉTODO DO INTENSIVO]`), diagnóstico das partidas, plano de treino individual, revisões ao vivo na turma, grupo exclusivo da turma no WhatsApp, prioridade nas lives e 1 aula por mês com um mestre nacional em atividade (sem nome de mestre no site até eu liberar).
+- **Intensivo, R$ 119/mês, turma limitada a 10 alunos:** tudo do Membro, mais o método de treino por ciclos (**Método Padrão Finale**), diagnóstico das partidas, plano de treino individual, revisões ao vivo na turma, grupo exclusivo da turma no WhatsApp, prioridade nas lives e 1 aula por mês com um mestre nacional em atividade (sem nome de mestre no site até eu liberar).
 
 **Não existe plano gratuito.** Sem assinatura ativa, a conta existe mas só acessa Home, planos, páginas institucionais e o **puzzle do dia** (única parte pública jogável).
 
@@ -137,9 +137,7 @@ PAYMENTS_LIVE=          # "1" só com confirmação do Augusto
 
 ## 12. Pendências do Augusto (placeholders até preencher)
 
-- `[NOME DO MÉTODO DO INTENSIVO]`
 - Dia e horário das lives; benefício de fundador; duração e estrutura do método
-- Aberturas e finais entram no Membro? (assumido: sim, até ele confirmar)
 - Conta do Asaas (sandbox para testes; produção só com confirmação); domínio definitivo e e-mail de suporte; SMTP próprio
 - Razão social, CNPJ e foro (termos e privacidade)
 - Credencial do Google (OAuth) no Supabase
