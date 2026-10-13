@@ -102,7 +102,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [ ] Como empatar: fortalezas e afogamento
 
 ## 4. Análise de partidas
-- [ ] Lógica pura: chance de vitória, classificação, precisão, momentos críticos (com testes)
+- [x] Lógica pura: chance de vitória, classificação, precisão, momentos críticos (com testes)
 - [ ] Cliente do motor com profundidade e multipv, cancelamento
 - [ ] Cache longo dos arquivos do motor
 - [ ] Cloud eval do Lichess nas primeiras jogadas, com fallback
