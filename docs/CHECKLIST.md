@@ -61,7 +61,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 ### Mates básicos
 - [x] Rei e dama contra rei
 - [x] Rei e torre contra rei
-- [ ] Mate com duas torres
+- [x] Mate com duas torres
 - [ ] Mate com dois bispos
 - [ ] Mate com bispo e cavalo (técnica)
 ### Finais de peões
