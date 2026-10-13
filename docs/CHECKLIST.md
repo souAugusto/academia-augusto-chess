@@ -94,7 +94,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [ ] Cavalo contra bispo
 ### Finais de dama
 - [x] Dama contra peão na 7ª fileira
-- [ ] Dama contra torre
+- [x] Dama contra torre
 - [ ] Xeque perpétuo
 ### Finais combinados
 - [ ] Torre e peça menor

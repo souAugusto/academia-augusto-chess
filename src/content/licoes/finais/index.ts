@@ -17,6 +17,7 @@ import { torrePeaoDeTorre } from "./torre-peao-de-torre.ts";
 import { oposicaoDistante } from "./oposicao-distante.ts";
 import { oposicaoDiagonal } from "./oposicao-diagonal.ts";
 import { damaContraPeao } from "./dama-contra-peao.ts";
+import { damaContraTorre } from "./dama-contra-torre.ts";
 
 // Lições de finais, do básico ao avançado. Cada lição fica no próprio arquivo.
 export const ENDGAME_LESSONS: EndgameLesson[] = [
@@ -38,4 +39,5 @@ export const ENDGAME_LESSONS: EndgameLesson[] = [
   oposicaoDistante,
   oposicaoDiagonal,
   damaContraPeao,
+  damaContraTorre,
 ];
