@@ -15,7 +15,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Script offline scripts/verificar-motor.ts (Stockfish via npm, local)
 - [x] Migration aditiva 0011: progresso de estudo por lição
 - [x] Páginas /licoes, /licoes/aberturas, /licoes/finais e /licoes/[slug]
-- [ ] Componente da lição: introdução, passo a passo, armadilhas
+- [x] Componente da lição: introdução, passo a passo, armadilhas
 - [ ] Prática interativa por níveis (fácil, médio, difícil) com dica e explicação
 - [ ] Mini-quiz com correção
 - [ ] Progresso salvo e selo de lição concluída
