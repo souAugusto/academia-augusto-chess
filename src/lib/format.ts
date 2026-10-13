@@ -54,3 +54,13 @@ export function formatLongDate(date: Date): string {
     year: "numeric",
   }).format(date);
 }
+
+// "13/10/2026" (aceita Date ou texto ISO)
+export function formatDate(value: Date | string): string {
+  return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: BUSINESS_TIME_ZONE,
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(typeof value === "string" ? new Date(value) : value);
+}

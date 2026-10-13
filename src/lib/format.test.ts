@@ -4,6 +4,7 @@ import {
   formatLongDate,
   formatPriceBRL,
   todayInSaoPaulo,
+  formatDate,
 } from "./format";
 
 describe("formatPriceBRL", () => {
@@ -49,5 +50,12 @@ describe("formatLongDate", () => {
     expect(formatLongDate(new Date("2027-03-16T02:59:59Z"))).toBe(
       "15 de março de 2027",
     );
+  });
+});
+
+describe("formatDate", () => {
+  it("usa o fuso de São Paulo", () => {
+    expect(formatDate("2026-10-13T02:00:00Z")).toBe("12/10/2026");
+    expect(formatDate(new Date("2026-10-13T15:00:00Z"))).toBe("13/10/2026");
   });
 });

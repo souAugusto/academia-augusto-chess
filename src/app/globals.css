@@ -79,6 +79,9 @@
   --color-board-light: #c9cedf;
   --color-board-dark: #6f7ba6;
   --color-board-highlight: rgb(232 184 74 / 0.55);
+  /* Barra e gráfico de avaliação (claro = brancas, escuro = pretas). */
+  --color-eval-light: #e9e6dd;
+  --color-eval-dark: #20232d;
 
   --text-hero: clamp(2.5rem, 6vw, 4.5rem);
   --text-hero--line-height: 1.04;

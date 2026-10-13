@@ -70,3 +70,41 @@ export async function getGamesForStats(
   }
   return rows;
 }
+
+export type RecentGame = {
+  id: number;
+  platform: Platform;
+  playedAt: string;
+  color: "white" | "black";
+  result: "win" | "draw" | "loss";
+  openingName: string | null;
+  opponentRating: number | null;
+  timeClass: string;
+};
+
+// Últimas partidas importadas, para a lista com o botão de análise.
+export async function getRecentGames(
+  platform: Platform | null,
+  limit = 20,
+): Promise<RecentGame[]> {
+  const supabase = await createClient();
+  let query = supabase
+    .from("imported_games")
+    .select(
+      "id, platform, played_at, color, result, opening_name, opponent_rating, time_class",
+    )
+    .order("played_at", { ascending: false })
+    .limit(limit);
+  if (platform) query = query.eq("platform", platform);
+  const { data } = await query;
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    platform: row.platform,
+    playedAt: row.played_at,
+    color: row.color,
+    result: row.result,
+    openingName: row.opening_name,
+    opponentRating: row.opponent_rating,
+    timeClass: row.time_class,
+  }));
+}
