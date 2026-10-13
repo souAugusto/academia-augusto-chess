@@ -45,7 +45,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Francesa: Troca
 - [x] Francesa: Tarrasch
 - [x] Caro-Kann: Clássica
-- [ ] Caro-Kann: Avanço
+- [x] Caro-Kann: Avanço
 - [ ] Escandinava
 - [ ] Defesa Eslava
 - [ ] Semi-Eslava
