@@ -2,7 +2,14 @@
 
 import { Chess, type Square } from "chess.js";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { saveAnalysis, loadImportedGame } from "@/app/(app)/analise/actions";
 import { BoardStage } from "@/components/chess/BoardStage";
 import {
@@ -472,20 +479,28 @@ function AnalysisView({
   } | null>(null);
   const [checking, setChecking] = useState(false);
 
+  // Navegar pela partida encerra o modo Tente de novo.
+  const go = useCallback(
+    (value: number | ((current: number) => number)) => {
+      setRetry(null);
+      setIndex(value);
+    },
+    [setIndex],
+  );
+
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       const target = event.target as HTMLElement | null;
       if (target && ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
         return;
-      if (event.key === "ArrowRight")
-        setIndex((v) => Math.min(lastIndex, v + 1));
-      if (event.key === "ArrowLeft") setIndex((v) => Math.max(0, v - 1));
-      if (event.key === "Home") setIndex(0);
-      if (event.key === "End") setIndex(lastIndex);
+      if (event.key === "ArrowRight") go((v) => Math.min(lastIndex, v + 1));
+      if (event.key === "ArrowLeft") go((v) => Math.max(0, v - 1));
+      if (event.key === "Home") go(0);
+      if (event.key === "End") go(lastIndex);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [lastIndex, setIndex]);
+  }, [lastIndex, go]);
 
   const critical = criticalMoments(reviewed);
   const suggestions = useMemo(
@@ -686,7 +701,7 @@ function AnalysisView({
               <button
                 type="button"
                 className={buttonClasses("ghost")}
-                onClick={() => setIndex(0)}
+                onClick={() => go(0)}
                 aria-label="Início"
               >
                 ⏮
@@ -694,21 +709,21 @@ function AnalysisView({
               <button
                 type="button"
                 className={buttonClasses("secondary")}
-                onClick={() => setIndex((v) => Math.max(0, v - 1))}
+                onClick={() => go((v) => Math.max(0, v - 1))}
               >
                 Voltar
               </button>
               <button
                 type="button"
                 className={buttonClasses("secondary")}
-                onClick={() => setIndex((v) => Math.min(lastIndex, v + 1))}
+                onClick={() => go((v) => Math.min(lastIndex, v + 1))}
               >
                 Avançar
               </button>
               <button
                 type="button"
                 className={buttonClasses("ghost")}
-                onClick={() => setIndex(lastIndex)}
+                onClick={() => go(lastIndex)}
                 aria-label="Fim"
               >
                 ⏭
@@ -753,7 +768,7 @@ function AnalysisView({
           sans={game.sans}
           reviewed={reviewed}
           current={index}
-          onSelect={setIndex}
+          onSelect={go}
         />
       </BoardStage>
 
@@ -767,7 +782,7 @@ function AnalysisView({
         evals={data.evals}
         current={index}
         marks={critical.map((move) => move.ply + 1)}
-        onSelect={setIndex}
+        onSelect={go}
       />
 
       <section aria-labelledby="resumo" className="grid gap-4 md:grid-cols-2">

@@ -47,8 +47,9 @@ describe("flip, scoreValue e formatEval", () => {
   });
 
   it("formata para exibir", () => {
-    expect(formatEval({ kind: "cp", value: 123 })).toBe("+1.2");
-    expect(formatEval({ kind: "cp", value: 0 })).toBe("0.0");
+    expect(formatEval({ kind: "cp", value: 123 })).toBe("+1,2");
+    expect(formatEval({ kind: "cp", value: 0 })).toBe("0,0");
     expect(formatEval({ kind: "mate", value: -2 })).toBe("-M2");
+    expect(formatEval({ kind: "cp", value: -250 })).toBe("-2,5");
   });
 });

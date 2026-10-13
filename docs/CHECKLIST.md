@@ -136,7 +136,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] SEO: metadados, Open Graph e dados estruturados
 
 ## 7. Melhoria contínua
-- [ ] Ciclo 1
+- [x] Ciclo 1
 - [ ] Ciclo 2
 - [ ] Ciclo 3
 

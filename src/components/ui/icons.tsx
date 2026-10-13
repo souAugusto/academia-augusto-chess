@@ -59,6 +59,13 @@ export const IconPlay = (p: IconProps) => (
   </Icon>
 );
 
+export const IconChart = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M4 20h16" />
+    <path d="m4 15 5-5 4 3 7-7" />
+  </Icon>
+);
+
 export const IconUser = (p: IconProps) => (
   <Icon {...p}>
     <circle cx="12" cy="8" r="3.5" />

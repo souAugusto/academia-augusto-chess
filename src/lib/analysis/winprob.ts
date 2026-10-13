@@ -36,5 +36,6 @@ export function formatEval(score: EngineScore): string {
   if (score.kind === "mate")
     return score.value > 0 ? `M${score.value}` : `-M${Math.abs(score.value)}`;
   const pawns = score.value / 100;
-  return `${pawns > 0 ? "+" : ""}${pawns.toFixed(1)}`;
+  // Vírgula decimal, como no resto do site.
+  return `${pawns > 0 ? "+" : ""}${pawns.toFixed(1).replace(".", ",")}`;
 }
