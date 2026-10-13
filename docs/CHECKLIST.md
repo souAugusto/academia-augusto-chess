@@ -34,7 +34,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Inglesa
 - [x] Sistema Londres
 - [x] Catalã
-- [ ] Gambito do Rei (visão geral)
+- [x] Gambito do Rei (visão geral)
 ### Com pretas
 - [ ] Siciliana Najdorf
 - [ ] Siciliana Dragão
