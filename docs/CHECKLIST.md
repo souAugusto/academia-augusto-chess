@@ -99,7 +99,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 ### Finais combinados
 - [ ] Torre e peça menor
 - [ ] Conversão de vantagem material
-- [ ] Como empatar: fortalezas e afogamento
+- [x] Como empatar: fortalezas e afogamento
 
 ## 4. Análise de partidas
 - [x] Lógica pura: chance de vitória, classificação, precisão, momentos críticos (com testes)
