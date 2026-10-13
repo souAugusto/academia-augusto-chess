@@ -7,6 +7,15 @@ import type {
   QuizQuestion,
 } from "../../content/licoes/types.ts";
 
+// Os mesmos estilos do questionário (src/lib/style/styles.ts).
+const STYLE_TAGS: readonly string[] = [
+  "atacante",
+  "posicional",
+  "tatico",
+  "defensor",
+  "universal",
+];
+
 // Conferência do conteúdo das lições: todo lance precisa ser legal, todo FEN
 // válido e toda prática precisa ter solução. Devolve a lista de problemas
 // (vazia = conteúdo ok). Usado no build (scripts/validar-conteudo.ts) e nos testes.
@@ -95,6 +104,9 @@ export function validateOpening(lesson: OpeningLesson): string[] {
   checkText(lesson.summary, `${where} resumo`, errors);
   if (lesson.intro.length === 0) errors.push(`${where}: sem introdução`);
   if (lesson.styles.length === 0) errors.push(`${where}: sem estilo indicado`);
+  for (const style of lesson.styles)
+    if (!STYLE_TAGS.includes(style))
+      errors.push(`${where}: estilo desconhecido "${style}"`);
   if (lesson.ideas.white.length === 0 || lesson.ideas.black.length === 0)
     errors.push(`${where}: faltam planos de um dos lados`);
   if (lesson.mainLine.length < 4)

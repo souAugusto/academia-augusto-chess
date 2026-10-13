@@ -8,13 +8,13 @@ export const gambitoDamaAceito: OpeningLesson = {
   side: "brancas",
   eco: "D20-D29",
   difficulty: 2,
-  styles: ["posicional", "universal", "estrategico"],
+  styles: ["posicional", "universal"],
   summary:
     "As pretas pegam o peão c4 e devolvem o centro: as brancas recuperam o peão com o bispo e jogam com mais espaço.",
   intro: [
     "No Gambito da Dama as brancas oferecem o peão c4 para tirar o peão d5 do centro. Não é um gambito de verdade: se as pretas pegarem com 2...dxc4, as brancas recuperam o peão quase sempre, porque segurar o peão extra custa caro.",
     "No Gambito da Dama Aceito as pretas não tentam ficar com o peão. Elas usam o tempo para atacar o centro branco com ...c5 e ...e6. As brancas recuperam o peão com Bxc4 e ficam com mais espaço e desenvolvimento rápido.",
-    "Combina com jogadores Posicionais e Estratégicos, porque a estrutura costuma ter um peão isolado em d4, e com o Universal, porque o jogo pode virar ataque no roque.",
+    "Combina com jogadores Posicionais, porque a estrutura costuma ter um peão isolado em d4, e com o Universal, porque o jogo pode virar ataque no roque.",
   ],
   ideas: {
     white: [

@@ -131,6 +131,16 @@ describe("validateOpening", () => {
   });
 });
 
+describe("estilos", () => {
+  it("acusa estilo que não existe no questionário", () => {
+    const lesson = {
+      ...opening,
+      styles: ["estrategico"],
+    } as unknown as OpeningLesson;
+    expect(validateOpening(lesson).join(" ")).toContain("estilo desconhecido");
+  });
+});
+
 describe("validateEndgame", () => {
   it("aceita lição correta", () => {
     expect(validateEndgame(endgame)).toEqual([]);

@@ -8,13 +8,13 @@ export const espanholaBerlim: OpeningLesson = {
   side: "brancas",
   eco: "C67",
   difficulty: 3,
-  styles: ["posicional", "estrategico"],
+  styles: ["posicional", "defensor"],
   summary:
     "Como as brancas enfrentam a defesa mais sólida contra a Espanhola: o famoso final sem damas e a alternativa 4.d3.",
   intro: [
     "Na Espanhola (ou Ruy López) as brancas jogam 3.Bb5, atacando o cavalo que defende o peão e5. A Defesa Berlim responde com 3...Cf6, contra-atacando o peão e4 em vez de se preocupar com o próprio e5.",
     "Depois de 4.O-O Cxe4 5.d4 a linha principal leva a um final sem damas logo no oitavo lance. As pretas perdem o direito de rocar e ficam com peões dobrados, mas têm o par de bispos e uma posição muito difícil de quebrar. Por isso a Berlim é chamada de muralha.",
-    "Para as brancas, a lição é saber jogar esse final com paciência (o peão e5 dá espaço) ou evitar tudo com 4.d3, mantendo as damas no tabuleiro. Combina com jogadores Posicionais e Estratégicos, que gostam de pequenas vantagens.",
+    "Para as brancas, a lição é saber jogar esse final com paciência (o peão e5 dá espaço) ou evitar tudo com 4.d3, mantendo as damas no tabuleiro. Combina com jogadores Posicionais, que gostam de pequenas vantagens, e com Defensores, que se sentem bem em posições sólidas e técnicas.",
   ],
   ideas: {
     white: [

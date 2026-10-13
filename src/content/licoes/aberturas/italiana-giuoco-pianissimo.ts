@@ -8,13 +8,13 @@ export const italianaGiuocoPianissimo: OpeningLesson = {
   side: "brancas",
   eco: "C50",
   difficulty: 2,
-  styles: ["posicional", "estrategico", "universal"],
+  styles: ["posicional", "defensor", "universal"],
   summary:
     "A Italiana lenta: d3 em vez de d4, manobras de peças e pressão que cresce aos poucos.",
   intro: [
     'Giuoco Pianissimo quer dizer "jogo muito tranquilo". As brancas jogam d3 em vez de d4: protegem o peão e4, mantêm o bispo de c4 e deixam a luta central para depois.',
     "Não é uma abertura passiva. As brancas ganham espaço na ala da dama (a4, b4), levam o cavalo de b1 para g3 pelo caminho d2-f1 e só então escolhem onde abrir o jogo. É a Italiana preferida dos jogadores de elite hoje.",
-    "Combina com os estilos Posicional e Estratégico, que gostam de planos de longo prazo, e com o Universal, porque a posição pode virar ataque no roque a qualquer momento.",
+    "Combina com os estilos Posicional, que gosta de planos de longo prazo, e Defensor, que prefere posições sólidas, e com o Universal, porque a posição pode virar ataque no roque a qualquer momento.",
   ],
   ideas: {
     white: [

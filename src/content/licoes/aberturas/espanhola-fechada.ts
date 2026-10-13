@@ -8,13 +8,13 @@ export const espanholaFechada: OpeningLesson = {
   side: "brancas",
   eco: "C84-C99",
   difficulty: 3,
-  styles: ["posicional", "estrategico", "universal"],
+  styles: ["posicional", "universal"],
   summary:
     "A linha mais clássica da Espanhola: centro com c3 e d4, manobras longas e a manobra do cavalo para g3.",
   intro: [
     "A Espanhola Fechada é uma das aberturas mais estudadas da história. Depois de 3...a6 4.Ba4 Cf6 5.O-O Be7 as pretas não pegam o peão e4: elas protegem o rei e aceitam uma luta longa no centro.",
     "O plano das brancas é sempre parecido: Te1 para proteger e4, c3 e h3 para preparar d4 sem deixar ...Bg4, e a manobra do cavalo Cbd2-f1-g3. O bispo de b3 fica mirando f7 de longe e depois recua para c2, de onde ajuda num ataque no roque.",
-    "Combina com estilos Posicional e Estratégico, por causa dos planos longos, e com o Universal, porque surgem também ataques e sacrifícios (o famoso Ataque Marshall das pretas).",
+    "Combina com o estilo Posicional, por causa dos planos longos, e com o Universal, porque surgem também ataques e sacrifícios (o famoso Ataque Marshall das pretas).",
   ],
   ideas: {
     white: [
