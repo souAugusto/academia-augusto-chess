@@ -105,7 +105,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Lógica pura: chance de vitória, classificação, precisão, momentos críticos (com testes)
 - [x] Cliente do motor com profundidade e multipv, cancelamento
 - [x] Cache longo dos arquivos do motor
-- [ ] Cloud eval do Lichess nas primeiras jogadas, com fallback
+- [x] Cloud eval do Lichess nas primeiras jogadas, com fallback
 - [ ] Entrada: colar PGN (validação) e escolher partida importada (busca do PGN)
 - [ ] Reaproveitar avaliações do Lichess quando existirem
 - [ ] Migration aditiva 0012: análises salvas (JSON compacto, RLS)
