@@ -31,6 +31,7 @@ import { triangulacao } from "./triangulacao.ts";
 import { torreAtiva } from "./torre-ativa.ts";
 import { comoEmpatar } from "./como-empatar.ts";
 import { peaoDeTorre } from "./peao-de-torre.ts";
+import { mesmaAla } from "./mesma-ala.ts";
 
 // Lições de finais, do básico ao avançado. Cada lição fica no próprio arquivo.
 export const ENDGAME_LESSONS: EndgameLesson[] = [
@@ -66,4 +67,5 @@ export const ENDGAME_LESSONS: EndgameLesson[] = [
   torreAtiva,
   comoEmpatar,
   peaoDeTorre,
+  mesmaAla,
 ];
