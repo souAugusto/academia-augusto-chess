@@ -54,12 +54,12 @@ export const triangulacao: EndgameLesson = {
       why: "Rf5 ataca e5 e g5 ao mesmo tempo. O rei preto não defende os dois.",
     },
     {
-      level: "medio",
-      fen: "8/k7/3p4/p2P1p2/P2P1P2/8/8/K7 w - - 0 1",
+      level: "facil",
+      fen: "8/8/3K4/1p1p4/1P1Pk3/8/8/8 w - - 0 1",
       goal: "vencer",
-      solution: ["Kb1"],
-      hint: "Só um lance de rei vence. Comece pela primeira fileira.",
-      why: "Rb1! é o único lance: começa a manobra que permite ao rei branco passar a vez no momento certo.",
+      solution: ["Kc5"],
+      hint: "A mesma ideia do outro lado: ataque dois peões com o rei.",
+      why: "Rc5 ataca b5 e d5. O rei preto não consegue defender os dois.",
     },
     {
       level: "medio",
