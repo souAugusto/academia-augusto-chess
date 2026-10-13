@@ -59,7 +59,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 
 ## 3. Lições de finais (uma por tópico, 5 a 10 posições cada)
 ### Mates básicos
-- [ ] Rei e dama contra rei
+- [x] Rei e dama contra rei
 - [ ] Rei e torre contra rei
 - [ ] Mate com duas torres
 - [ ] Mate com dois bispos
