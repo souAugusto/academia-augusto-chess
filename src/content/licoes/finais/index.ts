@@ -9,6 +9,7 @@ import { regraDoQuadrado } from "./regra-do-quadrado.ts";
 import { regraDeReti } from "./regra-de-reti.ts";
 import { lucena } from "./lucena.ts";
 import { philidorTorre } from "./philidor-torre.ts";
+import { casasChave } from "./casas-chave.ts";
 
 // Lições de finais, do básico ao avançado. Cada lição fica no próprio arquivo.
 export const ENDGAME_LESSONS: EndgameLesson[] = [
@@ -22,4 +23,5 @@ export const ENDGAME_LESSONS: EndgameLesson[] = [
   regraDeReti,
   lucena,
   philidorTorre,
+  casasChave,
 ];
