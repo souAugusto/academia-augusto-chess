@@ -20,7 +20,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
     white: [
       "Montar o centro e4 + d4 com a ajuda de c3.",
       "Usar o bispo de c4 e a dama em b3 contra f7 e b7.",
-      "Se surgir o peão isolado em d4, jogar ativo: Re1, Ne5 e ataque no roque.",
+      "Se surgir o peão isolado em d4, jogar ativo: Te1, Ce5 e ataque no roque.",
       "Rocar cedo para ligar as torres e tirar o rei do centro.",
     ],
     black: [
@@ -31,7 +31,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
     ],
   },
   structure:
-    "Depois de 8...d5 9.exd5 Nxd5 as brancas ficam com um peão isolado em d4 (sem peões vizinhos nas colunas c e e). Ele dá espaço e casas boas (e5, c5) para as peças brancas, mas no final vira um alvo fácil.",
+    "Depois de 8...d5 9.exd5 Cxd5 as brancas ficam com um peão isolado em d4 (sem peões vizinhos nas colunas c e e). Ele dá espaço e casas boas (e5, c5) para as peças brancas, mas no final vira um alvo fácil.",
   mainLine: [
     {
       san: "e4",
@@ -68,7 +68,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
     },
     {
       san: "Bd2",
-      note: "A resposta calma: oferece a troca de bispos. 7.Nc3 é o agudo Ataque Møller.",
+      note: "A resposta calma: oferece a troca de bispos. 7.Cc3 é o agudo Ataque Møller.",
     },
     { san: "Bxd2+" },
     { san: "Nbxd2", note: "Retoma desenvolvendo e defendendo e4." },
@@ -102,7 +102,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
   ],
   variations: [
     {
-      name: "Ataque Møller (7.Nc3)",
+      name: "Ataque Møller (7.Cc3)",
       moves: [
         { san: "e4" },
         { san: "e5" },
@@ -190,7 +190,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
         "Be2",
         "Nf3#",
       ],
-      text: "3...Nd4 deixa o peão e5 pendurado de propósito. Se as brancas pegam com 4.Nxe5?, vem 4...Qg5! atacando o cavalo e g2. Aceitar o desafio com 5.Nxf7?? termina em mate. Contra 3...Nd4 o melhor é 4.Nxd4 exd4 5.O-O ou 4.c3, com vantagem tranquila.",
+      text: "3...Cd4 deixa o peão e5 pendurado de propósito. Se as brancas pegam com 4.Cxe5?, vem 4...Dg5! atacando o cavalo e g2. Aceitar o desafio com 5.Cxf7?? termina em mate. Contra 3...Cd4 o melhor é 4.Cxd4 exd4 5.O-O ou 4.c3, com vantagem tranquila.",
     },
     {
       name: "Ganância no Ataque Møller (contra as pretas)",
@@ -215,12 +215,12 @@ export const italianaGiuocoPiano: OpeningLesson = {
         "Bxc3",
         "Ba3",
       ],
-      text: "No Ataque Møller, 9...Bxc3? pega mais um peão e ameaça a torre de a1, mas 10.Ba3! impede o roque preto. Se as pretas ainda pegarem a torre, Re1+ abre a coluna e contra o rei, e o ataque branco vale muito mais do que o material. O certo para as pretas é 9...d5!, devolvendo material para desenvolver.",
+      text: "No Ataque Møller, 9...Bxc3? pega mais um peão e ameaça a torre de a1, mas 10.Ba3! impede o roque preto. Se as pretas ainda pegarem a torre, Te1+ abre a coluna e contra o rei, e o ataque branco vale muito mais do que o material. O certo para as pretas é 9...d5!, devolvendo material para desenvolver.",
     },
   ],
   mistakes: [
     "Jogar d4 sem c3 antes: depois de ...exd4 as brancas não têm como retomar com peão e o centro desaparece.",
-    "Sacrificar em f7 (Bxf7+ ou Ng5) sem calcular: o ataque precisa de outras peças por perto.",
+    "Sacrificar em f7 (Bxf7+ ou Cg5) sem calcular: o ataque precisa de outras peças por perto.",
     "Com as pretas, esperar demais para ...d5: o centro e4-d4 avança (d5, e5) e empurra as peças pretas para trás.",
     "Com as pretas, pegar o peão e4 em posições onde a coluna e se abre contra o rei que ainda não rocou.",
     "Esquecer de rocar: na Italiana o centro abre rápido, e o rei no meio vira alvo.",
@@ -231,7 +231,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
       before: ["e4", "e5"],
       answer: "Nf3",
       hint: "Desenvolva uma peça que já ataque algo.",
-      why: "2.Nf3 desenvolve o cavalo e ataca o peão e5, obrigando as pretas a defendê-lo.",
+      why: "2.Cf3 desenvolve o cavalo e ataca o peão e5, obrigando as pretas a defendê-lo.",
     },
     {
       level: "facil",
@@ -273,7 +273,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
       answer: "Bd2",
       alternatives: ["Nc3"],
       hint: "Responda ao xeque sem perder material.",
-      why: "7.Bd2 oferece a troca de bispos e mantém tudo protegido. 7.Nc3 também é teoria (Ataque Møller), mas entrega o peão e4.",
+      why: "7.Bd2 oferece a troca de bispos e mantém tudo protegido. 7.Cc3 também é teoria (Ataque Møller), mas entrega o peão e4.",
     },
     {
       level: "dificil",
@@ -295,7 +295,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
       ],
       answer: "Nbxd2",
       hint: "Retome desenvolvendo uma peça que ainda está na casa inicial.",
-      why: "8.Nbxd2 desenvolve o cavalo da ala da dama e ainda defende o peão e4.",
+      why: "8.Cbxd2 desenvolve o cavalo da ala da dama e ainda defende o peão e4.",
     },
     {
       level: "dificil",
@@ -321,7 +321,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
       ],
       answer: "Qb3",
       hint: "A dama pode atacar dois alvos de uma vez.",
-      why: "10.Qb3 pressiona o cavalo de d5 e o peão b7. As pretas precisam gastar um lance para defender (10...Nce7).",
+      why: "10.Db3 pressiona o cavalo de d5 e o peão b7. As pretas precisam gastar um lance para defender (10...Cce7).",
     },
   ],
   quiz: [
@@ -360,7 +360,7 @@ export const italianaGiuocoPiano: OpeningLesson = {
     },
     {
       question:
-        "Na linha principal, qual estrutura as brancas costumam ter depois de 8...d5 9.exd5 Nxd5?",
+        "Na linha principal, qual estrutura as brancas costumam ter depois de 8...d5 9.exd5 Cxd5?",
       options: [
         "Peões dobrados na coluna c",
         "Um peão isolado em d4",

@@ -71,7 +71,7 @@ export const mateDama: EndgameLesson = {
       solution: ["Qa8#"],
       accept: ["Qg7#"],
       hint: "O rei preto está na borda e o seu rei controla a fileira de baixo dele.",
-      why: "Qa8# fecha a oitava fileira; o rei branco em g6 cuida de f7, g7 e h7. Qg7# também é mate, com a dama protegida pelo rei.",
+      why: "Da8# fecha a oitava fileira; o rei branco em g6 cuida de f7, g7 e h7. Dg7# também é mate, com a dama protegida pelo rei.",
     },
     {
       level: "facil",
@@ -79,7 +79,7 @@ export const mateDama: EndgameLesson = {
       goal: "vencer",
       solution: ["Qg8#"],
       hint: "Os reis estão frente a frente. Ataque a fileira do rei preto.",
-      why: "Qg8# dá xeque pela oitava fileira, e o rei branco em d6 tira as casas c7, d7 e e7.",
+      why: "Dg8# dá xeque pela oitava fileira, e o rei branco em d6 tira as casas c7, d7 e e7.",
     },
     {
       level: "medio",
@@ -87,7 +87,7 @@ export const mateDama: EndgameLesson = {
       goal: "vencer",
       solution: ["Qf8#"],
       hint: "Cuidado: um lance de dama natural aqui afoga o rei preto.",
-      why: "Qf8# é mate. A armadilha é Qf7??: o rei preto não estaria em xeque e não teria nenhum lance, e a partida terminaria empatada por afogamento.",
+      why: "Df8# é mate. A armadilha é Df7??: o rei preto não estaria em xeque e não teria nenhum lance, e a partida terminaria empatada por afogamento.",
     },
     {
       level: "medio",
@@ -95,7 +95,7 @@ export const mateDama: EndgameLesson = {
       goal: "vencer",
       solution: ["Qb6", "Ka3", "Qb3#"],
       hint: "Um lance tranquilo de dama deixa o rei preto com uma só casa.",
-      why: "Qb6 tira todas as casas do rei preto, menos a3. Depois de Ka3, Qb3# é mate, com a dama protegida pelo rei de c2.",
+      why: "Db6 tira todas as casas do rei preto, menos a3. Depois de Ra3, Db3# é mate, com a dama protegida pelo rei de c2.",
     },
     {
       level: "medio",
@@ -104,7 +104,7 @@ export const mateDama: EndgameLesson = {
       solution: ["Qd4", "Kb8", "Qd8#"],
       accept: ["Qd2", "Qd3", "Qd5"],
       hint: "Controle a coluna d sem tirar a última casa do rei preto.",
-      why: "Com a dama na coluna d, o rei preto só pode ir para b8, e Qd8# é mate. Cuidado com Qd6??: o rei preto fica sem lances e é afogamento.",
+      why: "Com a dama na coluna d, o rei preto só pode ir para b8, e Dd8# é mate. Cuidado com Dd6??: o rei preto fica sem lances e é afogamento.",
     },
     {
       level: "dificil",
@@ -113,7 +113,7 @@ export const mateDama: EndgameLesson = {
       solution: ["Qc5", "Kb8", "Kb6", "Ka8", "Qc8#"],
       accept: ["Qg7+"],
       hint: "Prenda o rei preto nas duas últimas colunas e traga o seu rei.",
-      why: "Qc5 cerca o rei preto em a8 e b8. O rei branco vem para b6 e a dama dá mate na oitava fileira. Qg7+ também leva ao mate em 3.",
+      why: "Dc5 cerca o rei preto em a8 e b8. O rei branco vem para b6 e a dama dá mate na oitava fileira. Dg7+ também leva ao mate em 3.",
     },
     {
       level: "dificil",
@@ -122,7 +122,7 @@ export const mateDama: EndgameLesson = {
       solution: ["Qd5"],
       accept: ["Ka2"],
       hint: "Use a dama como cerca, a um salto de cavalo do rei preto.",
-      why: "Qd5 prende o rei preto num canto pequeno do tabuleiro; depois o rei branco se aproxima. Ka2 também funciona: o rei vem ajudar antes.",
+      why: "Dd5 prende o rei preto num canto pequeno do tabuleiro; depois o rei branco se aproxima. Ra2 também funciona: o rei vem ajudar antes.",
     },
     {
       level: "dificil",

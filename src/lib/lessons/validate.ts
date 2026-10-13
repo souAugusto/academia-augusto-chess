@@ -190,6 +190,56 @@ export function validateEndgame(lesson: EndgameLesson): string[] {
   return errors;
 }
 
+// Todos os textos corridos da lição (onde o aluno lê lances em português).
+function proseOf(lesson: Lesson): string[] {
+  const quiz = lesson.quiz.flatMap((q) => [
+    q.question,
+    q.explanation,
+    ...q.options,
+  ]);
+  const drills = lesson.practice.flatMap((d) => [d.hint, d.why]);
+  if (lesson.kind === "abertura")
+    return [
+      lesson.summary,
+      ...lesson.intro,
+      ...lesson.ideas.white,
+      ...lesson.ideas.black,
+      lesson.structure,
+      ...lesson.mainLine.map((m) => m.note ?? ""),
+      ...lesson.variations.flatMap((v) => [
+        v.name,
+        v.text,
+        ...v.moves.map((m) => m.note ?? ""),
+      ]),
+      ...lesson.traps.flatMap((t) => [t.name, t.text]),
+      ...lesson.mistakes,
+      ...drills,
+      ...quiz,
+    ];
+  return [
+    lesson.summary,
+    ...lesson.theory,
+    ...lesson.keyPoints,
+    lesson.model.caption,
+    ...lesson.model.moves.map((m) => m.note ?? ""),
+    ...drills,
+    ...quiz,
+  ];
+}
+
+// Lance escrito com letra de peça em inglês (K, Q, N) num texto em português.
+const ENGLISH_SAN =
+  /(?:^|[\s(.,;:"“'])(?:\d+\.{1,3})?[KQN][a-h1-8]?x?[a-h][1-8](?:=[QRBN])?[+#]?(?=$|[\s).,;:!?"”'])/;
+
+export function checkNotation(lesson: Lesson): string[] {
+  return proseOf(lesson)
+    .filter((text) => ENGLISH_SAN.test(text))
+    .map(
+      (text) =>
+        `${lesson.slug}: use notação em português no texto (R, D, T, B, C): "${text.slice(0, 80)}"`,
+    );
+}
+
 export function validateLessons(lessons: Lesson[]): string[] {
   const errors: string[] = [];
   const slugs = new Set<string>();
@@ -202,6 +252,7 @@ export function validateLessons(lessons: Lesson[]): string[] {
       ...(lesson.kind === "abertura"
         ? validateOpening(lesson)
         : validateEndgame(lesson)),
+      ...checkNotation(lesson),
     );
   }
   return errors;
