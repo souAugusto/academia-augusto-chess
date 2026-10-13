@@ -74,7 +74,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Regra de Réti
 - [ ] Triangulação
 - [x] Zugzwang
-- [ ] Peões ligados e passados
+- [x] Peões ligados e passados
 - [x] Brecha (peão de rompimento)
 ### Finais de torre
 - [x] Posição de Lucena
