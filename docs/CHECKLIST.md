@@ -75,7 +75,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [ ] Triangulação
 - [ ] Zugzwang
 - [ ] Peões ligados e passados
-- [ ] Brecha (peão de rompimento)
+- [x] Brecha (peão de rompimento)
 ### Finais de torre
 - [x] Posição de Lucena
 - [x] Posição de Philidor
