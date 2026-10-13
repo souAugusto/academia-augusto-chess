@@ -55,7 +55,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Grünfeld
 - [x] Petroff
 - [x] Defesa Philidor
-- [ ] Defesa Holandesa
+- [x] Defesa Holandesa
 
 ## 3. Lições de finais (uma por tópico, 5 a 10 posições cada)
 ### Mates básicos

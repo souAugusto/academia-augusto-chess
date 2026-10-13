@@ -30,6 +30,7 @@ import { indiaDaDama } from "./india-da-dama.ts";
 import { grunfeld } from "./grunfeld.ts";
 import { petroff } from "./petroff.ts";
 import { philidor } from "./philidor.ts";
+import { holandesa } from "./holandesa.ts";
 
 // Lições de aberturas, na ordem em que aparecem no site. Cada lição fica no
 // próprio arquivo desta pasta.
@@ -65,4 +66,5 @@ export const OPENING_LESSONS: OpeningLesson[] = [
   grunfeld,
   petroff,
   philidor,
+  holandesa,
 ];
