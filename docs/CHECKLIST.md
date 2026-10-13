@@ -6,7 +6,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 ## 0. Preparação
 - [x] Salvar o prompt em docs/PROMPT-MESTRE.md
 - [x] Criar CHECKLIST, PROGRESSO, DECISOES e PENDENCIAS
-- [ ] Reconhecimento do repositório (registrado em PROGRESSO.md)
+- [x] Reconhecimento do repositório (registrado em PROGRESSO.md)
 
 ## 1. Infraestrutura das lições
 - [ ] Tipos do conteúdo (aberturas e finais) em src/content/licoes
