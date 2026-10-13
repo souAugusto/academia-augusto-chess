@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { cloudEvalUrl, parseCloudEval, parseLichessAnalysis } from "./sources";
+import {
+  cloudEvalUrl,
+  normalizeCastling,
+  parseCloudEval,
+  parseLichessAnalysis,
+} from "./sources";
 
 describe("parseCloudEval", () => {
   it("lê avaliação, melhor lance e profundidade", () => {
@@ -37,5 +42,26 @@ describe("parseLichessAnalysis", () => {
       null,
     ]);
     expect(parseLichessAnalysis(undefined, 3)).toBeNull();
+  });
+});
+
+describe("normalizeCastling", () => {
+  const castle =
+    "r1b1kbnr/pppp1ppp/8/4N1q1/2BnP3/8/PPPP1PPP/RNBQK2R w KQkq - 1 5";
+  it("converte o roque do Lichess para o formato padrão", () => {
+    expect(normalizeCastling(castle, "e1h1")).toBe("e1g1");
+    expect(
+      parseCloudEval(
+        { depth: 60, pvs: [{ moves: "e1h1 g5e5", cp: -51 }] },
+        castle,
+      )?.best,
+    ).toBe("e1g1");
+  });
+
+  it("não mexe em lance de torre nem em outros lances", () => {
+    expect(normalizeCastling("4k3/8/8/8/8/8/8/K3R3 w - - 0 1", "e1h1")).toBe(
+      "e1h1",
+    );
+    expect(normalizeCastling(castle, "e5f7")).toBe("e5f7");
   });
 });

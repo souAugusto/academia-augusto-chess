@@ -137,17 +137,6 @@ export async function saveAnalysis(
   );
   const supabase = await createClient();
 
-  if (parsed.data.importedGameId === null) {
-    const { count } = await supabase
-      .from("game_analyses")
-      .select("id", { count: "exact", head: true });
-    if ((count ?? 0) >= MAX_SAVED_ANALYSES)
-      return {
-        ok: false,
-        message: `Você já tem ${MAX_SAVED_ANALYSES} análises salvas. Apague alguma para salvar outra.`,
-      };
-  }
-
   const row = {
     user_id: access.userId,
     imported_game_id: parsed.data.importedGameId,
@@ -159,16 +148,39 @@ export async function saveAnalysis(
     accuracy_black: gameAccuracy(reviewed, "b"),
     updated_at: new Date().toISOString(),
   };
-  const query =
-    parsed.data.importedGameId === null
-      ? supabase.from("game_analyses").insert(row)
-      : supabase
-          .from("game_analyses")
-          .upsert(row, { onConflict: "user_id,imported_game_id" });
-  const { data, error } = await query.select("id").single();
+  // Partida importada: reanalisar substitui a análise anterior da mesma partida.
+  // (O índice único é parcial, então o upsert do PostgREST não serve aqui.)
+  let existingId: string | null = null;
+  if (parsed.data.importedGameId !== null) {
+    const { data: existing } = await supabase
+      .from("game_analyses")
+      .select("id")
+      .eq("imported_game_id", parsed.data.importedGameId)
+      .maybeSingle();
+    existingId = existing?.id ?? null;
+  }
+  if (!existingId) {
+    const { count } = await supabase
+      .from("game_analyses")
+      .select("id", { count: "exact", head: true });
+    if ((count ?? 0) >= MAX_SAVED_ANALYSES)
+      return {
+        ok: false,
+        message: `Você já tem ${MAX_SAVED_ANALYSES} análises salvas. Apague alguma para salvar outra.`,
+      };
+  }
+  const { data, error } = existingId
+    ? await supabase
+        .from("game_analyses")
+        .update(row)
+        .eq("id", existingId)
+        .select("id")
+        .single()
+    : await supabase.from("game_analyses").insert(row).select("id").single();
   if (error || !data)
     return { ok: false, message: "Não consegui salvar a análise." };
   revalidatePath("/analise");
+  revalidatePath("/partidas");
   return { ok: true, id: data.id };
 }
 

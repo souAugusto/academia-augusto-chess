@@ -77,6 +77,7 @@ export async function runAnalysis(
       try {
         cloud = parseCloudEval(
           await input.fetchJson(cloudEvalUrl(fen), signal),
+          fen,
         );
       } catch {
         cloud = null;

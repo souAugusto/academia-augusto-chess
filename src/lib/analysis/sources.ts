@@ -2,6 +2,7 @@
 // - nuvem do Lichess (posições muito jogadas, normalmente as primeiras);
 // - análise que o Lichess já fez de uma partida importada de lá.
 // As duas APIs devolvem avaliações do ponto de vista das BRANCAS.
+import { Chess } from "chess.js";
 import type { EngineScore } from "./winprob";
 
 export const CLOUD_EVAL_URL = "https://lichess.org/api/cloud-eval";
@@ -16,7 +17,26 @@ export type CloudEval = {
 
 type CloudPv = { moves?: string; cp?: number; mate?: number };
 
-export function parseCloudEval(json: unknown): CloudEval | null {
+// O Lichess escreve o roque como "rei captura torre" (e1h1). Converte para o
+// formato padrão (e1g1), olhando a posição para não confundir com lance de torre.
+export function normalizeCastling(fen: string, uci: string): string {
+  const castles: Record<string, string> = {
+    e1h1: "e1g1",
+    e1a1: "e1c1",
+    e8h8: "e8g8",
+    e8a8: "e8c8",
+  };
+  const standard = castles[uci];
+  if (!standard) return uci;
+  try {
+    const piece = new Chess(fen).get(uci.slice(0, 2) as never);
+    return piece?.type === "k" ? standard : uci;
+  } catch {
+    return uci;
+  }
+}
+
+export function parseCloudEval(json: unknown, fen?: string): CloudEval | null {
   if (!json || typeof json !== "object") return null;
   const data = json as { depth?: number; pvs?: CloudPv[] };
   const pv = data.pvs?.[0];
@@ -28,7 +48,8 @@ export function parseCloudEval(json: unknown): CloudEval | null {
         ? { kind: "cp", value: pv.cp }
         : null;
   if (!score) return null;
-  const best = pv.moves?.split(" ")[0] ?? null;
+  const first = pv.moves?.split(" ")[0] ?? null;
+  const best = first && fen ? normalizeCastling(fen, first) : first;
   return { score, best: best || null, depth: data.depth };
 }
 
