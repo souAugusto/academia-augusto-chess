@@ -114,7 +114,7 @@ Marque `[x]` ao concluir e faça commit na hora ("checkpoint: <item>").
 - [x] Gráfico de avaliação clicável
 - [x] Resumo: precisão, contagens e 3 momentos críticos
 - [x] Modo "Tente de novo"
-- [ ] Limite por plano configurável (constante) com mensagem de upgrade
+- [x] Limite por plano configurável (constante) com mensagem de upgrade
 - [ ] "Analisar esta partida" nas partidas importadas
 - [ ] Sugestões de lições a partir da análise
 
