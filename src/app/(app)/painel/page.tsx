@@ -1,3 +1,5 @@
+import { TitleProgressCard } from "@/components/titles/TitleProgressCard";
+import { getMyTitleSummary } from "@/lib/data/titles";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { APP_SECTIONS } from "@/components/app/modules";
@@ -53,13 +55,15 @@ export default async function PainelPage({
     );
   }
 
-  const [stats, streak, reviewDue, nextLesson, trails] = await Promise.all([
-    getMyTacticStats(user.id),
-    getStreak(user.id),
-    getReviewDueCount(),
-    getNextLesson(),
-    listTrails(),
-  ]);
+  const [stats, streak, reviewDue, nextLesson, trails, titles] =
+    await Promise.all([
+      getMyTacticStats(user.id),
+      getStreak(user.id),
+      getReviewDueCount(),
+      getNextLesson(),
+      listTrails(),
+      getMyTitleSummary(user.id),
+    ]);
 
   return (
     <>
@@ -67,6 +71,16 @@ export default async function PainelPage({
       {params.senha === "alterada" && (
         <FormAlert tone="sucesso">Sua senha foi alterada.</FormAlert>
       )}
+
+      <section
+        aria-labelledby="titulo-atual"
+        className="flex flex-col gap-3 rounded-card border border-border bg-surface p-6 shadow-card"
+      >
+        <h2 id="titulo-atual" className="text-lg font-semibold">
+          Seu título
+        </h2>
+        <TitleProgressCard summary={titles} />
+      </section>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Reveal index={0} className="flex">

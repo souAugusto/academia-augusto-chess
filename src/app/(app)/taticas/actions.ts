@@ -9,7 +9,14 @@ import {
   toTacticPuzzle,
   type TacticPuzzle,
 } from "@/lib/data/tactics";
+import { awardTitles } from "@/lib/data/titles";
+import { todayInSaoPaulo } from "@/lib/format";
 import { difficultyRange, nextRating, type Difficulty } from "@/lib/rating";
+import {
+  IMPLAUSIBLE_MESSAGES,
+  implausibleReason,
+} from "@/lib/tactics/plausibility";
+import type { Title } from "@/lib/titles";
 import { median, nextReview } from "@/lib/srs";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -114,6 +121,8 @@ const attemptSchema = z.object({
   puzzleId: z.string().min(1).max(64),
   moves: z.array(z.string().regex(UCI)).max(30),
   seconds: z.number().min(0).max(86_400),
+  // Usou "Dica" ou "Ver solução": conta como errado.
+  assisted: z.boolean().default(false),
 });
 
 export type AttemptResult = {
@@ -122,12 +131,15 @@ export type AttemptResult = {
   rated: boolean;
   ratingBefore: number;
   ratingAfter: number;
+  newTitles: Title[]; // títulos conquistados agora (celebração)
+  notice: string | null; // por que não contou para o rating, quando for o caso
 };
 
 export async function submitPuzzleAttempt(input: {
   puzzleId: string;
   moves: string[];
   seconds: number;
+  assisted?: boolean;
 }): Promise<AttemptResult | Failure> {
   const parsed = attemptSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "Tentativa inválida." };
@@ -140,34 +152,71 @@ export async function submitPuzzleAttempt(input: {
 
   const { data: puzzle } = await supabase
     .from("puzzles")
-    .select("id, fen, moves, first_move_is_setup, rating")
+    .select("id, fen, moves, first_move_is_setup, rating, source")
     .eq("id", puzzleId)
     .maybeSingle();
   if (!puzzle) return { ok: false, error: "Puzzle não encontrado." };
 
   // A decisão de "resolveu" é do servidor, refazendo os lances enviados.
-  const { solved } = evaluateAttempt(puzzle, moves);
+  // Dica ou "Ver solução" contam como erro.
+  const solved = evaluateAttempt(puzzle, moves).solved && !parsed.data.assisted;
 
-  const [{ data: previousAttempts }, { data: review }, stats] =
-    await Promise.all([
-      supabase
-        .from("attempts")
-        .select("seconds, solved, rated")
-        .eq("puzzle_id", puzzleId),
-      supabase
-        .from("review_state")
-        .select("ease, interval_days, repetitions, lapses")
-        .eq("puzzle_id", puzzleId)
-        .maybeSingle(),
-      getMyTacticStats(access.userId),
-    ]);
+  const dayStart = `${todayInSaoPaulo()}T00:00:00-03:00`;
+  const [
+    { data: previousAttempts },
+    { data: review },
+    stats,
+    { data: lastAttempt },
+    { count: ratedToday },
+  ] = await Promise.all([
+    supabase
+      .from("attempts")
+      .select("seconds, solved, rated")
+      .eq("user_id", access.userId)
+      .eq("puzzle_id", puzzleId),
+    supabase
+      .from("review_state")
+      .select("ease, interval_days, repetitions, lapses")
+      .eq("puzzle_id", puzzleId)
+      .maybeSingle(),
+    getMyTacticStats(access.userId),
+    supabase
+      .from("attempts")
+      .select("created_at")
+      .eq("user_id", access.userId)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+    supabase
+      .from("attempts")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", access.userId)
+      .eq("rated", true)
+      .gte("created_at", dayStart),
+  ]);
 
-  // Só a primeira tentativa em cada puzzle mexe no rating.
-  const rated = !(previousAttempts ?? []).some((attempt) => attempt.rated);
+  // Só a primeira tentativa em cada puzzle mexe no rating, e só em puzzles do
+  // banco com rating (puzzles personalizados e sem rating não contam).
+  const firstTry = !(previousAttempts ?? []).some((attempt) => attempt.rated);
+  const countable = puzzle.source !== "custom" && puzzle.rating !== null;
+  // `moves` traz só os lances do aluno (o tabuleiro joga os do adversário).
+  const userMoves = Math.max(1, moves.length);
+  const implausible =
+    firstTry && countable
+      ? implausibleReason({
+          userMoves,
+          seconds: parsed.data.seconds,
+          secondsSinceLastAttempt: lastAttempt?.created_at
+            ? (Date.now() - new Date(lastAttempt.created_at).getTime()) / 1000
+            : null,
+          ratedToday: ratedToday ?? 0,
+        })
+      : null;
+  const rated = firstTry && countable && !implausible;
   const after = rated
     ? nextRating(
         { rating: stats.rating, games: stats.games },
-        puzzle.rating ?? stats.rating,
+        puzzle.rating as number,
         solved,
       )
     : { rating: stats.rating, games: stats.games };
@@ -242,11 +291,22 @@ export async function submitPuzzleAttempt(input: {
     }
   }
 
+  // Títulos: concedidos pelo servidor; só os novos voltam (celebração única).
+  const newTitles = rated
+    ? await awardTitles(access.userId, after.rating, after.games)
+    : [];
+
   return {
     ok: true,
     solved,
     rated,
     ratingBefore: stats.rating,
     ratingAfter: after.rating,
+    newTitles,
+    notice: implausible
+      ? IMPLAUSIBLE_MESSAGES[implausible]
+      : !countable && firstTry
+        ? "Este puzzle não vale rating."
+        : null,
   };
 }

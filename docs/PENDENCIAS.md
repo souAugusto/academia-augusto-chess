@@ -22,3 +22,4 @@
 - **Proteção contra senhas vazadas desligada no Supabase Auth.** O verificador de segurança do Supabase recomenda ligar em Authentication > Policies (Leaked password protection). Depende do plano do Supabase.
 - **Migration 0013** (tirar a exceção de admin na leitura das análises): escrita, aguardando "pode aplicar".
 - **Revisar a lista de palavras proibidas em apelidos** (`src/content/apelidos-proibidos.ts`): é simples e editável; inclua ou tire o que achar melhor.
+- **Ranking é de motivação:** como as soluções dos puzzles chegam ao navegador, um aluno técnico consegue forjar acertos. Não oferecer prêmio pelo ranking sem antes mudar a validação (ver `docs/DECISOES.md`).

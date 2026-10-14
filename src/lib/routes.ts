@@ -15,6 +15,8 @@ const PROTECTED_PREFIXES = [
   "/partidas",
   "/licoes",
   "/analise",
+  "/titulos",
+  "/comunidade",
   "/admin",
   "/redefinir-senha",
 ];

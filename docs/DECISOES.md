@@ -35,3 +35,15 @@ Prompt de referência: `docs/PROMPT_PERSONALIZACAO_TITULOS.md`.
 - **Sons gerados por código** (Web Audio, `src/lib/sound/synth.ts`): os sons do Lichess são AGPL ou NC, então a Finale gera os próprios. Sem arquivos, sem licença de terceiros, latência mínima. Nada toca antes do primeiro toque/clique; no iPhone, o modo "ambient" respeita a chave de silêncio.
 - **Tema padrão continua o atual** ("Finale", azul-acinzentado). O "verde e creme" do prompt antigo entrou como opção.
 - **Bio privada por enquanto:** o perfil público (Bloco B) mostra só apelido, foto, título e rating.
+
+## Rating tático, títulos e ranking — Bloco B (2026-10-14)
+- **Rating:** usa o rating de táticas que já existia (`user_stats`, começa em 1500), por decisão do Augusto. A conta continua no servidor (`src/lib/rating.ts`, K = 40 nos 30 primeiros e 20 depois), sem função SQL nova.
+- **Só a primeira tentativa de cada puzzle conta.** Repetir um puzzle (inclusive pela revisão) não muda o rating, o que impede inflar o número.
+- **Não contam para o rating:** puzzles personalizados, puzzles sem rating, puzzle do dia, ciclos do Método Padrão Finale e revisão. Usar "Dica" ou "Ver solução" conta como erro.
+- **Travas de plausibilidade** (`src/lib/tactics/plausibility.ts`): menos de 0,8 s por lance, menos de 2 s depois da tentativa anterior ou mais de 300 puzzles valendo rating no dia. A tentativa é gravada, mas não mexe no rating nem concede título.
+- **Limitação de segurança conhecida:** o navegador recebe a solução do puzzle (o tabuleiro precisa dela para responder na hora). Uma pessoa técnica consegue forjar acertos dentro das travas. Por isso o ranking é de **motivação, não de competição com prêmio**. Se um dia houver prêmio, será preciso esconder as soluções e validar lance a lance no servidor.
+- **Títulos permanentes:** concedidos só depois de 30 puzzles contados e nunca retirados; o exibido é o mais alto já conquistado. Ao completar 30 puzzles, o aluno pode ganhar vários de uma vez; a celebração mostra só o mais alto. A celebração aparece uma única vez por título (só os títulos recém-inseridos voltam na resposta).
+- **Escada editável no admin** (`/admin/titulos`), sem títulos oficiais da FIDE ou da federação (o formulário recusa nomes como "Grande Mestre" e "Mestre Nacional"). Mudar o rating mínimo não tira títulos já conquistados.
+- **Ranking em `/comunidade`:** só apelido, foto, título e rating. Entra quem tem apelido, deixou "aparecer no ranking" ligado e tem 30+ puzzles contados. Só quem tem plano ativo vê. A linha do próprio aluno aparece mesmo fora do top 50.
+- **Imagem para compartilhar** (`/api/titulo/[apelido]/og`, quadrada ou vertical): só sai para quem aparece no ranking ou para o próprio aluno logado.
+- **Alunos antigos:** quem já tinha 30+ puzzles recebe os títulos (com celebração) no próximo puzzle valendo rating.
