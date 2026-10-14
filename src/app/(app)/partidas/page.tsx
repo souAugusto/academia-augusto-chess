@@ -70,8 +70,9 @@ export default async function PartidasPage({
         </h1>
         <p className="max-w-2xl leading-relaxed text-muted">
           Importe suas partidas públicas do Chess.com e do Lichess e veja como
-          você joga: resultados, aberturas, ritmos e rating. São só números das
-          partidas, sem análise de motor.
+          você joga: resultados, aberturas, ritmos e rating. Depois, abra
+          qualquer partida recente na análise com o motor para ver os erros e os
+          momentos críticos.
         </p>
       </div>
 

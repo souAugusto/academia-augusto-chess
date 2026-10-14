@@ -1,4 +1,5 @@
 import {
+  IconBoard,
   IconBranch,
   IconChart,
   IconFlag,
@@ -8,12 +9,13 @@ import {
 } from "@/components/ui/icons";
 
 // Áreas do app: usadas na navegação (desktop e barra inferior) e no Painel.
-// `mobile: false` deixa a área fora da barra inferior (cabem só cinco).
+// `mobile: false` deixa a área fora da barra inferior (cabem só seis).
 export const APP_SECTIONS = [
   { id: "painel", href: "/painel", label: "Painel", Icon: IconHome },
   { id: "taticas", href: "/taticas", label: "Táticas", Icon: IconTarget },
   { id: "aberturas", href: "/aberturas", label: "Aberturas", Icon: IconBranch },
   { id: "finais", href: "/finais", label: "Finais", Icon: IconFlag },
+  { id: "partidas", href: "/partidas", label: "Partidas", Icon: IconBoard },
   { id: "aulas", href: "/aulas", label: "Aulas", Icon: IconPlay },
   {
     id: "analise",

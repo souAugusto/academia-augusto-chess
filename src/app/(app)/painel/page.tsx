@@ -5,7 +5,6 @@ import { FormAlert } from "@/components/forms/Field";
 import { ProgressFill, Reveal } from "@/components/motion/Reveal";
 import { StreakWeek } from "@/components/progress/StreakWeek";
 import { buttonClasses } from "@/components/ui/button";
-import { IconTarget } from "@/components/ui/icons";
 import { Card } from "@/components/ui/Card";
 import { SectionLabel } from "@/components/ui/Label";
 import { PLAN_NAMES, requireUser } from "@/lib/data/account";
@@ -245,17 +244,6 @@ export default async function PainelPage({
               </Link>
             </li>
           ))}
-          <li>
-            <Link
-              href="/partidas"
-              className="flex h-full flex-col gap-3 rounded-card border border-border bg-surface p-5 shadow-card transition hover:border-border-strong"
-            >
-              <span className="flex size-10 items-center justify-center rounded-control bg-surface-2 text-accent-text">
-                <IconTarget />
-              </span>
-              <span className="font-semibold">Minhas partidas</span>
-            </Link>
-          </li>
         </ul>
       </section>
     </>
