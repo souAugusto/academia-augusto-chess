@@ -1,3 +1,4 @@
+import { getMyProfile } from "@/lib/data/profile";
 import type { Metadata } from "next";
 import { PlanRequired } from "@/components/app/PlanRequired";
 import { TacticsTrainer } from "@/components/tactics/TacticsTrainer";
@@ -24,9 +25,10 @@ export default async function TaticasPage({
     );
   }
 
-  const [stats, reviewDue] = await Promise.all([
+  const [stats, reviewDue, profile] = await Promise.all([
     getMyTacticStats(user.id),
     getReviewDueCount(),
+    getMyProfile(user.id),
   ]);
   return (
     <TacticsTrainer
@@ -34,6 +36,7 @@ export default async function TaticasPage({
       initialSolved={stats.solved}
       initialMode={params.modo === "revisao" ? "revisao" : "livre"}
       initialReviewDue={reviewDue}
+      nickname={profile.nickname}
       title={
         <>
           <SectionLabel>Treino</SectionLabel>

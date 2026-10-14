@@ -1,3 +1,5 @@
+import { TitleBadge } from "@/components/titles/TitleBadge";
+import { getMyTitleSummary } from "@/lib/data/titles";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Avatar } from "@/components/account/Avatar";
@@ -18,7 +20,10 @@ export const metadata: Metadata = { title: "Perfil" };
 
 export default async function PerfilPage() {
   const user = await requireUser("/conta/perfil");
-  const profile = await getMyProfile(user.id);
+  const [profile, titles] = await Promise.all([
+    getMyProfile(user.id),
+    getMyTitleSummary(user.id),
+  ]);
   const next = nextNicknameChange(profile.nicknameChangedAt);
   const shownName = profile.nickname ?? user.name;
 
@@ -40,6 +45,15 @@ export default async function PerfilPage() {
           <span className="truncate font-semibold">
             {profile.nickname ?? "Sem apelido ainda"}
           </span>
+          {titles.current && (
+            <span>
+              <TitleBadge
+                name={titles.current.name}
+                color={titles.current.color}
+                size="sm"
+              />
+            </span>
+          )}
           <span className="text-sm text-muted">
             Plano: {PLAN_NAMES[user.planRank] ?? "nenhum"} ·{" "}
             <Link href="/conta" className="text-accent-text hover:underline">

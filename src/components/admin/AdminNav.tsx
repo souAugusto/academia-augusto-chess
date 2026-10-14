@@ -12,6 +12,7 @@ const LINKS = [
   { href: "/admin/finais", label: "Finais" },
   { href: "/admin/conjuntos", label: "Conjuntos" },
   { href: "/admin/trilhas", label: "Trilhas" },
+  { href: "/admin/titulos", label: "Títulos" },
   { href: "/admin/puzzle-do-dia", label: "Puzzle do dia" },
   { href: "/admin/configuracoes", label: "Lives e grupos" },
 ];

@@ -27,6 +27,7 @@ export type PuzzleOutcome = {
   solved: boolean;
   moves: string[];
   seconds: number;
+  assisted: boolean; // usou a dica (o servidor conta como erro)
 };
 
 type PuzzleBoardProps = {
@@ -91,6 +92,7 @@ export function PuzzleBoard({
   const [message, setMessage] = useState("");
   const startedAt = useRef(0);
   const reported = useRef(false);
+  const assisted = useRef(false);
   const timers = useRef<number[]>([]);
   const reducedMotion = useReducedMotion();
 
@@ -128,7 +130,12 @@ export function PuzzleBoard({
   function report(solved: boolean, moves: string[]) {
     if (reported.current) return;
     reported.current = true;
-    onOutcome?.({ solved, moves, seconds: (now() - startedAt.current) / 1000 });
+    onOutcome?.({
+      solved,
+      moves,
+      seconds: (now() - startedAt.current) / 1000,
+      assisted: assisted.current,
+    });
   }
 
   const active = game.phase === "playing" || game.phase === "failed";
@@ -198,6 +205,7 @@ export function PuzzleBoard({
   function showHint() {
     const expected = line[game.index];
     if (!active || !expected) return;
+    assisted.current = true;
     setHint(expected.slice(0, 2));
     setMessage("A peça destacada é a que você deve mover.");
   }

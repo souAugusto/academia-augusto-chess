@@ -53,3 +53,31 @@ describe("difficultyRange", () => {
     expect(difficultyRange(1500, "facil")).toEqual({ min: 1150, max: 1400 });
   });
 });
+
+describe("nextRating: valores esperados", () => {
+  // K = 40 nos 30 primeiros puzzles; K = 20 depois.
+  it("puzzle mais difícil (+400): acerto vale muito, erro custa pouco", () => {
+    expect(nextRating({ rating: 1500, games: 0 }, 1900, true).rating).toBe(
+      1536,
+    );
+    expect(nextRating({ rating: 1500, games: 0 }, 1900, false).rating).toBe(
+      1496,
+    );
+  });
+  it("puzzle mais fácil (-400): acerto vale pouco, erro custa muito", () => {
+    expect(nextRating({ rating: 1500, games: 0 }, 1100, true).rating).toBe(
+      1504,
+    );
+    expect(nextRating({ rating: 1500, games: 0 }, 1100, false).rating).toBe(
+      1464,
+    );
+  });
+  it("mesmo nível, depois do período provisório: ±10", () => {
+    expect(nextRating({ rating: 1600, games: 50 }, 1600, true).rating).toBe(
+      1610,
+    );
+    expect(nextRating({ rating: 1600, games: 50 }, 1600, false).rating).toBe(
+      1590,
+    );
+  });
+});

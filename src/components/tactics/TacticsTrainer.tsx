@@ -19,11 +19,13 @@ import {
   PuzzleBoard,
   type PuzzleOutcome,
 } from "@/components/chess/PuzzleBoard";
+import { TitleCelebration } from "@/components/titles/TitleCelebration";
 import { buttonClasses } from "@/components/ui/button";
 import { Card } from "@/components/ui/Card";
 import { THEME_FILTERS, themeLabel } from "@/lib/chess/themes";
 import type { TacticPuzzle } from "@/lib/data/tactics";
 import { DIFFICULTIES, type Difficulty } from "@/lib/rating";
+import type { Title } from "@/lib/titles";
 
 type Mode = "livre" | "revisao";
 
@@ -32,6 +34,7 @@ type TacticsTrainerProps = {
   initialSolved: number;
   initialMode: Mode;
   initialReviewDue: number;
+  nickname: string | null; // para compartilhar o título
   title: ReactNode;
 };
 
@@ -40,8 +43,10 @@ export function TacticsTrainer({
   initialSolved,
   initialMode,
   initialReviewDue,
+  nickname,
   title,
 }: TacticsTrainerProps) {
+  const [celebrating, setCelebrating] = useState<Title | null>(null);
   const [mode, setMode] = useState<Mode>(
     initialMode === "revisao" && initialReviewDue > 0 ? "revisao" : "livre",
   );
@@ -119,12 +124,16 @@ export function TacticsTrainer({
       puzzleId: puzzle.id,
       moves: outcome.moves,
       seconds: outcome.seconds,
+      assisted: outcome.assisted,
     });
     if (!response.ok) {
       setError(response.error);
       return;
     }
     setResult(response);
+    // Vários títulos de uma vez (ex.: ao completar 30 puzzles): celebra o mais alto.
+    const highest = response.newTitles.at(-1);
+    if (highest) setCelebrating(highest);
     setRating(response.ratingAfter);
     if (response.rated && response.solved) setSolvedCount((count) => count + 1);
   }
@@ -165,7 +174,8 @@ export function TacticsTrainer({
       </p>
       {!result.rated && (
         <p className="text-sm text-muted">
-          Você já tinha tentado este puzzle: o rating não mudou.
+          {result.notice ??
+            "Você já tinha tentado este puzzle: o rating não mudou."}
         </p>
       )}
     </div>
@@ -314,15 +324,24 @@ export function TacticsTrainer({
     );
 
   return (
-    <PuzzleBoard
-      key={puzzle.id}
-      puzzle={puzzle}
-      onOutcome={handleOutcome}
-      title={title}
-      stats={stats}
-      result={resultBox}
-      extraActions={nextAction}
-      below={below}
-    />
+    <>
+      {celebrating && (
+        <TitleCelebration
+          title={celebrating}
+          nickname={nickname}
+          onClose={() => setCelebrating(null)}
+        />
+      )}
+      <PuzzleBoard
+        key={puzzle.id}
+        puzzle={puzzle}
+        onOutcome={handleOutcome}
+        title={title}
+        stats={stats}
+        result={resultBox}
+        extraActions={nextAction}
+        below={below}
+      />
+    </>
   );
 }
