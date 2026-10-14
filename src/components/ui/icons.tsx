@@ -59,6 +59,15 @@ export const IconPlay = (p: IconProps) => (
   </Icon>
 );
 
+// Tabuleiro: as partidas do aluno.
+export const IconBoard = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="4" y="4" width="16" height="16" rx="2" />
+    <path d="M4 12h16M12 4v16" />
+    <path d="M4 8h4v4H4zM12 8h4M8 12h4v4H8zM16 12h4v4h-4zM12 16h4v4" />
+  </Icon>
+);
+
 export const IconChart = (p: IconProps) => (
   <Icon {...p}>
     <path d="M4 20h16" />

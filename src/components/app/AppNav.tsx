@@ -45,7 +45,7 @@ export function AppBottomNav() {
       aria-label="Áreas de treino"
       className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-glass pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden"
     >
-      <ul className="mx-auto grid h-bottom-nav max-w-lg grid-cols-5">
+      <ul className="mx-auto grid h-bottom-nav max-w-lg grid-cols-6">
         {MOBILE_SECTIONS.map(({ href, label, Icon }) => {
           const active = isActive(pathname, href);
           return (
