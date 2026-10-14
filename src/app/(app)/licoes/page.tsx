@@ -14,8 +14,8 @@ import { getStudyProgress } from "@/lib/data/lessons";
 export const metadata: Metadata = { title: "Lições" };
 
 export default async function LicoesPage() {
-  await requireUser("/licoes");
-  const progress = await getStudyProgress();
+  const user = await requireUser("/licoes");
+  const progress = await getStudyProgress(user.id);
   const counts = contentCounts();
   const done = (slugs: string[]) =>
     slugs.filter((slug) => progress.get(slug)?.completed).length;

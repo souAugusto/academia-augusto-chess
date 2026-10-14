@@ -40,7 +40,7 @@ export async function getNextPuzzle(input: {
     parsed.data.theme && isThemeFilter(parsed.data.theme)
       ? parsed.data.theme
       : null;
-  const { rating } = await getMyTacticStats();
+  const { rating } = await getMyTacticStats(access.userId);
   const supabase = await createClient();
 
   // Tenta a faixa escolhida; se acabar, abre a faixa aos poucos.
@@ -159,7 +159,7 @@ export async function submitPuzzleAttempt(input: {
         .select("ease, interval_days, repetitions, lapses")
         .eq("puzzle_id", puzzleId)
         .maybeSingle(),
-      getMyTacticStats(),
+      getMyTacticStats(access.userId),
     ]);
 
   // Só a primeira tentativa em cada puzzle mexe no rating.

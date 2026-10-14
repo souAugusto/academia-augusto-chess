@@ -55,7 +55,7 @@ export async function createSet(
   let name: string;
 
   if (input.source === "tema") {
-    const { rating } = await getMyTacticStats();
+    const { rating } = await getMyTacticStats(access.userId);
     const theme = input.theme || null;
     const { data, error } = await supabase.rpc("pick_puzzles", {
       p_theme: theme,

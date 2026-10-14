@@ -9,11 +9,12 @@ export type TacticPuzzle = PuzzleRecord & { id: string; rating: number };
 
 export type TacticStats = { rating: number; games: number; solved: number };
 
-export async function getMyTacticStats(): Promise<TacticStats> {
+export async function getMyTacticStats(userId: string): Promise<TacticStats> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("user_stats")
     .select("puzzle_rating, puzzle_games, puzzles_solved")
+    .eq("user_id", userId)
     .maybeSingle();
   return {
     rating: data?.puzzle_rating ?? INITIAL_RATING,

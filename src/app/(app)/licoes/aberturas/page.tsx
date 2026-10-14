@@ -8,8 +8,8 @@ import { getStudyProgress } from "@/lib/data/lessons";
 export const metadata: Metadata = { title: "Lições de aberturas" };
 
 export default async function LicoesAberturasPage() {
-  await requireUser("/licoes/aberturas");
-  const progress = await getStudyProgress();
+  const user = await requireUser("/licoes/aberturas");
+  const progress = await getStudyProgress(user.id);
 
   return (
     <>

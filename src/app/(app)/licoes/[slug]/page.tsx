@@ -32,7 +32,7 @@ export default async function LicaoPage({
     );
   }
   const [progress, myStyle] = await Promise.all([
-    getStudyProgress(),
+    getStudyProgress(user.id),
     getMyStyle(user.id),
   ]);
   const mine = progress.get(lesson.slug);

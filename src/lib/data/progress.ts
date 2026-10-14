@@ -19,12 +19,13 @@ export type Streak = StreakStats & {
   week: { day: string; trained: boolean }[];
 };
 
-export async function getStreak(): Promise<Streak> {
+export async function getStreak(userId: string): Promise<Streak> {
   const supabase = await createClient();
   const today = todayInSaoPaulo();
   const { data } = await supabase
     .from("user_activity")
     .select("day")
+    .eq("user_id", userId)
     .gte("day", addDays(today, -400));
   const days = (data ?? []).map((row) => row.day as string);
   return { ...streakStats(days, today), week: recentDays(days, today, 7) };

@@ -55,7 +55,9 @@ export default async function PartidasPage({
     getLinkedAccounts(),
     getGamesForStats(filter),
     getRecentGames(filter),
-    canAnalyse ? analysedGameIds() : Promise.resolve(new Map<number, string>()),
+    canAnalyse
+      ? analysedGameIds(user.id)
+      : Promise.resolve(new Map<number, string>()),
   ]);
   const stats = computeStats(games);
 

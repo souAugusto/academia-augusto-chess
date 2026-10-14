@@ -33,6 +33,7 @@ export async function saveLessonProgress(input: {
   const { data: current } = await supabase
     .from("lesson_study")
     .select("practice_solved, quiz_score, completed_at")
+    .eq("user_id", access.userId)
     .eq("lesson_slug", lesson.slug)
     .maybeSingle();
 

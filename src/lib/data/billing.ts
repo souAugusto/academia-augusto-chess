@@ -46,13 +46,16 @@ function toSubscription(row: Row): MySubscription {
 }
 
 // Todas as assinaturas que ainda importam: ativas, em atraso ou esperando pagamento.
-export async function getMySubscriptions(): Promise<MySubscription[]> {
+export async function getMySubscriptions(
+  userId: string,
+): Promise<MySubscription[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("subscriptions")
     .select(
       "id, plan_id, status, source, billing_type, current_period_end, cancel_at_period_end, provider_subscription_id, plans (name, rank)",
     )
+    .eq("user_id", userId)
     .in("status", ["active", "trialing", "past_due", "incomplete"])
     .order("created_at", { ascending: false });
   return ((data ?? []) as unknown as Row[]).map(toSubscription);

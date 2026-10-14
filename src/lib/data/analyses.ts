@@ -40,20 +40,30 @@ const toSummary = (row: Row): AnalysisSummary => ({
   createdAt: row.created_at,
 });
 
-// Análises do aluno logado (a RLS garante que só vêm as dele).
-export async function listAnalyses(limit = 50): Promise<AnalysisSummary[]> {
+// Todas as consultas filtram pelo dono: cada aluno vê só as próprias análises
+// (a RLS também garante isso; o filtro aqui é uma segunda proteção).
+
+// Análises do aluno logado.
+export async function listAnalyses(
+  userId: string,
+  limit = 50,
+): Promise<AnalysisSummary[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("game_analyses")
     .select(
       "id, title, imported_game_id, accuracy_white, accuracy_black, depth, created_at",
     )
+    .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .limit(limit);
   return ((data ?? []) as Row[]).map(toSummary);
 }
 
-export async function getAnalysis(id: string): Promise<SavedAnalysis | null> {
+export async function getAnalysis(
+  userId: string,
+  id: string,
+): Promise<SavedAnalysis | null> {
   if (!/^[0-9a-f-]{36}$/.test(id)) return null;
   const supabase = await createClient();
   const { data: row } = await supabase
@@ -62,6 +72,7 @@ export async function getAnalysis(id: string): Promise<SavedAnalysis | null> {
       "id, title, imported_game_id, accuracy_white, accuracy_black, depth, created_at, headers, data",
     )
     .eq("id", id)
+    .eq("user_id", userId)
     .maybeSingle();
   if (!row) return null;
   const data = decodeAnalysis(row.data);
@@ -74,11 +85,14 @@ export async function getAnalysis(id: string): Promise<SavedAnalysis | null> {
 }
 
 // Mapa partida importada -> análise salva (para o botão "Ver análise").
-export async function analysedGameIds(): Promise<Map<number, string>> {
+export async function analysedGameIds(
+  userId: string,
+): Promise<Map<number, string>> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("game_analyses")
     .select("id, imported_game_id")
+    .eq("user_id", userId)
     .not("imported_game_id", "is", null);
   return new Map(
     (data ?? []).map((row) => [

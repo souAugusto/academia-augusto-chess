@@ -24,7 +24,7 @@ export default async function AberturasPage() {
 
   const [repertoires, progress] = await Promise.all([
     listRepertoires(),
-    getStudyProgress(),
+    getStudyProgress(user.id),
   ]);
   return (
     <>

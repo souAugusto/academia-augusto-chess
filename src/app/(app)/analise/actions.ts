@@ -155,6 +155,7 @@ export async function saveAnalysis(
     const { data: existing } = await supabase
       .from("game_analyses")
       .select("id")
+      .eq("user_id", access.userId)
       .eq("imported_game_id", parsed.data.importedGameId)
       .maybeSingle();
     existingId = existing?.id ?? null;
@@ -162,7 +163,8 @@ export async function saveAnalysis(
   if (!existingId) {
     const { count } = await supabase
       .from("game_analyses")
-      .select("id", { count: "exact", head: true });
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", access.userId);
     if ((count ?? 0) >= MAX_SAVED_ANALYSES)
       return {
         ok: false,
@@ -174,6 +176,7 @@ export async function saveAnalysis(
         .from("game_analyses")
         .update(row)
         .eq("id", existingId)
+        .eq("user_id", access.userId)
         .select("id")
         .single()
     : await supabase.from("game_analyses").insert(row).select("id").single();
@@ -189,7 +192,11 @@ export async function deleteAnalysis(id: string): Promise<{ ok: boolean }> {
   const access = await checkPlan(ANALYSIS_MIN_PLAN_RANK);
   if (!access.ok) return { ok: false };
   const supabase = await createClient();
-  const { error } = await supabase.from("game_analyses").delete().eq("id", id);
+  const { error } = await supabase
+    .from("game_analyses")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", access.userId);
   revalidatePath("/analise");
   return { ok: !error };
 }

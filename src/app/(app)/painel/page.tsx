@@ -55,8 +55,8 @@ export default async function PainelPage({
   }
 
   const [stats, streak, reviewDue, nextLesson, trails] = await Promise.all([
-    getMyTacticStats(),
-    getStreak(),
+    getMyTacticStats(user.id),
+    getStreak(user.id),
     getReviewDueCount(),
     getNextLesson(),
     listTrails(),
