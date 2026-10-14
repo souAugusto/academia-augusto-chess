@@ -61,7 +61,11 @@ export function AuthTabs({ initialTab, next, notice }: AuthTabsProps) {
         id={`${baseId}-${tab}-painel`}
         aria-labelledby={`${baseId}-${tab}-aba`}
       >
-        {tab === "entrar" ? <LoginForm next={next} /> : <SignupForm />}
+        {tab === "entrar" ? (
+          <LoginForm next={next} />
+        ) : (
+          <SignupForm next={next} />
+        )}
       </div>
     </>
   );
@@ -115,7 +119,7 @@ function LoginForm({ next }: { next: string }) {
   );
 }
 
-function SignupForm() {
+function SignupForm({ next }: { next: string }) {
   const [state, action] = useActionState(signup, initial);
   if (state.success) {
     return (
@@ -133,6 +137,7 @@ function SignupForm() {
   }
   return (
     <form action={action} noValidate className="flex flex-col gap-5">
+      <input type="hidden" name="next" value={next} />
       <div className="flex flex-col gap-1.5">
         <h2 className="font-display text-[1.875rem] font-bold">
           Criar sua conta

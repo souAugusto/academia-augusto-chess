@@ -64,3 +64,15 @@ describe("safeNextPath", () => {
     }
   });
 });
+
+describe("routeRedirect: já logado em /entrar", () => {
+  it("segue para o next seguro, ou para o painel", () => {
+    expect(routeRedirect("/entrar", "?next=%2Fteste-gratis", true)).toBe(
+      "/teste-gratis",
+    );
+    expect(routeRedirect("/entrar", "", true)).toBe("/painel");
+    expect(routeRedirect("/entrar", "?next=https%3A%2F%2Fmal.com", true)).toBe(
+      "/painel",
+    );
+  });
+});

@@ -43,7 +43,9 @@ function describe(sub: Sub): string {
     PLAN_LABEL[sub.plan_id] ?? sub.plan_id,
     sub.source === "manual"
       ? "concedido"
-      : (METHOD_LABELS[sub.billing_type ?? "PIX"] ?? ""),
+      : sub.source === "trial"
+        ? "teste grátis"
+        : (METHOD_LABELS[sub.billing_type ?? "PIX"] ?? ""),
     sub.cancel_at_period_end
       ? "sem renovação"
       : STATUS_LABELS[sub.status as SubscriptionStatus],

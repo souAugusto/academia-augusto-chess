@@ -24,6 +24,14 @@ const PLANOS = "/planos";
 // Conta nova: questionário de estilo (pode pular) e depois os planos.
 const ONBOARDING = `/questionario?next=${encodeURIComponent(PLANOS)}`;
 
+// Depois do cadastro: questionário e, em seguida, o destino pedido (ex.: ativar
+// o teste grátis). Sem destino explícito, os planos, como antes.
+function onboardingTo(next: string): string {
+  const target = safeNextPath(next, PLANOS);
+  if (target === HOME_LOGGED_IN || target === PLANOS) return ONBOARDING;
+  return `/questionario?next=${encodeURIComponent(target)}`;
+}
+
 function text(formData: FormData, key: string): string {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
@@ -82,7 +90,10 @@ export async function signup(
     password,
     options: {
       data: { name, whatsapp: whatsapp ?? "", terms_accepted: true },
-      emailRedirectTo: confirmUrl(await siteOrigin(), ONBOARDING),
+      emailRedirectTo: confirmUrl(
+        await siteOrigin(),
+        onboardingTo(text(formData, "next")),
+      ),
     },
   });
   if (error) {
@@ -103,7 +114,7 @@ export async function signup(
   }
 
   // Confirmação de e-mail desligada no Supabase: já entra e segue para o questionário.
-  if (data.session) redirect(ONBOARDING);
+  if (data.session) redirect(onboardingTo(text(formData, "next")));
 
   // Mesma resposta para e-mail novo ou já cadastrado (não revela quem tem conta).
   return {

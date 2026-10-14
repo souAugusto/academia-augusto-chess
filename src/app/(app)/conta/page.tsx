@@ -1,3 +1,4 @@
+import { getAccessStatus } from "@/lib/data/trial";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { signOut } from "@/app/(auth)/actions";
@@ -57,10 +58,11 @@ function subscriptionRows(sub: MySubscription) {
 
 export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
   const user = await requireUser("/conta");
-  const [subscriptions, params, styles] = await Promise.all([
+  const [subscriptions, params, styles, access] = await Promise.all([
     getMySubscriptions(user.id),
     searchParams,
     getMyStyleHistory(user.id),
+    getAccessStatus({ id: user.id, email: user.email }),
   ]);
   const currentStyle = styles[0];
   const groups = await getGroupLinks(user.planRank);
@@ -73,7 +75,10 @@ export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
     },
     {
       label: "Acesso",
-      value: PLAN_NAMES[user.planRank] ?? "Nenhum plano ativo",
+      value:
+        access.kind === "teste"
+          ? "Membro (teste grátis)"
+          : (PLAN_NAMES[user.planRank] ?? "Nenhum plano ativo"),
     },
   ];
 
@@ -169,7 +174,55 @@ export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
             instantes.
           </FormAlert>
         )}
-        {subscriptions.length === 0 && (
+        {access.kind === "teste" && (
+          <div
+            className={`flex flex-wrap items-center justify-between gap-3 rounded-card border p-5 ${access.daysLeft <= 7 ? "border-accent bg-surface-2" : "border-border bg-surface"}`}
+          >
+            <div className="flex flex-col gap-1">
+              <span className="font-semibold">
+                Teste grátis:{" "}
+                {access.daysLeft === 1
+                  ? "último dia"
+                  : `${access.daysLeft} dias restantes`}
+              </span>
+              <span className="text-sm text-muted">
+                Plano Membro até {formatLongDate(access.endsAt)}. Nada é cobrado
+                ao fim.
+              </span>
+            </div>
+            <Link
+              href="/checkout?plano=membro"
+              className={buttonClasses("primary")}
+            >
+              Assinar agora
+            </Link>
+          </div>
+        )}
+        {access.kind === "teste-expirado" && (
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-border bg-surface p-5">
+            <span className="text-[0.9375rem] text-muted">
+              Seu teste grátis terminou em {formatLongDate(access.endsAt)}. Seu
+              progresso continua guardado.
+            </span>
+            <Link
+              href="/checkout?plano=membro"
+              className={buttonClasses("primary")}
+            >
+              Assinar o Membro
+            </Link>
+          </div>
+        )}
+        {access.kind === "gratuito" && access.eligible && (
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-border bg-surface p-5">
+            <span className="text-[0.9375rem] text-muted">
+              Você pode testar o plano Membro por 30 dias, sem cartão.
+            </span>
+            <Link href="/teste-gratis" className={buttonClasses("secondary")}>
+              Começar 30 dias grátis
+            </Link>
+          </div>
+        )}
+        {subscriptions.length === 0 && access.kind !== "teste" && (
           <p className="text-muted">Você ainda não tem assinatura.</p>
         )}
         {subscriptions.map((sub) => (

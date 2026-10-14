@@ -32,7 +32,13 @@ export default async function EntrarPage({
       />
       <OrDivider />
       <GoogleButton
-        next={tab === "criar" ? "/questionario?next=%2Fplanos" : next}
+        next={
+          tab !== "criar"
+            ? next
+            : next === HOME_LOGGED_IN
+              ? "/questionario?next=%2Fplanos"
+              : `/questionario?next=${encodeURIComponent(next)}`
+        }
       />
     </>
   );

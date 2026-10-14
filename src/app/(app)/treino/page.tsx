@@ -15,6 +15,7 @@ export default async function TreinoPage() {
   if (user.planRank < 2) {
     return (
       <PlanRequired
+        plan="intensivo"
         title="Método Padrão Finale"
         text="O treino por ciclos de repetição faz parte do plano Intensivo."
       />

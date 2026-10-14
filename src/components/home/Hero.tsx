@@ -3,6 +3,7 @@ import { StaticBoard } from "@/components/chess/StaticBoard";
 import { buttonClasses } from "@/components/ui/button";
 import { SectionLabel } from "@/components/ui/Label";
 import { HERO } from "@/content/home";
+import { TRIAL_CTA, TRIAL_HREF, TRIAL_NOTE } from "@/content/trial";
 import { HeroVideo } from "./HeroVideo";
 import type { DailyPuzzle } from "@/lib/data/public";
 
@@ -27,17 +28,16 @@ export function Hero({ puzzle }: { puzzle: DailyPuzzle | null }) {
             {HERO.text}
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="#planos" className={buttonClasses("primary", "lg")}>
+            <Link href={TRIAL_HREF} className={buttonClasses("primary", "lg")}>
+              {TRIAL_CTA}
+            </Link>
+            <Link href="#planos" className={buttonClasses("secondary", "lg")}>
               {HERO.primaryCta}
             </Link>
-            <Link
-              href="/puzzle-do-dia"
-              className={buttonClasses("secondary", "lg")}
-            >
-              {HERO.secondaryCta}
-            </Link>
           </div>
-          <p className="text-sm text-muted">{HERO.note}</p>
+          <p className="text-sm text-muted">
+            {TRIAL_NOTE} {HERO.note}
+          </p>
         </div>
 
         <div
@@ -63,6 +63,12 @@ export function Hero({ puzzle }: { puzzle: DailyPuzzle | null }) {
                   {puzzle.themeLabel ? ` · ${puzzle.themeLabel}` : ""}
                 </span>
                 <span className="text-muted">{side}</span>
+                <Link
+                  href="/puzzle-do-dia"
+                  className="flex min-h-touch w-full items-center justify-center rounded-control border border-border-strong font-semibold hover:bg-surface-2"
+                >
+                  {HERO.secondaryCta}
+                </Link>
               </div>
             </div>
           ) : (

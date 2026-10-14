@@ -47,3 +47,14 @@ Prompt de referência: `docs/PROMPT_PERSONALIZACAO_TITULOS.md`.
 - **Ranking em `/comunidade`:** só apelido, foto, título e rating. Entra quem tem apelido, deixou "aparecer no ranking" ligado e tem 30+ puzzles contados. Só quem tem plano ativo vê. A linha do próprio aluno aparece mesmo fora do top 50.
 - **Imagem para compartilhar** (`/api/titulo/[apelido]/og`, quadrada ou vertical): só sai para quem aparece no ranking ou para o próprio aluno logado.
 - **Alunos antigos:** quem já tinha 30+ puzzles recebe os títulos (com celebração) no próximo puzzle valendo rating.
+
+## Teste grátis de 30 dias do Membro (2026-10-14)
+Decisões do Augusto: **sem cartão**, ao fim fica liberado **só o que já é público**, e a regra "não existe plano gratuito" passou a ter essa única exceção (CLAUDE.md, regra 7, e PROMPT_MESTRE.md).
+- **Modelo:** o teste é uma linha em `subscriptions` (source `trial`, status `trialing`, `cancel_at_period_end = true`, `current_period_end` = fim do teste). A função `my_plan_rank()`, que já decide o acesso no RLS e no servidor, vale para o teste sem mudança e o expira sozinha pela data (sem job, sem a tolerância de 3 dias do pago).
+- **Prazo:** o dia da ativação conta como o 1º; o teste vale até 23h59 (horário de Brasília) do 30º dia.
+- **Uma vez por pessoa:** índice único de um teste por conta + tabela `trial_claims` com o e-mail normalizado (minúsculas, sem "+etiqueta" e, no Gmail, sem pontos). O registro fica mesmo se a conta for excluída. Quem já foi assinante (pago que chegou a ativar ou concessão manual) não testa; tentativa de pagamento abandonada não impede.
+- **Idempotente:** clicar duas vezes (ou em duas abas) não cria um segundo teste nem muda o prazo.
+- **Assinar durante o teste:** quando o Asaas confirma o pagamento, o teste termina na hora (sem dias extras) e a conversão fica em `trial_claims.converted_at`. O checkout passou a olhar só o plano pago (`my_paid_plan_rank()`), para quem está no teste conseguir assinar; quem já paga continua bloqueado (sem cobrança dupla).
+- **Status único** (`getAccessStatus` em `src/lib/data/trial.ts`): pago, em teste (dias restantes), teste expirado ou gratuito (e se pode testar). Usado pela faixa do app, Minha conta, /planos, /teste-gratis e a tela de "plano necessário".
+- **Cadastro com intenção de teste:** o botão leva a `/entrar?aba=criar&next=/teste-gratis`; o cadastro (e-mail ou Google) passou a respeitar esse destino depois do questionário; quem já está logado vai direto para a confirmação.
+- **Oferta na landing:** a página inicial é a mesma para todos (rápida, em cache), então mostra a oferta também para quem já assina; a página `/teste-gratis` responde "você já é assinante". Em `/planos`, que sabe quem está logado, a oferta some para pagantes e para quem já testou.

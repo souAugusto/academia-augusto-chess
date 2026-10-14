@@ -4,7 +4,7 @@ import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 import { buttonClasses } from "@/components/ui/button";
 import { Card } from "@/components/ui/Card";
 import { SectionLabel } from "@/components/ui/Label";
-import { requireUser } from "@/lib/data/account";
+import { getPaidPlanRank, requireUser } from "@/lib/data/account";
 import { getIntensivoSeatsLeft, getPlans } from "@/lib/data/public";
 import { formatPriceBRL } from "@/lib/format";
 import { paymentsConfigured } from "@/lib/payments";
@@ -41,7 +41,7 @@ export default async function CheckoutPage({
 
   let blocker: string | null = null;
   if (!plan) blocker = "Escolha um plano para continuar.";
-  else if (user.planRank >= PLAN_RANK[plan.id])
+  else if ((await getPaidPlanRank()) >= PLAN_RANK[plan.id])
     blocker = `Sua conta já tem o plano ${plan.name} ou superior.`;
   else if (
     plan.seatLimit !== null &&

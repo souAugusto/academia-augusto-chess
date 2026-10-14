@@ -1,3 +1,4 @@
+import { getAccessStatus } from "@/lib/data/trial";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionHeading } from "@/components/home/Section";
@@ -21,6 +22,11 @@ export default async function PlanosPage({
     supabase.auth.getClaims(),
   ]);
   const isLoggedIn = Boolean(auth?.claims);
+  // Logado: a oferta do teste só aparece para quem ainda pode usar.
+  const access =
+    auth?.claims?.sub && typeof auth.claims.email === "string"
+      ? await getAccessStatus({ id: auth.claims.sub, email: auth.claims.email })
+      : null;
   const email =
     typeof auth?.claims?.email === "string" ? auth.claims.email : undefined;
   const chosen = plans.find((plan) => plan.id === params.plano);
@@ -68,7 +74,11 @@ export default async function PlanosPage({
         </section>
       )}
 
-      <PlanCards plans={plans} seatsLeft={seatsLeft} />
+      <PlanCards
+        plans={plans}
+        seatsLeft={seatsLeft}
+        trialOffer={!access || (access.kind === "gratuito" && access.eligible)}
+      />
 
       {seatsLeft <= 0 && (
         <section

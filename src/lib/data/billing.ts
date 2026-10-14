@@ -56,6 +56,7 @@ export async function getMySubscriptions(
       "id, plan_id, status, source, billing_type, current_period_end, cancel_at_period_end, provider_subscription_id, plans (name, rank)",
     )
     .eq("user_id", userId)
+    .neq("source", "trial") // o teste grátis tem seção própria em /conta
     .in("status", ["active", "trialing", "past_due", "incomplete"])
     .order("created_at", { ascending: false });
   return ((data ?? []) as unknown as Row[]).map(toSubscription);
