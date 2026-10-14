@@ -3,13 +3,21 @@ import { StaticBoard } from "@/components/chess/StaticBoard";
 import { buttonClasses } from "@/components/ui/button";
 import { SectionLabel } from "@/components/ui/Label";
 import { HERO } from "@/content/home";
+import { HeroVideo } from "./HeroVideo";
 import type { DailyPuzzle } from "@/lib/data/public";
 
 export function Hero({ puzzle }: { puzzle: DailyPuzzle | null }) {
   const side = puzzle?.sideToMove === "b" ? "Pretas jogam" : "Brancas jogam";
   return (
-    <section id="topo" className="bg-aurora">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-14 pb-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:pt-20">
+    <section id="topo" className="relative isolate overflow-hidden">
+      <HeroVideo />
+      {/* Escurece o vídeo para o texto ler bem e funde a base com o fundo da página. */}
+      <div aria-hidden="true" className="hero-overlay absolute inset-0 -z-10" />
+      {/* Sobre o vídeo o hero é sempre escuro, nos dois temas do site. */}
+      <div
+        data-theme="dark"
+        className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-14 pb-24 text-text sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:pt-20 lg:pb-28"
+      >
         <div className="flex flex-col gap-6">
           <SectionLabel>{HERO.label}</SectionLabel>
           <h1 className="font-display text-hero font-semibold tracking-tight">

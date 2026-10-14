@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="280" viewBox="0 0 440 140" role="img" aria-label="Academia Finale de Xadrez">
+<g transform="translate(0 10)">
+<path d="M30 20H44V34H53V20H67V34H76V20H90V46H82V96H94V106H26V96H38V46H30Z" fill="none" stroke="#0B0D12" stroke-width="6" stroke-linejoin="round"/>
+<path d="M50 96V78A10 10 0 0 1 70 78V96" fill="none" stroke="#B97F1B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="150" y="78" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="56" letter-spacing="6" fill="#0B0D12">FINALE</text>
+<text x="152" y="104" font-family="Manrope, Arial, sans-serif" font-weight="700" font-size="13" letter-spacing="4.5" fill="#8A5E12">ACADEMIA DE XADREZ</text>
+</svg>

@@ -3,7 +3,7 @@
 // - Páginas públicas: rede primeiro, cópia em cache para abrir sem internet.
 // - Páginas com dados do aluno NUNCA são guardadas (privacidade em aparelho compartilhado).
 // Ao mudar a lógica, troque VERSION para descartar o cache antigo.
-const VERSION = "finale-v2";
+const VERSION = "finale-v3";
 const STATIC_CACHE = `${VERSION}-static`;
 const PAGES_CACHE = `${VERSION}-pages`;
 
