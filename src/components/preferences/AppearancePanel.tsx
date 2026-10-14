@@ -106,7 +106,13 @@ function Toggle({
 
 // Painel único de aparência: tabuleiro, peças e sons, com pré-visualização ao
 // vivo. Usado em /conta/aparencia e na janela da engrenagem dos tabuleiros.
-export function AppearancePanel({ idPrefix = "ap" }: { idPrefix?: string }) {
+export function AppearancePanel({
+  idPrefix = "ap",
+  inDialog = false,
+}: {
+  idPrefix?: string;
+  inDialog?: boolean; // na janela, a prévia gruda no topo da janela; na página, abaixo do cabeçalho
+}) {
   const { prefs, update, reset } = usePreferences();
   const id = (name: string) => `${idPrefix}-${name}`;
   const setBoard = <K extends keyof Preferences["board"]>(
@@ -285,16 +291,24 @@ export function AppearancePanel({ idPrefix = "ap" }: { idPrefix?: string }) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 lg:sticky lg:top-24 lg:self-start">
-        <span className="text-sm font-semibold">Pré-visualização</span>
-        <ChessBoard
-          id={id("previa")}
-          fen={PREVIEW_FEN}
-          orientation="w"
-          movableColor="b"
-          lastMove={PREVIEW_LAST}
-          onMove={() => false}
-        />
+      {/* Celular: prévia pequena, fixa no topo enquanto as opções rolam.
+          Desktop: coluna da direita, acompanhando a rolagem. */}
+      <div
+        className={`sticky ${inDialog ? "top-0" : "top-[var(--header-h)]"} z-10 order-first -mx-1 flex items-center gap-3 bg-bg px-1 py-2 lg:top-24 lg:order-none lg:mx-0 lg:flex-col lg:items-stretch lg:gap-2 lg:self-start lg:p-0`}
+      >
+        <span className="sr-only lg:not-sr-only lg:text-sm lg:font-semibold">
+          Pré-visualização
+        </span>
+        <div className="w-36 shrink-0 sm:w-44 lg:w-full">
+          <ChessBoard
+            id={id("previa")}
+            fen={PREVIEW_FEN}
+            orientation="w"
+            movableColor="b"
+            lastMove={PREVIEW_LAST}
+            onMove={() => false}
+          />
+        </div>
         <p className="text-[0.8125rem] text-muted">
           Toque numa peça preta para ver os lances possíveis. As mudanças valem
           na hora, em todos os tabuleiros do site.

@@ -315,5 +315,5 @@ export async function deleteAccount(
 
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect("/?conta=excluida");
+  redirect("/entrar?erro=excluida");
 }

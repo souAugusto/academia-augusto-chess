@@ -12,6 +12,7 @@ import {
 } from "@/app/(app)/conta/perfil/actions";
 import { Field, FormAlert } from "@/components/forms/Field";
 import { buttonClasses } from "@/components/ui/button";
+import { AVATAR_MAX_BYTES } from "@/lib/validation/profile";
 import { Avatar } from "./Avatar";
 
 const initial: ProfileState = {};
@@ -95,6 +96,7 @@ export function AvatarForm({
   name: string;
 }) {
   const [state, action, pending] = useActionState(uploadAvatar, initial);
+  const [localError, setLocalError] = useState<string | null>(null);
   const [removeState, remove, removing] = useActionState(
     async () => removeAvatar(),
     initial,
@@ -108,6 +110,16 @@ export function AvatarForm({
           action={action}
           className="flex min-w-0 flex-1 flex-col gap-3"
           noValidate
+          onSubmit={(event) => {
+            // Confere o tamanho antes de enviar (o servidor confere de novo).
+            const input = event.currentTarget.elements.namedItem("avatar");
+            const file =
+              input instanceof HTMLInputElement ? input.files?.[0] : undefined;
+            if (file && file.size > AVATAR_MAX_BYTES) {
+              event.preventDefault();
+              setLocalError("A imagem pode ter no máximo 2 MB.");
+            } else setLocalError(null);
+          }}
         >
           <div className="flex flex-col gap-2">
             <label htmlFor="avatar" className="text-sm font-semibold">
@@ -119,16 +131,18 @@ export function AvatarForm({
               type="file"
               accept="image/jpeg,image/png,image/webp"
               aria-describedby="avatar-dica"
-              aria-invalid={state.errors?.avatar ? true : undefined}
+              aria-invalid={
+                (localError ?? state.errors?.avatar) ? true : undefined
+              }
               className="text-sm file:mr-3 file:rounded-control file:border file:border-border-strong file:bg-surface-2 file:px-3 file:py-2 file:text-text"
             />
             <span id="avatar-dica" className="text-[0.8125rem] text-muted">
               JPG, PNG ou WEBP de até 2 MB. A foto é recortada em quadrado e os
               dados escondidos da imagem (como localização) são apagados.
             </span>
-            {state.errors?.avatar && (
+            {(localError ?? state.errors?.avatar) && (
               <span className="text-sm text-danger" role="alert">
-                {state.errors.avatar}
+                {localError ?? state.errors?.avatar}
               </span>
             )}
           </div>

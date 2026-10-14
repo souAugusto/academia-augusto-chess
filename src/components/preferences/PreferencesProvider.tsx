@@ -65,21 +65,29 @@ export function PreferencesProvider({
   const logged = useRef(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const sync = useCallback(async () => {
-    const local = readLocal();
-    try {
-      const result = await getMyPreferences();
-      logged.current = result.logged;
-      if (!result.logged) return;
-      if (result.prefs) {
-        setPrefs(result.prefs);
-        writeLocal(result.prefs);
-      } else if (local) {
-        await savePreferences(local);
+  const syncing = useRef<Promise<void> | null>(null);
+
+  const sync = useCallback(() => {
+    // Uma sincronização por vez (o Supabase avisa "entrou" várias vezes).
+    syncing.current ??= (async () => {
+      const local = readLocal();
+      try {
+        const result = await getMyPreferences();
+        logged.current = result.logged;
+        if (!result.logged) return;
+        if (result.prefs) {
+          setPrefs(result.prefs);
+          writeLocal(result.prefs);
+        } else if (local) {
+          await savePreferences(local);
+        }
+      } catch {
+        // Sem rede: fica com o cache local.
+      } finally {
+        syncing.current = null;
       }
-    } catch {
-      // Sem rede: fica com o cache local.
-    }
+    })();
+    return syncing.current;
   }, []);
 
   useEffect(() => {
@@ -89,7 +97,8 @@ export function PreferencesProvider({
     if (local) setPrefs(local);
     void sync();
     const { data } = createClient().auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_IN") void sync();
+      // Só quando a pessoa acaba de entrar (não a cada aviso de sessão).
+      if (event === "SIGNED_IN" && !logged.current) void sync();
       if (event === "SIGNED_OUT") logged.current = false;
     });
     return () => data.subscription.unsubscribe();

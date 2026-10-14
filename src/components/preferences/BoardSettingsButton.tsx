@@ -45,7 +45,7 @@ export function BoardSettingsButton() {
               <IconClose />
             </button>
           </div>
-          <AppearancePanel idPrefix="janela" />
+          <AppearancePanel idPrefix="janela" inDialog />
         </div>
       </dialog>
     </>
