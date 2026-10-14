@@ -14,9 +14,9 @@ import { saveAnalysis, loadImportedGame } from "@/app/(app)/analise/actions";
 import { BoardStage } from "@/components/chess/BoardStage";
 import {
   BOARD_COLORS,
-  PlayBoard,
+  ChessBoard,
   type Side,
-} from "@/components/chess/PlayBoard";
+} from "@/components/chess/ChessBoard";
 import { buttonClasses } from "@/components/ui/button";
 import { encodeAnalysis, type AnalysisData } from "@/lib/analysis/compact";
 import { ANALYSIS_DEPTHS, DEFAULT_ANALYSIS_DEPTH } from "@/lib/analysis/config";
@@ -667,7 +667,7 @@ function AnalysisView({
               orientation={orientation}
             />
             <div className="min-w-0 flex-1">
-              <PlayBoard
+              <ChessBoard
                 id="analise"
                 fen={fen}
                 orientation={orientation}

@@ -94,6 +94,14 @@ export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
           </div>
         ))}
       </dl>
+      <div className="flex flex-wrap gap-3">
+        <Link href="/conta/perfil" className={buttonClasses("secondary")}>
+          Editar perfil
+        </Link>
+        <Link href="/conta/aparencia" className={buttonClasses("secondary")}>
+          Aparência do tabuleiro e sons
+        </Link>
+      </div>
 
       <section
         aria-labelledby="estilo"

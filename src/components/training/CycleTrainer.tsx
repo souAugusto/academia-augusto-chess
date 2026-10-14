@@ -1,5 +1,6 @@
 "use client";
 
+import { playSound } from "@/lib/sound";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition, type ReactNode } from "react";
 import {
@@ -89,6 +90,7 @@ export function CycleTrainer({
     }
     setAnsweredSeconds(outcome.seconds);
     setAnswer(response);
+    if (response.cycleFinished) setTimeout(() => playSound("cycleEnd"), 500);
     setProgress(response.progress);
   }
 

@@ -1,14 +1,15 @@
 "use client";
 
+import { playSound } from "@/lib/sound";
 import { Chess, type Square } from "chess.js";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { BoardStage } from "@/components/chess/BoardStage";
 import { MoveInput } from "@/components/chess/MoveInput";
 import {
   BOARD_COLORS,
-  PlayBoard,
+  ChessBoard,
   type Side,
-} from "@/components/chess/PlayBoard";
+} from "@/components/chess/ChessBoard";
 import { useReducedMotion } from "@/components/chess/useReducedMotion";
 import { buttonClasses } from "@/components/ui/button";
 import { sanToPortuguese } from "@/lib/chess/notation";
@@ -213,6 +214,7 @@ function DrillBoard({
     }
     const verdict = drill.judge(step, san);
     if (verdict.kind === "wrong") {
+      playSound("wrong");
       const count = tries + 1;
       setTries(count);
       if (count >= MAX_TRIES) reveal();
@@ -229,6 +231,7 @@ function DrillBoard({
     setArrow(null);
     if (verdict.done) {
       setStatus("solved");
+      setTimeout(() => playSound("correct"), 150);
       setFeedback({ tone: "ok", text: `Correto! ${drill.why}` });
       onSolved();
       return true;
@@ -262,7 +265,7 @@ function DrillBoard({
   return (
     <BoardStage
       board={
-        <PlayBoard
+        <ChessBoard
           id="pratica"
           fen={fen}
           orientation={orientation ?? userSide}

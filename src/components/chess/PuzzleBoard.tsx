@@ -1,5 +1,6 @@
 "use client";
 
+import { playSound } from "@/lib/sound";
 import { Chess, type Square } from "chess.js";
 import {
   useEffect,
@@ -16,7 +17,7 @@ import type { PuzzleRecord } from "@/lib/chess/puzzle";
 import { judgeMove, solutionLine, uciToMove } from "@/lib/chess/solver";
 import { BoardStage } from "./BoardStage";
 import { MoveInput } from "./MoveInput";
-import { BOARD_COLORS, PlayBoard } from "./PlayBoard";
+import { BOARD_COLORS, ChessBoard } from "./ChessBoard";
 import { useReducedMotion } from "./useReducedMotion";
 
 export type PuzzlePhase =
@@ -141,6 +142,7 @@ export function PuzzleBoard({
     if (verdict.kind === "illegal") return false;
 
     if (verdict.kind === "wrong") {
+      playSound("wrong");
       if (game.phase === "playing") report(false, [...game.userMoves, uci]);
       if (revealOnMistake) {
         revealSolution();
@@ -162,6 +164,8 @@ export function PuzzleBoard({
     const finished = verdict.kind === "mate" || verdict.done;
 
     if (finished && game.phase === "playing") report(true, userMoves);
+    // O som do lance toca no tabuleiro; aqui só o do resultado.
+    if (finished) setTimeout(() => playSound("solved"), 150);
     setMessage(finished ? "Resolvido." : "Boa. Continue.");
     setGame({
       fen: chess.fen(),
@@ -247,7 +251,7 @@ export function PuzzleBoard({
   return (
     <BoardStage
       board={
-        <PlayBoard
+        <ChessBoard
           id="finale-puzzle"
           fen={game.fen}
           orientation={playerColor}

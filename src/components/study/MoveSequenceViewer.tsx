@@ -5,9 +5,9 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { BoardStage } from "@/components/chess/BoardStage";
 import {
   BOARD_COLORS,
-  PlayBoard,
+  ChessBoard,
   type Side,
-} from "@/components/chess/PlayBoard";
+} from "@/components/chess/ChessBoard";
 import { buttonClasses } from "@/components/ui/button";
 import { sanToPortuguese } from "@/lib/chess/notation";
 import type { ExplainedMove } from "@/content/licoes/types";
@@ -86,7 +86,7 @@ export function MoveSequenceViewer({
   return (
     <BoardStage
       board={
-        <PlayBoard
+        <ChessBoard
           id={id}
           fen={fen}
           orientation={orientation}

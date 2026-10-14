@@ -1,5 +1,6 @@
 "use client";
 
+import { playSound } from "@/lib/sound";
 import { Chess, type Square } from "chess.js";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Arrow } from "react-chessboard";
@@ -8,9 +9,9 @@ import { BoardStage } from "@/components/chess/BoardStage";
 import { MoveInput } from "@/components/chess/MoveInput";
 import {
   BOARD_COLORS,
-  PlayBoard,
+  ChessBoard,
   type Side,
-} from "@/components/chess/PlayBoard";
+} from "@/components/chess/ChessBoard";
 import { useReducedMotion } from "@/components/chess/useReducedMotion";
 import { buttonClasses } from "@/components/ui/button";
 import type { ProgressEntry } from "@/lib/data/repertoires";
@@ -176,7 +177,7 @@ function StudyMode({
   return (
     <BoardStage
       board={
-        <PlayBoard
+        <ChessBoard
           id="finale-repertorio-estudo"
           fen={fen}
           orientation={userSide}
@@ -381,6 +382,7 @@ function TrainMode({
       });
     } else {
       setMistakes((value) => value + 1);
+      playSound("wrong");
       setFeedback({
         tone: "bad",
         text: `No seu repertório, o lance aqui é ${sanToPortuguese(verdict.expected.san)}.`,
@@ -405,7 +407,7 @@ function TrainMode({
   return (
     <BoardStage
       board={
-        <PlayBoard
+        <ChessBoard
           id="finale-repertorio-treino"
           fen={fen}
           orientation={userSide}

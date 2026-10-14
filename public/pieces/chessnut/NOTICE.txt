@@ -1,0 +1,4 @@
+Chessnut piece layout
+Copyright 2015 Alexis Luengas
+Fonte: https://github.com/LexLuengas/chessnut-pieces
+Licença: Apache License 2.0 (texto completo em LICENSE.txt). Arquivos usados sem modificação.

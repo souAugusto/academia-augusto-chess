@@ -39,6 +39,7 @@ export function Hero({ puzzle }: { puzzle: DailyPuzzle | null }) {
           {puzzle ? (
             <div className="flex flex-col gap-3">
               <StaticBoard
+                decorative
                 fen={puzzle.fen}
                 orientation={puzzle.sideToMove}
                 highlight={

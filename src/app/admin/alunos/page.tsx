@@ -13,7 +13,12 @@ import { formatLongDate } from "@/lib/format";
 import type { SubscriptionStatus } from "@/lib/payments/rules";
 import type { ResultStyle } from "@/lib/style/styles";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { grantPlan, revokeGrant, stopRenewal } from "./actions";
+import {
+  grantPlan,
+  resetProfileIdentity,
+  revokeGrant,
+  stopRenewal,
+} from "./actions";
 
 export const metadata: Metadata = { title: "Alunos" };
 
@@ -64,7 +69,9 @@ export default async function AlunosPage({
     { data: styles },
   ] = await Promise.all([
     admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
-    admin.from("profiles").select("id, name, whatsapp, created_at"),
+    admin
+      .from("profiles")
+      .select("id, name, whatsapp, created_at, display_name, avatar_path"),
     admin
       .from("subscriptions")
       .select(
@@ -86,6 +93,9 @@ export default async function AlunosPage({
       email: user.email ?? "",
       name: profileById.get(user.id)?.name ?? "",
       whatsapp: profileById.get(user.id)?.whatsapp ?? null,
+      nickname:
+        (profileById.get(user.id)?.display_name as string | null) ?? null,
+      hasAvatar: Boolean(profileById.get(user.id)?.avatar_path),
       createdAt: new Date(user.created_at),
       subs: ((subs ?? []) as Sub[]).filter((sub) => sub.user_id === user.id),
     }))
@@ -93,7 +103,8 @@ export default async function AlunosPage({
       (user) =>
         !search ||
         user.email.toLowerCase().includes(search) ||
-        user.name.toLowerCase().includes(search),
+        user.name.toLowerCase().includes(search) ||
+        (user.nickname ?? "").toLowerCase().includes(search),
     )
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
@@ -118,7 +129,7 @@ export default async function AlunosPage({
           id="busca"
           name="q"
           defaultValue={search}
-          placeholder="Buscar por nome ou e-mail"
+          placeholder="Buscar por nome, apelido ou e-mail"
           className="min-h-touch flex-1 rounded-control border border-border-strong bg-surface px-3 text-base"
         />
         <button
@@ -158,6 +169,22 @@ export default async function AlunosPage({
                       {user.email}
                       {user.whatsapp && ` · WhatsApp ${user.whatsapp}`}
                     </span>
+                    {(user.nickname || user.hasAvatar) && (
+                      <span className="flex flex-wrap items-center gap-2 text-sm">
+                        Apelido: {user.nickname ?? "(nenhum)"}
+                        {user.hasAvatar && " · tem foto"}
+                        <AdminForm
+                          action={resetProfileIdentity}
+                          submitLabel="Resetar apelido e foto"
+                          pendingLabel="Resetando..."
+                          variant="ghost"
+                          confirm="Apagar o apelido e a foto deste aluno?"
+                          className="inline-flex"
+                        >
+                          <input type="hidden" name="userId" value={user.id} />
+                        </AdminForm>
+                      </span>
+                    )}
                   </div>
                   <span className="text-xs text-muted">
                     Conta criada em {formatLongDate(user.createdAt)}
