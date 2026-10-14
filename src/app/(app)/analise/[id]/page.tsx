@@ -26,7 +26,7 @@ export default async function AnaliseSalvaPage({
         text={analysisUpgradeText(user.planRank)}
       />
     );
-  const analysis = await getAnalysis(id);
+  const analysis = await getAnalysis(user.id, id);
   if (!analysis) notFound();
 
   // Partida importada: o tabuleiro fica do lado do aluno.
@@ -41,7 +41,7 @@ export default async function AnaliseSalvaPage({
     if (data?.color === "black") orientation = "b";
   }
 
-  const progress = await getStudyProgress();
+  const progress = await getStudyProgress(user.id);
   const completed = [...progress]
     .filter(([, item]) => item.completed)
     .map(([slug]) => slug);

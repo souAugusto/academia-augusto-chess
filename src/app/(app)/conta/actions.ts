@@ -25,7 +25,7 @@ export async function cancelSubscription(
     subscriptionId: formData.get("subscriptionId"),
   });
   if (!parsed.success) return { message: "Assinatura não encontrada." };
-  await requireUser("/conta");
+  const user = await requireUser("/conta");
 
   // Lido com o cliente do aluno: o RLS garante que a assinatura é dele.
   const supabase = await createClient();
@@ -35,6 +35,7 @@ export async function cancelSubscription(
       "id, status, source, current_period_end, cancel_at_period_end, provider_subscription_id",
     )
     .eq("id", parsed.data.subscriptionId)
+    .eq("user_id", user.id)
     .maybeSingle();
   if (!row || row.source !== "asaas" || !row.provider_subscription_id)
     return {
@@ -81,12 +82,13 @@ export async function payPending(formData: FormData): Promise<void> {
     subscriptionId: formData.get("subscriptionId"),
   });
   if (!parsed.success) redirect("/conta");
-  await requireUser("/conta");
+  const user = await requireUser("/conta");
   const supabase = await createClient();
   const { data: row } = await supabase
     .from("subscriptions")
     .select("provider_subscription_id")
     .eq("id", parsed.data.subscriptionId)
+    .eq("user_id", user.id)
     .maybeSingle();
   if (!row?.provider_subscription_id) redirect("/conta");
   let url: string | null = null;

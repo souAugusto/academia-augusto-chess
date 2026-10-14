@@ -46,8 +46,8 @@ export default async function AnalisePage({
       };
   }
   const [saved, progress] = await Promise.all([
-    listAnalyses(20),
-    getStudyProgress(),
+    listAnalyses(user.id, 20),
+    getStudyProgress(user.id),
   ]);
   const completed = [...progress]
     .filter(([, item]) => item.completed)

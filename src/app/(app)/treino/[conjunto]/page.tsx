@@ -29,7 +29,7 @@ export default async function ConjuntoPage({
     );
   }
   if (!isUuid(conjunto)) notFound();
-  const run = await getSetRun(conjunto);
+  const run = await getSetRun(conjunto, user.id);
   if (!run) notFound();
 
   const history = (

@@ -10,12 +10,14 @@ export type StyleHistoryItem = {
 };
 
 export async function getMyStyleHistory(
+  userId: string,
   limit = 6,
 ): Promise<StyleHistoryItem[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("style_results")
     .select("id, style, created_at")
+    .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .limit(limit);
   return (data ?? []).map((row) => ({

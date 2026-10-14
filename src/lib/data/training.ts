@@ -69,14 +69,20 @@ export type SetRun = {
   history: CycleHistory[]; // ciclos terminados, do mais recente ao mais antigo
 };
 
-export async function getSetRun(setId: string): Promise<SetRun | null> {
+// Só abre conjuntos oficiais ou do próprio aluno.
+export async function getSetRun(
+  setId: string,
+  userId: string,
+): Promise<SetRun | null> {
   const supabase = await createClient();
   const { data: set } = await supabase
     .from("puzzle_sets")
-    .select("id, name, is_official, puzzle_set_items (puzzle_id, position)")
+    .select(
+      "id, name, is_official, owner_id, puzzle_set_items (puzzle_id, position)",
+    )
     .eq("id", setId)
     .maybeSingle();
-  if (!set) return null;
+  if (!set || (!set.is_official && set.owner_id !== userId)) return null;
   const items = [...(set.puzzle_set_items ?? [])]
     .sort((a, b) => a.position - b.position)
     .map((item) => item.puzzle_id);

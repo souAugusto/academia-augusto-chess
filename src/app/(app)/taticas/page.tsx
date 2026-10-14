@@ -25,7 +25,7 @@ export default async function TaticasPage({
   }
 
   const [stats, reviewDue] = await Promise.all([
-    getMyTacticStats(),
+    getMyTacticStats(user.id),
     getReviewDueCount(),
   ]);
   return (

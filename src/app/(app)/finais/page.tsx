@@ -27,7 +27,7 @@ export default async function FinaisPage() {
 
   const [endgames, progress] = await Promise.all([
     listEndgames(),
-    getStudyProgress(),
+    getStudyProgress(user.id),
   ]);
   const levels = [...new Set(endgames.map((endgame) => endgame.level))];
 

@@ -56,11 +56,11 @@ function subscriptionRows(sub: MySubscription) {
 }
 
 export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
-  const [user, subscriptions, params, styles] = await Promise.all([
-    requireUser("/conta"),
-    getMySubscriptions(),
+  const user = await requireUser("/conta");
+  const [subscriptions, params, styles] = await Promise.all([
+    getMySubscriptions(user.id),
     searchParams,
-    getMyStyleHistory(),
+    getMyStyleHistory(user.id),
   ]);
   const currentStyle = styles[0];
   const groups = await getGroupLinks(user.planRank);
