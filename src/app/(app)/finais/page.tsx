@@ -3,11 +3,13 @@ import Link from "next/link";
 import { PlanRequired } from "@/components/app/PlanRequired";
 import { SectionIcon } from "@/components/app/SectionIcon";
 import { StaticBoard } from "@/components/chess/StaticBoard";
+import { EndgameLessonList } from "@/components/study/LessonLists";
 import { Card } from "@/components/ui/Card";
 import { IconCheck } from "@/components/ui/icons";
 import { SectionLabel } from "@/components/ui/Label";
 import { requireUser } from "@/lib/data/account";
 import { LEVEL_LABELS, listEndgames } from "@/lib/data/endgames";
+import { getStudyProgress } from "@/lib/data/lessons";
 import { GOAL_LABELS } from "@/lib/endgames";
 
 export const metadata: Metadata = { title: "Finais" };
@@ -23,7 +25,10 @@ export default async function FinaisPage() {
     );
   }
 
-  const endgames = await listEndgames();
+  const [endgames, progress] = await Promise.all([
+    listEndgames(),
+    getStudyProgress(),
+  ]);
   const levels = [...new Set(endgames.map((endgame) => endgame.level))];
 
   return (
@@ -34,19 +39,22 @@ export default async function FinaisPage() {
           Finais
         </h1>
         <p className="max-w-2xl leading-relaxed text-muted">
-          Posições clássicas para jogar contra o computador. Converta as
-          posições ganhas e segure as empatadas. Para estudar a teoria de cada
-          final com exercícios e quiz, veja{" "}
-          <Link
-            href="/licoes/finais"
-            className="text-accent-text underline-offset-4 hover:underline"
-          >
-            as lições de finais
-          </Link>
-          .
+          Comece pelas lições: teoria curta, uma posição-modelo explicada e
+          posições para praticar. Depois jogue as posições clássicas contra o
+          computador: converta as ganhas e segure as empatadas.
         </p>
       </div>
 
+      <section aria-labelledby="licoes" className="flex flex-col gap-6">
+        <h2 id="licoes" className="font-display text-2xl font-semibold">
+          Lições
+        </h2>
+        <EndgameLessonList progress={progress} heading="h3" />
+      </section>
+
+      <h2 id="treino-motor" className="font-display text-2xl font-semibold">
+        Jogue contra o computador
+      </h2>
       {endgames.length === 0 ? (
         <Card className="flex flex-col items-start gap-4 p-8">
           <span className="flex size-12 items-center justify-center rounded-control bg-surface-2 text-accent-text">
@@ -63,9 +71,9 @@ export default async function FinaisPage() {
             aria-labelledby={`nivel-${level}`}
             className="flex flex-col gap-4"
           >
-            <h2 id={`nivel-${level}`} className="text-lg font-semibold">
+            <h3 id={`nivel-${level}`} className="text-lg font-semibold">
               {LEVEL_LABELS[level] ?? `Nível ${level}`}
-            </h2>
+            </h3>
             <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {endgames
                 .filter((endgame) => endgame.level === level)
@@ -85,7 +93,7 @@ export default async function FinaisPage() {
                           <span className="text-xs text-muted">
                             {endgame.category}
                           </span>
-                          <h3 className="font-semibold">{endgame.title}</h3>
+                          <h4 className="font-semibold">{endgame.title}</h4>
                           <span className="text-sm text-accent-text">
                             {GOAL_LABELS[endgame.goal]}
                           </span>

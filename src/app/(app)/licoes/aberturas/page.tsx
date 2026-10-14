@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LessonCard } from "@/components/study/LessonCard";
+import { OpeningLessonList } from "@/components/study/LessonLists";
 import { SectionLabel } from "@/components/ui/Label";
-import { OPENING_LESSONS } from "@/content/licoes";
 import { requireUser } from "@/lib/data/account";
 import { getStudyProgress } from "@/lib/data/lessons";
 
 export const metadata: Metadata = { title: "Lições de aberturas" };
-
-const SIDES = [
-  { side: "brancas", title: "Com as brancas" },
-  { side: "pretas", title: "Com as pretas" },
-] as const;
 
 export default async function LicoesAberturasPage() {
   await requireUser("/licoes/aberturas");
@@ -40,33 +34,7 @@ export default async function LicoesAberturasPage() {
           .
         </p>
       </div>
-      {SIDES.map(({ side, title }) => {
-        const lessons = OPENING_LESSONS.filter(
-          (lesson) => lesson.side === side,
-        );
-        if (lessons.length === 0) return null;
-        return (
-          <section
-            key={side}
-            className="flex flex-col gap-3"
-            aria-labelledby={`lado-${side}`}
-          >
-            <h2 id={`lado-${side}`} className="text-lg font-semibold">
-              {title}
-            </h2>
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {lessons.map((lesson) => (
-                <li key={lesson.slug}>
-                  <LessonCard
-                    lesson={lesson}
-                    progress={progress.get(lesson.slug)}
-                  />
-                </li>
-              ))}
-            </ul>
-          </section>
-        );
-      })}
+      <OpeningLessonList progress={progress} />
     </>
   );
 }

@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PlanRequired } from "@/components/app/PlanRequired";
 import { SectionIcon } from "@/components/app/SectionIcon";
+import { OpeningLessonList } from "@/components/study/LessonLists";
 import { Card } from "@/components/ui/Card";
 import { SectionLabel } from "@/components/ui/Label";
 import { requireUser } from "@/lib/data/account";
+import { getStudyProgress } from "@/lib/data/lessons";
 import { listRepertoires } from "@/lib/data/repertoires";
 
 export const metadata: Metadata = { title: "Aberturas" };
@@ -20,7 +22,10 @@ export default async function AberturasPage() {
     );
   }
 
-  const repertoires = await listRepertoires();
+  const [repertoires, progress] = await Promise.all([
+    listRepertoires(),
+    getStudyProgress(),
+  ]);
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -29,19 +34,23 @@ export default async function AberturasPage() {
           Aberturas
         </h1>
         <p className="max-w-2xl leading-relaxed text-muted">
-          Estude cada repertório lance a lance e depois treine: o app joga o
-          adversário e você precisa acertar a sua linha. Para aprender as ideias
-          de cada abertura com exercícios e quiz, veja{" "}
-          <Link
-            href="/licoes/aberturas"
-            className="text-accent-text underline-offset-4 hover:underline"
-          >
-            as lições de aberturas
-          </Link>
-          .
+          Comece pelas lições: as ideias de cada abertura, a linha principal
+          explicada, armadilhas, exercícios e quiz. Depois treine os
+          repertórios: o app joga o adversário e você precisa acertar a sua
+          linha.
         </p>
       </div>
 
+      <section aria-labelledby="licoes" className="flex flex-col gap-6">
+        <h2 id="licoes" className="font-display text-2xl font-semibold">
+          Lições
+        </h2>
+        <OpeningLessonList progress={progress} heading="h3" />
+      </section>
+
+      <h2 id="repertorios" className="font-display text-2xl font-semibold">
+        Repertórios para treinar
+      </h2>
       {repertoires.length === 0 ? (
         <Card className="flex flex-col items-start gap-4 p-8">
           <span className="flex size-12 items-center justify-center rounded-control bg-surface-2 text-accent-text">
@@ -68,7 +77,7 @@ export default async function AberturasPage() {
                       ? "Com as brancas"
                       : "Com as pretas"}
                   </span>
-                  <h2 className="text-xl font-semibold">{repertoire.title}</h2>
+                  <h3 className="text-xl font-semibold">{repertoire.title}</h3>
                   {repertoire.description && (
                     <p className="leading-relaxed text-muted">
                       {repertoire.description}
