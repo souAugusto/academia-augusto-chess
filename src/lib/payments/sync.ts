@@ -65,8 +65,9 @@ export async function syncSubscriptionEvent(
     await onActivated(admin, provider, row.user_id, row.id);
 }
 
-// Pagamento confirmado: a vaga reservada vira vaga ocupada e outras assinaturas
-// do aluno (troca de plano ou tentativa repetida) deixam de cobrar.
+// Pagamento confirmado: a vaga reservada vira vaga ocupada, outras assinaturas
+// do aluno (troca de plano ou tentativa repetida) deixam de cobrar e o teste
+// grátis, se houver, termina na hora (sem dias extras).
 async function onActivated(
   admin: SupabaseClient,
   provider: PaymentProvider,
@@ -74,6 +75,23 @@ async function onActivated(
   keepId: string,
 ) {
   await admin.from("seat_reservations").delete().eq("user_id", userId);
+
+  const now = new Date().toISOString();
+  const { data: endedTrials } = await admin
+    .from("subscriptions")
+    .update({ status: "canceled", current_period_end: now, updated_at: now })
+    .eq("user_id", userId)
+    .eq("source", "trial")
+    .eq("status", "trialing")
+    .select("id");
+  // Conversão: quem testou e assinou (o teste pode ter acabado antes).
+  await admin
+    .from("trial_claims")
+    .update({ converted_at: now })
+    .eq("user_id", userId)
+    .is("converted_at", null);
+  if (endedTrials?.length)
+    console.info("Teste grátis encerrado pela assinatura", { userId });
 
   const { data: others } = await admin
     .from("subscriptions")

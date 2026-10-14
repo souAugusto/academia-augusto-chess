@@ -23,3 +23,6 @@
 - **Migration 0013** (tirar a exceção de admin na leitura das análises): escrita, aguardando "pode aplicar".
 - **Revisar a lista de palavras proibidas em apelidos** (`src/content/apelidos-proibidos.ts`): é simples e editável; inclua ou tire o que achar melhor.
 - **Ranking é de motivação:** como as soluções dos puzzles chegam ao navegador, um aluno técnico consegue forjar acertos. Não oferecer prêmio pelo ranking sem antes mudar a validação (ver `docs/DECISOES.md`).
+- **E-mails do teste grátis não foram criados**: o projeto ainda não envia e-mails transacionais (só os do Supabase Auth). Para boas-vindas, aviso de 7 dias, último dia e fim do teste, é preciso escolher um provedor (ex.: Resend) e configurar as chaves; os dados necessários já estão em `trial_claims` (início, fim, conversão).
+- **Analytics do teste**: o projeto não tem ferramenta de eventos. Hoje dá para medir pelo banco: testes ativados (`trial_claims`), conversões (`converted_at`) e expirados (`ends_at` no passado sem conversão).
+- **Revisar o parágrafo do teste grátis nos Termos de uso** (seção 3) na revisão jurídica.

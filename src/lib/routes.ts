@@ -17,6 +17,7 @@ const PROTECTED_PREFIXES = [
   "/analise",
   "/titulos",
   "/comunidade",
+  "/teste-gratis",
   "/admin",
   "/redefinir-senha",
 ];
@@ -60,8 +61,12 @@ export function routeRedirect(
   if (!isLoggedIn && isProtectedPath(pathname)) {
     return `/entrar?next=${encodeURIComponent(pathname + search)}`;
   }
+  // Já logado em /entrar: segue para onde ia (ex.: ativar o teste grátis).
   if (isLoggedIn && GUEST_ONLY.some((prefix) => matches(pathname, prefix))) {
-    return HOME_LOGGED_IN;
+    return safeNextPath(
+      new URLSearchParams(search).get("next"),
+      HOME_LOGGED_IN,
+    );
   }
   return null;
 }

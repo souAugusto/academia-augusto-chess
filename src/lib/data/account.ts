@@ -39,3 +39,11 @@ export const PLAN_NAMES: Record<number, string> = {
   1: "Membro",
   2: "Intensivo",
 };
+
+// Nível do plano PAGO (ignora o teste grátis). No checkout: quem está no
+// teste do Membro pode assinar o Membro; quem já paga, não.
+export async function getPaidPlanRank(): Promise<number> {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("my_paid_plan_rank");
+  return Number(data ?? 0);
+}

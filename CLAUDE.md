@@ -18,7 +18,7 @@ Next.js 16 (App Router) + TypeScript + Tailwind 4 · Supabase (Auth, Postgres, R
 4. Escritas em `subscriptions`, `seat_reservations` e eventos de pagamento só pelo servidor com a service role.
 5. Webhook de pagamento: verificar assinatura com o corpo bruto e garantir idempotência.
 6. Validar toda entrada no servidor (Zod). Não confiar em `user_id` ou `plan` vindos do cliente.
-7. Não existe plano gratuito. Não criar fluxo "grátis". O puzzle do dia é a única parte pública jogável.
+7. Não existe plano gratuito permanente. A única exceção é o teste grátis de 30 dias do plano Membro (sem cartão, uma vez por conta e por e-mail normalizado; decisão do Augusto em 2026-10-14). Não criar outros fluxos "grátis". O puzzle do dia é a única parte pública jogável.
 8. Não prometer resultado (ex.: "suba X pontos de rating") em nenhum texto.
 9. Nada do mestre convidado (nome, foto, currículo) aparece no site até o Augusto liberar.
 10. Só conteúdo aberto (Lichess CC0, `lichess-org/chess-openings` CC0) ou do Augusto. Não usar código ou arte GPL no front (o `chessground` foi descartado por isso); o Stockfish só roda isolado em Web Worker, com aviso de licença em `/creditos`.
@@ -39,7 +39,7 @@ Next.js 16 (App Router) + TypeScript + Tailwind 4 · Supabase (Auth, Postgres, R
 - Dúvida de produto: perguntar uma vez, com recomendação. Não inventar regra de negócio.
 
 ## Onde está cada coisa
-- Schema e RLS: `supabase/migrations/` (0001 a 0015 aplicadas, exceto a 0013, escrita e aguardando confirmação)
+- Schema e RLS: `supabase/migrations/` (0001 a 0016 aplicadas, exceto a 0013, escrita e aguardando confirmação)
 - Pagamento: Asaas, webhook em `/api/pagamentos/asaas` (token no header `asaas-access-token`, idempotência em `payment_events`)
 - Painel admin: `/admin` (só quem está na tabela `admins`)
 - Vercel: projeto `finale-xadrez` (time sergio-codes), produção em https://finale-xadrez.vercel.app (o antigo academia-augusto-chess.vercel.app redireciona)

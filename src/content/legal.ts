@@ -1,4 +1,5 @@
 import type { LegalSection } from "@/components/site/LegalPage";
+import { TRIAL_TERMS } from "./trial";
 
 // RASCUNHOS (Fase 1). Precisam de revisão jurídica antes do lançamento.
 // Placeholders entre colchetes bloqueiam o deploy de produção.
@@ -25,6 +26,7 @@ export const TERMS: LegalSection[] = [
       "Os planos, preços e benefícios são os informados na página de planos no momento da contratação. A cobrança é mensal e renovada automaticamente até o cancelamento.",
       "O plano Intensivo tem número limitado de vagas por turma. Quando a turma está completa, é possível entrar na lista de espera.",
       "Se um pagamento falhar, o acesso pode ser suspenso após um período de tolerância, até a regularização.",
+      TRIAL_TERMS,
     ],
   },
   {

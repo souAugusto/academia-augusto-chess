@@ -1,3 +1,5 @@
+import { TRIAL_FAQ } from "./trial";
+
 // Textos da Home da Finale (rascunho para revisão do Augusto).
 // Placeholders entre colchetes bloqueiam o deploy de produção.
 
@@ -79,6 +81,7 @@ export const FAQ = {
       answer:
         "Sim. O cancelamento é feito na página Minha conta, e o acesso continua até o fim do período pago.",
     },
+    TRIAL_FAQ,
     {
       question: "O que muda para quem entra agora como fundador?",
       answer:

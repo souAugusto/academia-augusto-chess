@@ -16,7 +16,7 @@ Plataforma premium de treino de xadrez: **táticas, aberturas e finais**, com **
 - **Membro, R$ 19/mês:** táticas com rating e revisão de erros, aberturas, finais, aulas em vídeo (com PDF e PGN), lives exclusivas, ranking, torneios e grupo no WhatsApp.
 - **Intensivo, R$ 119/mês, turma limitada a 10 alunos:** tudo do Membro, mais o método de treino por ciclos (**Método Padrão Finale**), diagnóstico das partidas, plano de treino individual, revisões ao vivo na turma, grupo exclusivo da turma no WhatsApp, prioridade nas lives e 1 aula por mês com um mestre nacional em atividade (sem nome de mestre no site até eu liberar).
 
-**Não existe plano gratuito.** Sem assinatura ativa, a conta existe mas só acessa Home, planos, páginas institucionais e o **puzzle do dia** (única parte pública jogável).
+**Não existe plano gratuito permanente.** A única exceção é o **teste grátis de 30 dias do plano Membro** (sem cartão, uma vez por conta e por e-mail normalizado, decisão do Augusto em 2026-10-14). Sem assinatura ativa nem teste em andamento, a conta existe mas só acessa Home, planos, páginas institucionais e o **puzzle do dia** (única parte pública jogável).
 
 Não prometa resultado (ex.: "suba X pontos de rating") em nenhum texto.
 

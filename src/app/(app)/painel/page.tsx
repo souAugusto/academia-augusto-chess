@@ -71,6 +71,13 @@ export default async function PainelPage({
       {params.senha === "alterada" && (
         <FormAlert tone="sucesso">Sua senha foi alterada.</FormAlert>
       )}
+      {params.teste === "ativado" && (
+        <FormAlert tone="sucesso">
+          Seu teste grátis de 30 dias começou. Você tem acesso completo ao plano
+          Membro: táticas, aberturas, finais, aulas, análise e lives. Bom
+          treino!
+        </FormAlert>
+      )}
 
       <section
         aria-labelledby="titulo-atual"

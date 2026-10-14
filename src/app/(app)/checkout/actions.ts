@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import type { FormState } from "@/app/(auth)/actions";
-import { requireUser } from "@/lib/data/account";
+import { getPaidPlanRank, requireUser } from "@/lib/data/account";
 import { getPlans } from "@/lib/data/public";
 import { siteOrigin } from "@/lib/origin";
 import { getPaymentProvider, paymentsConfigured } from "@/lib/payments";
@@ -37,7 +37,8 @@ export async function startCheckout(
   const { plan: planId, method, cpf } = parsed.data;
 
   const user = await requireUser(`/checkout?plano=${planId}`);
-  if (user.planRank >= PLAN_RANK[planId]) redirect("/conta");
+  // Plano pago (o teste grátis não conta: quem está no teste pode assinar).
+  if ((await getPaidPlanRank()) >= PLAN_RANK[planId]) redirect("/conta");
   if (!paymentsConfigured())
     return { message: "O pagamento ainda está sendo configurado.", values };
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AppBottomNav, AppTopNav } from "@/components/app/AppNav";
+import { TrialBanner } from "@/components/app/TrialBanner";
 import { Logo } from "@/components/brand/Logo";
 import { IconUser } from "@/components/ui/icons";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -26,6 +27,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
       </header>
       {/* Espaço extra embaixo no celular para a barra inferior não cobrir o conteúdo. */}
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 pt-8 pb-28 sm:px-6 md:pb-16">
+        <TrialBanner />
         {children}
       </main>
       <AppBottomNav />
