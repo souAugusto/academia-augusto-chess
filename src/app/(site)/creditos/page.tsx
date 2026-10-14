@@ -6,9 +6,9 @@ export const metadata: Metadata = { title: "Créditos e licenças" };
 // Avisos de licença de terceiros. Cada fase acrescenta o que passar a usar.
 const SECTIONS = [
   {
-    title: "Peças do tabuleiro e ícone",
+    title: "Peças do tabuleiro",
     paragraphs: [
-      "Clássico (padrão) e o cavalo do ícone da Finale: conjunto de Colin M. L. Burnett (Wikimedia Commons), usado sob a licença BSD. Copyright (c) Colin M. L. Burnett.",
+      "Clássico (padrão): conjunto de Colin M. L. Burnett (Wikimedia Commons), usado sob a licença BSD. Copyright (c) Colin M. L. Burnett.",
       "Moderno: conjunto Chessnut, de Alexis Luengas (github.com/LexLuengas/chessnut-pieces), sob a Apache License 2.0. Copyright 2015 Alexis Luengas. Licença em /pieces/chessnut/LICENSE.txt.",
       "Fantasia e Minimalista: conjuntos Fantasy e Spatial, de Maurizio Monge (github.com/maurimo/chess-art), sob a licença MIT. Copyright (c) Maurizio Monge. Licença em /pieces/fantasy/LICENSE.txt.",
       "Todos os conjuntos são usados sem modificação.",

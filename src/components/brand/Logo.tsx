@@ -6,7 +6,7 @@ type LogoProps = {
   compact?: boolean; // só o ícone (ex.: barra do app no celular)
 };
 
-// Versão horizontal: ícone + "Finale". O nome completo fica no texto acessível.
+// Versão horizontal: castelo + "FINALE". O nome completo fica no texto acessível.
 export function Logo({ href = "/", compact = false }: LogoProps) {
   return (
     <Link
@@ -14,10 +14,10 @@ export function Logo({ href = "/", compact = false }: LogoProps) {
       className="flex min-h-touch items-center gap-2.5"
       aria-label="Academia Finale de Xadrez, início"
     >
-      <FinaleMark className="size-9 shrink-0" />
+      <FinaleMark className="h-8 w-auto shrink-0" />
       {!compact && (
-        <span className="font-display text-[1.375rem] leading-none font-semibold tracking-tight">
-          Finale
+        <span className="font-display text-[1.375rem] leading-none font-semibold tracking-[0.1em]">
+          FINALE
         </span>
       )}
     </Link>

@@ -1,46 +1,33 @@
-// Ícone da Finale: "F" geométrico com o cavalo no lugar da barra do meio.
-// O cavalo vem do conjunto Cburnett (licença BSD; ver /creditos).
-// Mesmo desenho de src/app/icon.svg.
+// Símbolo da Finale: castelo em contorno com o portão dourado.
+// As cores vêm do tema (--logo-stroke e --logo-gate em globals.css), então o
+// logo troca junto com o tema, sem piscar. Arquivos soltos em public/brand/.
 type FinaleMarkProps = { className?: string; title?: string };
 
 export function FinaleMark({ className, title }: FinaleMarkProps) {
   return (
     <svg
-      viewBox="0 0 64 64"
+      viewBox="20 14 80 98"
       className={className}
       role={title ? "img" : undefined}
       aria-hidden={title ? undefined : true}
       focusable="false"
     >
       {title && <title>{title}</title>}
-      <defs>
-        <linearGradient id="finale-ouro" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#F5D47E" />
-          <stop offset="1" stopColor="#C9962F" />
-        </linearGradient>
-      </defs>
-      <rect width="64" height="64" rx="14" fill="#0B0D12" />
-      <path d="M14 12h36v9H24v31H14z" fill="url(#finale-ouro)" />
-      <g
-        transform="translate(22 24) scale(0.66)"
-        fill="url(#finale-ouro)"
-        stroke="url(#finale-ouro)"
-        strokeWidth={1.5}
+      <path
+        d="M30 20H44V34H53V20H67V34H76V20H90V46H82V96H94V106H26V96H38V46H30Z"
+        fill="none"
+        stroke="var(--logo-stroke)"
+        strokeWidth={6}
         strokeLinejoin="round"
-      >
-        <path d="M22 10c10.5 1 16.5 8 16 29H15c0-9 10-6.5 8-21" />
-        <path d="M24 18c.38 2.91-5.55 7.37-8 9-3 2-2.82 4.34-5 4-1.042-.94 1.41-3.04 0-3-1 0 .19 1.23-1 2-1 0-4.003 1-4-4 0-2 6-12 6-12s1.89-1.9 2-3.5c-.73-.994-.5-2-.5-3 1-1 3 2.5 3 2.5h2s.78-1.992 2.5-3c1 0 1 3 1 3" />
-        <path
-          d="M9.5 25.5a.5.5 0 1 1-1 0 .5.5 0 1 1 1 0z"
-          fill="#0B0D12"
-          stroke="#0B0D12"
-        />
-        <path
-          d="M24.55 10.4l-.45 1.45.5.15c3.15 1 5.65 2.49 7.9 6.75 2.25 4.26 3.25 10.31 2.75 20.25l-.05.5h2.25l.05-.5c.5-10.06-.88-16.85-3.25-21.34-2.37-4.49-5.79-6.64-9.19-7.16l-.51-.1z"
-          fill="#0B0D12"
-          stroke="none"
-        />
-      </g>
+      />
+      <path
+        d="M50 96V78A10 10 0 0 1 70 78V96"
+        fill="none"
+        stroke="var(--logo-gate)"
+        strokeWidth={6}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
