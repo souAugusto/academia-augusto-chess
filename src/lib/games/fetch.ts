@@ -183,3 +183,56 @@ export async function fetchLichessGames(
   take(splitNdjson(`${buffer}\n`).lines);
   return games;
 }
+
+// ---------------------------------------------------------------------------
+// Uma partida para análise (lances e, no Lichess, a análise já feita lá)
+// ---------------------------------------------------------------------------
+
+export type GameForAnalysis = {
+  pgn: string | null; // Chess.com
+  sans: string[] | null; // Lichess (lances em SAN, posição inicial padrão)
+  lichessAnalysis: unknown; // lista do Lichess com evals, se a partida foi analisada
+};
+
+const LICHESS_ID = /^[A-Za-z0-9]{8}$/;
+
+export async function fetchLichessGameForAnalysis(
+  externalId: string,
+): Promise<GameForAnalysis> {
+  if (!LICHESS_ID.test(externalId)) throw new GamesFetchError("not_found");
+  const game = await getJson<{
+    moves?: string;
+    variant?: string;
+    analysis?: unknown;
+  }>(
+    `https://lichess.org/game/export/${externalId}?evals=true&clocks=false&opening=false&literate=false`,
+  );
+  if (game.variant && game.variant !== "standard")
+    throw new GamesFetchError("not_found");
+  const sans = game.moves?.trim() ? game.moves.trim().split(/\s+/) : [];
+  if (sans.length === 0) throw new GamesFetchError("no_games");
+  return { pgn: null, sans, lichessAnalysis: game.analysis ?? null };
+}
+
+// O Chess.com não tem endpoint de partida avulsa: a partida é procurada no
+// arquivo do mês em que foi jogada (o mesmo usado na importação).
+export async function fetchChessComGameForAnalysis(
+  username: string,
+  playedAt: Date,
+  externalId: string,
+): Promise<GameForAnalysis> {
+  if (!isValidUsername(username)) throw new GamesFetchError("not_found");
+  const year = playedAt.getUTCFullYear();
+  const month = String(playedAt.getUTCMonth() + 1).padStart(2, "0");
+  const url = `${CHESSCOM}/${username.toLowerCase()}/games/${year}/${month}`;
+  const { games = [] } = await getJson<{
+    games?: { uuid?: string; url?: string; pgn?: string; rules?: string }[];
+  }>(url);
+  const game = games.find(
+    (item) =>
+      item.uuid === externalId || item.url?.split("/").pop() === externalId,
+  );
+  if (!game?.pgn || (game.rules && game.rules !== "chess"))
+    throw new GamesFetchError("not_found");
+  return { pgn: game.pgn, sans: null, lichessAnalysis: null };
+}

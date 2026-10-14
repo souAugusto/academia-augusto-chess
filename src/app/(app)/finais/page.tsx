@@ -35,7 +35,15 @@ export default async function FinaisPage() {
         </h1>
         <p className="max-w-2xl leading-relaxed text-muted">
           Posições clássicas para jogar contra o computador. Converta as
-          posições ganhas e segure as empatadas.
+          posições ganhas e segure as empatadas. Para estudar a teoria de cada
+          final com exercícios e quiz, veja{" "}
+          <Link
+            href="/licoes/finais"
+            className="text-accent-text underline-offset-4 hover:underline"
+          >
+            as lições de finais
+          </Link>
+          .
         </p>
       </div>
 

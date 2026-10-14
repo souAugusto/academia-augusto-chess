@@ -1,0 +1,180 @@
+import type { EndgameLesson } from "../types.ts";
+
+export const mateTorre: EndgameLesson = {
+  kind: "final",
+  slug: "mate-rei-e-torre",
+  title: "Rei e torre contra rei",
+  group: "mates",
+  difficulty: 1,
+  summary:
+    "A torre corta o rei adversário em uma caixa; o seu rei empurra e a torre fecha a borda.",
+  theory: [
+    "Com rei e torre contra rei sozinho, a vitória é sempre possível, mas exige mais trabalho que com a dama. A torre não controla diagonais, então o seu rei tem papel ativo: ele empurra o rei adversário enquanto a torre segura a cerca.",
+    'O método da "caixa": a torre corta uma fileira ou coluna, prendendo o rei adversário num retângulo. A cada passo você encolhe a caixa: o rei se aproxima, a torre avança uma casa e o retângulo diminui.',
+    "Na borda, o mate vem quando os reis ficam frente a frente (em oposição) e a torre dá xeque na última fileira. Se o rei adversário não está em oposição, faça um lance de espera com a torre, longe dele, e deixe-o entrar na oposição.",
+  ],
+  keyPoints: [
+    "Use a torre para cortar o rei adversário e criar uma caixa.",
+    "Encolha a caixa sem deixar a torre ser atacada pelo rei adversário.",
+    "Se o rei adversário chegar perto da torre, afaste-a para o outro lado do tabuleiro, na mesma fileira.",
+    "O mate na borda acontece com os reis frente a frente e a torre na última fileira.",
+    "Lances de espera com a torre resolvem quando a oposição ainda não está pronta.",
+  ],
+  model: {
+    fen: "8/8/3k4/8/8/2K5/8/7R w - - 0 1",
+    orientation: "white",
+    caption:
+      "Do centro até o mate: caixa, aproximação do rei e lances de espera.",
+    moves: [
+      { san: "Kd4", note: "O rei branco vai para o centro." },
+      { san: "Ke6" },
+      {
+        san: "Rf1",
+        note: "A torre corta a coluna f: o rei preto fica preso nas colunas a a e.",
+      },
+      { san: "Kd6" },
+      {
+        san: "Rf6+",
+        note: "Xeque que empurra o rei para as duas últimas fileiras.",
+      },
+      { san: "Ke7" },
+      { san: "Ke5", note: "O rei branco protege a torre e se aproxima." },
+      { san: "Kd7" },
+      { san: "Kd5" },
+      { san: "Kc7" },
+      {
+        san: "Rh6",
+        note: "A torre continua cortando a sexta fileira, de longe.",
+      },
+      { san: "Kd7" },
+      { san: "Rh7+", note: "Agora o rei preto só tem a última fileira." },
+      { san: "Kd8" },
+      { san: "Kd6", note: "O rei branco chega à sexta fileira." },
+      { san: "Ke8" },
+      {
+        san: "Rc7",
+        note: "Lances de espera: a torre muda de casa sem soltar a sétima fileira.",
+      },
+      { san: "Kd8" },
+      { san: "Rf7" },
+      { san: "Kc8" },
+      { san: "Rh7" },
+      { san: "Kb8" },
+      { san: "Kc6" },
+      { san: "Ka8" },
+      { san: "Rh8+" },
+      { san: "Ka7" },
+      {
+        san: "Rg8",
+        note: "Mais um lance de espera: o rei preto precisa ir para a6.",
+      },
+      { san: "Ka6" },
+      {
+        san: "Ra8#",
+        note: "Mate: a torre fecha a coluna a e o rei branco controla b5, b6 e b7.",
+      },
+    ],
+  },
+  practice: [
+    {
+      level: "facil",
+      fen: "6k1/8/6K1/8/8/8/8/R7 w - - 0 1",
+      goal: "vencer",
+      solution: ["Ra8#"],
+      hint: "Os reis estão frente a frente. Dê xeque na última fileira.",
+      why: "Ta8# é mate: o rei branco em g6 controla f7, g7 e h7, e a torre fecha a oitava fileira.",
+    },
+    {
+      level: "facil",
+      fen: "1k6/8/1K6/8/8/8/8/3R4 w - - 0 1",
+      goal: "vencer",
+      solution: ["Rd8#"],
+      hint: "Use a coluna aberta para chegar à última fileira.",
+      why: "Td8# é mate: os reis estão em oposição e a torre controla toda a oitava fileira.",
+    },
+    {
+      level: "medio",
+      fen: "5k2/8/4K3/8/8/8/8/6R1 w - - 0 1",
+      goal: "vencer",
+      solution: ["Rg5", "Ke8", "Rg8#"],
+      accept: ["Rg6", "Rg4", "Rg3", "Rg2"],
+      hint: "Os reis ainda não estão frente a frente. Faça um lance de espera sem soltar a coluna g.",
+      why: "Um lance de espera na coluna g obriga o rei preto a ir para e8, ficando em oposição. Depois Tg8# é mate.",
+    },
+    {
+      level: "medio",
+      fen: "7k/8/5K2/8/8/8/8/R7 w - - 0 1",
+      goal: "vencer",
+      solution: ["Kg6", "Kg8", "Ra8#"],
+      hint: "Coloque o seu rei em oposição ao rei preto.",
+      why: "Rg6 deixa o rei preto só com g8. Depois Ta8# é mate.",
+    },
+    {
+      level: "medio",
+      fen: "4k3/8/3K4/8/8/8/8/7R w - - 0 1",
+      goal: "vencer",
+      solution: ["Rf1", "Kd8", "Rf8#"],
+      hint: "Tire a casa f8 e f7 do rei preto; ele só vai poder ir para a frente do seu rei.",
+      why: "Tf1 corta a coluna f. O único lance preto é ...Rd8, e Tf8# é mate.",
+    },
+    {
+      level: "dificil",
+      fen: "8/8/8/8/8/k7/2K5/7R w - - 0 1",
+      goal: "vencer",
+      solution: ["Rh4", "Ka2", "Ra4#"],
+      hint: "O rei preto está preso na borda. Tire a quarta fileira dele.",
+      why: "Th4 prende o rei nas casas a2 e a3. Depois de ...Ra2, Ta4# é mate porque o rei branco controla b1, b2 e b3.",
+    },
+    {
+      level: "dificil",
+      fen: "8/8/8/8/8/1k6/8/1K1R4 w - - 0 1",
+      goal: "vencer",
+      solution: ["Rd3+"],
+      hint: "Com xeque, empurre o rei preto para longe do seu rei e monte a caixa.",
+      why: "Td3+ obriga o rei preto a subir para a quarta fileira, e a torre corta a terceira. É o primeiro passo para encolher a caixa.",
+    },
+    {
+      level: "dificil",
+      fen: "2k5/R7/3K4/8/8/8/8/8 w - - 0 1",
+      goal: "vencer",
+      solution: ["Rh7", "Kb8", "Kc6", "Ka8", "Kb6", "Kb8", "Rh8#"],
+      hint: "Não dê xeque ainda. Afaste a torre na sétima fileira e traga o rei.",
+      why: "Th7 mantém o rei preto na última fileira. O rei branco o acompanha até a oposição e Th8# é mate.",
+    },
+  ],
+  quiz: [
+    {
+      question: "Qual é o papel da torre no mate de rei e torre?",
+      options: [
+        "Cortar o rei adversário numa caixa que vai diminuindo",
+        "Dar xeques seguidos até o mate",
+        "Proteger o próprio rei",
+      ],
+      answer: 0,
+      explanation:
+        "A torre corta fileiras e colunas. Xeques sem plano só fazem o rei adversário fugir.",
+    },
+    {
+      question: "Quando a torre dá o mate na borda?",
+      options: [
+        "Quando os reis estão frente a frente (em oposição)",
+        "Quando o rei adversário está no centro",
+        "A qualquer momento",
+      ],
+      answer: 0,
+      explanation:
+        "Com os reis em oposição, o seu rei tira as casas de fuga e a torre fecha a fileira.",
+    },
+    {
+      question: "O que fazer quando o rei adversário ataca a sua torre?",
+      options: [
+        "Afastar a torre para o outro lado, na mesma fileira ou coluna",
+        "Trocar a torre",
+        "Dar xeque",
+      ],
+      answer: 0,
+      explanation:
+        "Longe do rei adversário, a torre continua cortando a mesma linha.",
+    },
+  ],
+};

@@ -1,0 +1,10 @@
+Licenças de software de terceiros distribuído pela Academia Finale de Xadrez.
+
+stockfish-GPL-3.0.txt
+  Licença do motor Stockfish 19 (pacote npm "stockfish" 19.0.1, projeto
+  stockfish.js de Nathan Rugg), servido sem modificação em /engine/.
+  Código-fonte: https://github.com/nmrugg/stockfish.js/tree/v19.0.1
+                https://github.com/official-stockfish/Stockfish
+
+A lista completa das bibliotecas usadas no site e suas licenças está em
+/licencas/THIRD_PARTY_LICENSES.txt.

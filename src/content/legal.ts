@@ -48,8 +48,11 @@ export const TERMS: LegalSection[] = [
     ],
   },
   {
-    title: "7. Créditos",
+    title: "7. Componentes de terceiros",
     paragraphs: [
+      "A Finale usa software e conteúdo de terceiros, cada um com a sua própria licença, que continua valendo para esses componentes. A lista completa, com versões e licenças, está na página Créditos e licenças e em /licencas.",
+      "A análise de partidas e o treino de finais usam o motor Stockfish, software livre sob a GNU General Public License versão 3. Ele roda no seu próprio aparelho, como programa separado, e é distribuído sem modificações; o código-fonte correspondente está indicado em Créditos e licenças. Você pode usar, estudar, copiar e redistribuir o motor nos termos dessa licença.",
+      "As avaliações dos componentes de terceiros (por exemplo, a avaliação do motor ou da nuvem do Lichess) são fornecidas como estão, para estudo, e podem conter imprecisões.",
       "Peças do tabuleiro: conjunto de Colin M.L. Burnett, usado sob a licença BSD.",
     ],
   },
@@ -91,6 +94,7 @@ export const PRIVACY: LegalSection[] = [
     paragraphs: [
       "Com prestadores que fazem o serviço funcionar: Supabase (banco de dados e login), Vercel (hospedagem), Asaas (pagamentos), YouTube (vídeos das aulas) e Google, se você escolher entrar com o Google. Alguns desses serviços guardam dados fora do Brasil, com as garantias previstas na LGPD.",
       "No ranking, outros membros podem ver o seu nome e a sua posição.",
+      "Na análise de partidas, o seu navegador consulta a nuvem de avaliações do Lichess enviando apenas as posições do tabuleiro (sem seu nome ou e-mail). Ao importar ou analisar partidas, buscamos os dados públicos das suas contas no Chess.com e no Lichess.",
     ],
   },
   {

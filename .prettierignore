@@ -6,3 +6,7 @@ PROMPT_MESTRE.md
 CLAUDE.md
 AGENTS.md
 docs/design
+
+# Arquivos do motor: cópia exata do pacote npm, nunca reformatar.
+public/engine/
+public/licencas/

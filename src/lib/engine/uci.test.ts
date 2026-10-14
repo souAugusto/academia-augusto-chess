@@ -17,6 +17,7 @@ describe("parseInfo", () => {
       depth: 18,
       score: { kind: "cp", value: -34 },
       pv: ["e2e4", "e7e5", "g1f3"],
+      multipv: 1,
     });
   });
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { APP_SECTIONS } from "./modules";
+import { APP_SECTIONS, MOBILE_SECTIONS } from "./modules";
 
 function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -46,7 +46,7 @@ export function AppBottomNav() {
       className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-glass pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden"
     >
       <ul className="mx-auto grid h-bottom-nav max-w-lg grid-cols-5">
-        {APP_SECTIONS.map(({ href, label, Icon }) => {
+        {MOBILE_SECTIONS.map(({ href, label, Icon }) => {
           const active = isActive(pathname, href);
           return (
             <li key={href}>

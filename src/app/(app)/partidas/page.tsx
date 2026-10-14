@@ -7,8 +7,15 @@ import { LinkAccountForm } from "@/components/games/LinkAccountForm";
 import { Card } from "@/components/ui/Card";
 import { SectionLabel } from "@/components/ui/Label";
 import { requireUser } from "@/lib/data/account";
-import { getGamesForStats, getLinkedAccounts } from "@/lib/data/games";
-import { formatLongDate } from "@/lib/format";
+import { buttonClasses } from "@/components/ui/button";
+import { ANALYSIS_MIN_PLAN_RANK } from "@/lib/analysis/config";
+import { analysedGameIds } from "@/lib/data/analyses";
+import {
+  getGamesForStats,
+  getLinkedAccounts,
+  getRecentGames,
+} from "@/lib/data/games";
+import { formatDate, formatLongDate } from "@/lib/format";
 import { PLATFORM_LABELS, type Platform } from "@/lib/games/normalize";
 import { computeStats } from "@/lib/games/stats";
 import { unlinkAccount } from "./actions";
@@ -19,6 +26,7 @@ export const metadata: Metadata = { title: "Minhas partidas" };
 export const maxDuration = 120;
 
 const PLATFORMS: Platform[] = ["chesscom", "lichess"];
+const RESULT_LABELS = { win: "vitória", draw: "empate", loss: "derrota" };
 const FILTERS = [
   { value: null, label: "Ambas" },
   { value: "chesscom", label: "Chess.com" },
@@ -42,9 +50,12 @@ export default async function PartidasPage({
   }
 
   const filter = PLATFORMS.find((item) => item === params.plataforma) ?? null;
-  const [accounts, games] = await Promise.all([
+  const canAnalyse = user.planRank >= ANALYSIS_MIN_PLAN_RANK;
+  const [accounts, games, recent, analysed] = await Promise.all([
     getLinkedAccounts(),
     getGamesForStats(filter),
+    getRecentGames(filter),
+    canAnalyse ? analysedGameIds() : Promise.resolve(new Map<number, string>()),
   ]);
   const stats = computeStats(games);
 
@@ -149,6 +160,55 @@ export default async function PartidasPage({
           <GameStatsView stats={stats} />
         )}
       </section>
+      {recent.length > 0 && (
+        <section aria-labelledby="recentes" className="flex flex-col gap-3">
+          <h2 id="recentes" className="text-lg font-semibold">
+            Partidas recentes
+          </h2>
+          <ul className="flex flex-col gap-2">
+            {recent.map((game) => {
+              const analysisId = analysed.get(game.id);
+              return (
+                <li
+                  key={game.id}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-border bg-surface p-4"
+                >
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-semibold">
+                      {game.openingName ?? "Abertura não identificada"}
+                    </span>
+                    <span className="text-sm text-muted">
+                      {formatDate(game.playedAt)} ·{" "}
+                      {PLATFORM_LABELS[game.platform]} · de{" "}
+                      {game.color === "white" ? "brancas" : "pretas"} ·{" "}
+                      {RESULT_LABELS[game.result]}
+                      {game.opponentRating
+                        ? ` · adversário ${game.opponentRating}`
+                        : ""}
+                    </span>
+                  </div>
+                  {canAnalyse &&
+                    (analysisId ? (
+                      <Link
+                        href={`/analise/${analysisId}`}
+                        className={buttonClasses("secondary")}
+                      >
+                        Ver análise
+                      </Link>
+                    ) : (
+                      <Link
+                        href={`/analise?partida=${game.id}`}
+                        className={buttonClasses("outline-accent")}
+                      >
+                        Analisar esta partida
+                      </Link>
+                    ))}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
     </>
   );
 }
