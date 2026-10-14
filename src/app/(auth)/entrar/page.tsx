@@ -9,6 +9,8 @@ const NOTICES: Record<string, string> = {
   link: "O link expirou ou já foi usado. Entre com sua senha ou peça um novo link.",
   google:
     "Não foi possível entrar com o Google agora. Tente de novo ou use e-mail e senha.",
+  excluida:
+    "Sua conta foi excluída: os dados foram apagados e a assinatura, cancelada.",
 };
 
 export default async function EntrarPage({

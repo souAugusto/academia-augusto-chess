@@ -7,3 +7,4 @@
 # Motor e licenças de terceiros: cópia byte a byte, sem conversão de fim de linha.
 public/engine/** -text
 public/licencas/** -text
+public/pieces/** -text

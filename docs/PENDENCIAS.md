@@ -18,3 +18,7 @@
 - **Limites de uso das APIs do Lichess.** A análise usa a nuvem de avaliações e o export de
   partidas do Lichess sem chave. Em caso de muito uso, o Lichess pode limitar as chamadas
   (o site já cai para o motor local quando a nuvem não responde).
+- **Testar o som no iPhone (Safari) e no Android.** Testado em Chrome e Firefox no computador; não há iPhone no ambiente de desenvolvimento.
+- **Proteção contra senhas vazadas desligada no Supabase Auth.** O verificador de segurança do Supabase recomenda ligar em Authentication > Policies (Leaked password protection). Depende do plano do Supabase.
+- **Migration 0013** (tirar a exceção de admin na leitura das análises): escrita, aguardando "pode aplicar".
+- **Revisar a lista de palavras proibidas em apelidos** (`src/content/apelidos-proibidos.ts`): é simples e editável; inclua ou tire o que achar melhor.

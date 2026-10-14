@@ -53,7 +53,7 @@ export const TERMS: LegalSection[] = [
       "A Finale usa software e conteúdo de terceiros, cada um com a sua própria licença, que continua valendo para esses componentes. A lista completa, com versões e licenças, está na página Créditos e licenças e em /licencas.",
       "A análise de partidas e o treino de finais usam o motor Stockfish, software livre sob a GNU General Public License versão 3. Ele roda no seu próprio aparelho, como programa separado, e é distribuído sem modificações; o código-fonte correspondente está indicado em Créditos e licenças. Você pode usar, estudar, copiar e redistribuir o motor nos termos dessa licença.",
       "As avaliações dos componentes de terceiros (por exemplo, a avaliação do motor ou da nuvem do Lichess) são fornecidas como estão, para estudo, e podem conter imprecisões.",
-      "Peças do tabuleiro: conjunto de Colin M.L. Burnett, usado sob a licença BSD.",
+      "Peças do tabuleiro: conjuntos de Colin M.L. Burnett (BSD), Alexis Luengas (Apache 2.0) e Maurizio Monge (MIT). Detalhes em /creditos.",
     ],
   },
   {

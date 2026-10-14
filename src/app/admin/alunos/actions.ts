@@ -108,3 +108,31 @@ export async function stopRenewal(
   revalidatePath("/admin/alunos");
   return { success: "Renovação cancelada." };
 }
+
+const moderationSchema = z.object({ userId: z.uuid() });
+
+// Moderação: apaga o apelido e a foto de um aluno (ex.: conteúdo ofensivo).
+// O aluno pode escolher um apelido novo na hora (o prazo de 30 dias zera).
+export async function resetProfileIdentity(
+  _prev: AdminState,
+  formData: FormData,
+): Promise<AdminState> {
+  await requireAdmin();
+  const parsed = moderationSchema.safeParse(formObject(formData, ["userId"]));
+  if (!parsed.success) return { message: zodMessage(parsed.error) };
+  const { userId } = parsed.data;
+  const admin = createAdminClient();
+  await admin.storage.from("avatars").remove([`${userId}/avatar.webp`]);
+  const { error } = await admin
+    .from("profiles")
+    .update({
+      display_name: null,
+      display_name_changed_at: null,
+      avatar_path: null,
+    })
+    .eq("id", userId);
+  if (error) return { message: `Não foi possível resetar: ${error.message}` };
+  console.info("Moderação: apelido e foto resetados", { userId });
+  revalidatePath("/admin/alunos");
+  return { success: "Apelido e foto removidos." };
+}

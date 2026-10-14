@@ -23,3 +23,15 @@ O `verify:engine` passou a checar, além da prática: cada lance da linha princi
 - **Avaliação com vírgula** (+1,2), como o resto do site em português.
 - **Prática só aceita os lances listados.** Por isso as lições novas usam posições com um lance certo, ou com a lista completa de lances que mantêm o resultado (conferida com `MULTIPV=40` no `resolver-final.ts`). Posições com muitos lances ganhadores (ex.: evitar afogamento com dama) ficaram de fora para não marcar como erro um lance bom.
 - **Licença da libvips no Linux:** a exceção LGPL do sharp passou a cobrir também `@img/sharp-libvips-*`, que o build da Vercel instala separado. É a mesma biblioteca e a mesma exceção já listada nas pendências.
+
+## Perfil, aparência e sons — Bloco A (2026-10-14)
+Prompt de referência: `docs/PROMPT_PERSONALIZACAO_TITULOS.md`.
+- **Adaptações ao projeto real** (o prompt foi escrito para uma versão anterior): pagamento é Asaas (não Stripe); o tabuleiro é react-chessboard (o chessground é GPL e foi descartado); a migration "0002" virou **0014** (a parte de rating e títulos fica para o Bloco B); `/puzzles` é `/taticas`.
+- **Banco único:** não há Supabase de desenvolvimento; a 0014 (só aditiva) foi aplicada no banco de produção com autorização do Augusto.
+- **Apelido e foto só mudam pelo servidor:** um trigger no banco bloqueia a troca direta pelo aluno (pela API), para as regras de palavras proibidas, nomes reservados e prazo de 30 dias não poderem ser burladas. Trocar só maiúsculas/minúsculas não conta como troca.
+- **Fotos sem escrita do aluno no Storage:** o bucket `avatars` tem leitura pública, mas só o servidor grava, depois de redimensionar (256x256), converter para webp e apagar os metadados (EXIF/GPS). Assim ninguém sobe a foto original com localização pela API.
+- **Excluir conta:** pede o apelido (ou o e-mail, se não tiver apelido), cancela a assinatura no Asaas antes de apagar e grava um resumo do que foi apagado em `account_deletions` (sem e-mail ou nome). Eventos de pagamento ficam (registro fiscal). Contas de admin não se excluem pelo site.
+- **Peças:** só conjuntos com licença comercial conferida na fonte original: Clássico (cburnett, BSD), Moderno (chessnut, Apache 2.0), Fantasia e Minimalista (fantasy e spatial, MIT). Os conjuntos populares do Lichess com licença NC ficaram de fora (lista em `docs/licencas/README.md`).
+- **Sons gerados por código** (Web Audio, `src/lib/sound/synth.ts`): os sons do Lichess são AGPL ou NC, então a Finale gera os próprios. Sem arquivos, sem licença de terceiros, latência mínima. Nada toca antes do primeiro toque/clique; no iPhone, o modo "ambient" respeita a chave de silêncio.
+- **Tema padrão continua o atual** ("Finale", azul-acinzentado). O "verde e creme" do prompt antigo entrou como opção.
+- **Bio privada por enquanto:** o perfil público (Bloco B) mostra só apelido, foto, título e rating.

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { BoardSettingsButton } from "@/components/preferences/BoardSettingsButton";
 
 type BoardStageProps = {
   board: ReactNode;
@@ -27,7 +28,13 @@ export function BoardStage({
       >
         <div className="board-stage__board">{board}</div>
         <div className="board-stage__panel">
-          {info && <div className="board-stage__info">{info}</div>}
+          {/* Cabeçalho do tabuleiro: informação + engrenagem de aparência. */}
+          <div className="board-stage__info">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex min-w-0 flex-1 flex-col gap-2">{info}</div>
+              <BoardSettingsButton />
+            </div>
+          </div>
           {children && <div className="board-stage__body">{children}</div>}
           {actions && <div className="board-stage__actions">{actions}</div>}
         </div>

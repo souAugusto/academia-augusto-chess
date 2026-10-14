@@ -1,0 +1,107 @@
+import { z } from "zod";
+
+// Preferências de tabuleiro, peças e sons. Ficam em profiles.preferences (jsonb,
+// até 2 KB) para quem está logado e no localStorage para visitantes e como cache.
+// Cada campo tem lista fechada; valor inválido volta ao padrão e chave
+// desconhecida é descartada.
+
+export const BOARD_THEMES = [
+  "finale",
+  "verde",
+  "madeira",
+  "azul",
+  "cinza",
+  "roxo",
+  "contraste",
+] as const;
+export const COORDINATES = ["dentro", "margem", "ocultas"] as const;
+export const ANIMATION_SPEEDS = [
+  "desligada",
+  "rapida",
+  "normal",
+  "lenta",
+] as const;
+export const MOVE_METHODS = ["ambos", "arrastar", "clicar"] as const;
+export const PIECE_SETS = [
+  "cburnett",
+  "chessnut",
+  "fantasy",
+  "spatial",
+] as const;
+export const SOUND_PACKS = ["suave", "madeira"] as const;
+
+export type BoardTheme = (typeof BOARD_THEMES)[number];
+export type Coordinates = (typeof COORDINATES)[number];
+export type AnimationSpeed = (typeof ANIMATION_SPEEDS)[number];
+export type MoveMethod = (typeof MOVE_METHODS)[number];
+export type PieceSet = (typeof PIECE_SETS)[number];
+export type SoundPack = (typeof SOUND_PACKS)[number];
+
+export const DEFAULT_PREFERENCES = {
+  v: 1 as const,
+  board: {
+    theme: "finale" as BoardTheme,
+    coordinates: "dentro" as Coordinates,
+    lastMove: true,
+    legalMoves: true,
+    animation: "normal" as AnimationSpeed,
+    moveMethod: "ambos" as MoveMethod,
+    autoQueen: false,
+  },
+  pieces: "cburnett" as PieceSet,
+  sound: { enabled: true, volume: 50, pack: "suave" as SoundPack },
+};
+
+export type Preferences = typeof DEFAULT_PREFERENCES;
+
+const d = DEFAULT_PREFERENCES;
+
+export const preferencesSchema = z.object({
+  v: z.literal(1).catch(1),
+  board: z
+    .object({
+      theme: z.enum(BOARD_THEMES).catch(d.board.theme),
+      coordinates: z.enum(COORDINATES).catch(d.board.coordinates),
+      lastMove: z.boolean().catch(d.board.lastMove),
+      legalMoves: z.boolean().catch(d.board.legalMoves),
+      animation: z.enum(ANIMATION_SPEEDS).catch(d.board.animation),
+      moveMethod: z.enum(MOVE_METHODS).catch(d.board.moveMethod),
+      autoQueen: z.boolean().catch(d.board.autoQueen),
+    })
+    .catch(d.board),
+  pieces: z.enum(PIECE_SETS).catch(d.pieces),
+  sound: z
+    .object({
+      enabled: z.boolean().catch(d.sound.enabled),
+      volume: z.number().int().min(0).max(100).catch(d.sound.volume),
+      pack: z.enum(SOUND_PACKS).catch(d.sound.pack),
+    })
+    .catch(d.sound),
+});
+
+export const MAX_PREFERENCES_BYTES = 2048;
+
+// Lê qualquer valor (do banco, do localStorage ou do navegador) e devolve
+// preferências completas e válidas.
+export function parsePreferences(value: unknown): Preferences {
+  const source =
+    value && typeof value === "object" && !Array.isArray(value) ? value : {};
+  const filled = {
+    ...source,
+    board: { ...d.board, ...((source as { board?: object }).board ?? {}) },
+    sound: { ...d.sound, ...((source as { sound?: object }).sound ?? {}) },
+  };
+  return preferencesSchema.parse(filled) as Preferences;
+}
+
+// Preferências vazias no banco ({}) significam "nunca salvou".
+export function isEmptyPreferences(value: unknown): boolean {
+  return (
+    !value ||
+    (typeof value === "object" && Object.keys(value as object).length === 0)
+  );
+}
+
+export function preferencesSize(prefs: Preferences): number {
+  return new TextEncoder().encode(JSON.stringify(prefs)).length;
+}

@@ -9,9 +9,9 @@ import { BoardStage } from "@/components/chess/BoardStage";
 import { MoveInput } from "@/components/chess/MoveInput";
 import {
   BOARD_COLORS,
-  PlayBoard,
+  ChessBoard,
   type Side,
-} from "@/components/chess/PlayBoard";
+} from "@/components/chess/ChessBoard";
 import { buttonClasses } from "@/components/ui/button";
 import { Card } from "@/components/ui/Card";
 import { engineSupported, StockfishClient } from "@/lib/engine/client";
@@ -244,7 +244,7 @@ export function EndgameTrainer({
   return (
     <BoardStage
       board={
-        <PlayBoard
+        <ChessBoard
           id="finale-final"
           fen={fen}
           orientation={userSide}
