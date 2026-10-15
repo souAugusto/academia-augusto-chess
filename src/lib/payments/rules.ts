@@ -1,4 +1,6 @@
-export { todayInSaoPaulo } from "../format";
+import { todayInSaoPaulo } from "../format";
+
+export { todayInSaoPaulo };
 
 // Regras da assinatura que não dependem do provedor: período pago e mudanças de status.
 
@@ -31,6 +33,23 @@ export function addMonths(date: string, months: number): string {
 // (horário de Brasília, que não tem horário de verão desde 2019).
 export function periodEndFor(dueDate: string): string {
   return new Date(`${addMonths(dueDate, 1)}T23:59:59-03:00`).toISOString();
+}
+
+// Desfazer o cancelamento: a nova recorrência começa a cobrar no dia em que o
+// período pago acaba (o mesmo dia em que a próxima cobrança cairia), nunca antes.
+// Assim não há cobrança dupla nem adiantada. null = não dá mais para desfazer.
+export function reactivationDueDate(
+  state: SubscriptionState,
+  now: Date = new Date(),
+): string | null {
+  if (!state.cancelAtPeriodEnd) return null;
+  if (state.status !== "active" && state.status !== "past_due") return null;
+  if (!state.currentPeriodEnd) return null;
+  const end = new Date(state.currentPeriodEnd);
+  if (end <= now) return null;
+  const endDay = todayInSaoPaulo(end);
+  const today = todayInSaoPaulo(now);
+  return endDay > today ? endDay : today;
 }
 
 function later(a: string | null, b: string): string {

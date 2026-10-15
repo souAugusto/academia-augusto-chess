@@ -9,12 +9,16 @@ export type MyProfile = {
   name: string;
   bio: string;
   whatsapp: string;
+  location: string;
+  declaredRating: number | null;
   showInRanking: boolean;
-  avatarUrl: string | null;
+  avatarUrl: string | null; // foto enviada ou, sem ela, a do Google
+  hasUploadedAvatar: boolean;
 };
 
-// Endereço público da foto. O "v" muda a cada envio, para o navegador não
-// mostrar a foto antiga do cache.
+// Endereço público da foto. Fotos novas têm nome único por envio
+// (avatar-<hora>.webp), então o cache do navegador nunca mostra a antiga.
+// A foto antiga de nome fixo (avatar.webp) recebe "?v=" com a data do arquivo.
 export function avatarUrl(
   path: string | null,
   version?: string,
@@ -25,24 +29,27 @@ export function avatarUrl(
 }
 
 // Perfil do aluno logado (só o dele).
-export async function getMyProfile(userId: string): Promise<MyProfile> {
+export async function getMyProfile(
+  userId: string,
+  socialAvatarUrl: string | null = null,
+): Promise<MyProfile> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("profiles")
     .select(
-      "display_name, display_name_changed_at, name, bio, whatsapp, show_in_ranking, avatar_path",
+      "display_name, display_name_changed_at, name, bio, whatsapp, location, declared_rating, show_in_ranking, avatar_path",
     )
     .eq("id", userId)
     .single();
   let version: string | undefined;
-  if (data?.avatar_path) {
-    // Listar arquivos exige a service role (o bucket não tem policy de leitura
-    // da listagem para alunos); só a pasta do próprio aluno é consultada.
+  if (data?.avatar_path?.endsWith("/avatar.webp")) {
+    // Listar arquivos exige a service role; só a pasta do próprio aluno.
     const { data: files } = await createAdminClient()
       .storage.from("avatars")
       .list(userId, { search: "avatar.webp" });
     version = files?.[0]?.updated_at ?? undefined;
   }
+  const uploaded = avatarUrl(data?.avatar_path ?? null, version);
   return {
     nickname: data?.display_name ?? null,
     nicknameChangedAt: data?.display_name_changed_at
@@ -51,7 +58,10 @@ export async function getMyProfile(userId: string): Promise<MyProfile> {
     name: data?.name ?? "",
     bio: data?.bio ?? "",
     whatsapp: data?.whatsapp ?? "",
+    location: data?.location ?? "",
+    declaredRating: data?.declared_rating ?? null,
     showInRanking: data?.show_in_ranking ?? true,
-    avatarUrl: avatarUrl(data?.avatar_path ?? null, version),
+    avatarUrl: uploaded ?? socialAvatarUrl,
+    hasUploadedAvatar: Boolean(uploaded),
   };
 }

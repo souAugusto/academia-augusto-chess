@@ -122,7 +122,11 @@ export async function resetProfileIdentity(
   if (!parsed.success) return { message: zodMessage(parsed.error) };
   const { userId } = parsed.data;
   const admin = createAdminClient();
-  await admin.storage.from("avatars").remove([`${userId}/avatar.webp`]);
+  const { data: files } = await admin.storage.from("avatars").list(userId);
+  if (files?.length)
+    await admin.storage
+      .from("avatars")
+      .remove(files.map((file) => `${userId}/${file.name}`));
   const { error } = await admin
     .from("profiles")
     .update({

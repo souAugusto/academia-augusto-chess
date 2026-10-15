@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { AppBottomNav, AppTopNav } from "@/components/app/AppNav";
+import { HeaderAvatar } from "@/components/app/HeaderAvatar";
 import { TrialBanner } from "@/components/app/TrialBanner";
 import { Logo } from "@/components/brand/Logo";
-import { IconUser } from "@/components/ui/icons";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 // Casca do app: cabeçalho com as áreas no desktop e barra inferior no celular.
@@ -15,13 +14,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
           <AppTopNav />
           <div className="flex items-center gap-1">
             <ThemeToggle />
-            <Link
-              href="/conta"
-              className="flex size-touch items-center justify-center rounded-control text-muted transition hover:bg-surface-2 hover:text-text"
-            >
-              <span className="sr-only">Minha conta</span>
-              <IconUser />
-            </Link>
+            <HeaderAvatar />
           </div>
         </div>
       </header>

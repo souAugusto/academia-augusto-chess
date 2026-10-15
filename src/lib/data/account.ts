@@ -8,7 +8,16 @@ export type CurrentUser = {
   name: string;
   whatsapp: string | null;
   planRank: number; // 0 = sem plano, 1 = Membro, 2 = Intensivo
+  createdAt: Date; // "Membro desde"
+  providers: string[]; // "email", "google"...
+  socialAvatarUrl: string | null; // foto do Google, se entrou por ele
 };
+
+// Foto do provedor social (Google manda "avatar_url" ou "picture"). Só https.
+function socialAvatar(meta: Record<string, unknown> | undefined): string | null {
+  const url = meta?.avatar_url ?? meta?.picture;
+  return typeof url === "string" && url.startsWith("https://") ? url : null;
+}
 
 // Usuário logado, conferido no servidor. Sem sessão, manda para /entrar.
 export async function requireUser(nextPath: string): Promise<CurrentUser> {
@@ -32,6 +41,11 @@ export async function requireUser(nextPath: string): Promise<CurrentUser> {
     name: profile?.name || user.email?.split("@")[0] || "aluno",
     whatsapp: profile?.whatsapp ?? null,
     planRank: Number(rank ?? 0),
+    createdAt: new Date(user.created_at),
+    providers: (user.app_metadata?.providers as string[] | undefined) ?? [
+      (user.app_metadata?.provider as string | undefined) ?? "email",
+    ],
+    socialAvatarUrl: socialAvatar(user.user_metadata),
   };
 }
 

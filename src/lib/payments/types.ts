@@ -17,7 +17,19 @@ export type NewSubscription = {
   description: string;
   externalReference: string; // id da assinatura no nosso banco
   firstDueDate: string; // AAAA-MM-DD
-  successUrl: string;
+  successUrl?: string; // volta depois de pagar (só no checkout)
+};
+
+// Uma cobrança da assinatura, para o histórico em Minha conta.
+export type PaymentRecord = {
+  id: string;
+  status: string; // PENDING, RECEIVED, CONFIRMED, OVERDUE, REFUNDED...
+  dueDate: string; // AAAA-MM-DD
+  paidDate: string | null;
+  valueCents: number;
+  method: BillingMethod | null;
+  invoiceUrl: string | null; // página da cobrança (pagar ou ver)
+  receiptUrl: string | null; // comprovante, depois de pago
 };
 
 export interface PaymentProvider {
@@ -32,6 +44,15 @@ export interface PaymentProvider {
   pendingInvoiceUrl(subscriptionId: string): Promise<string | null>;
   // Encerra a recorrência: nenhuma cobrança nova é gerada.
   cancelSubscription(subscriptionId: string): Promise<void>;
+  // Valor mensal da assinatura no provedor (vale também para as já canceladas).
+  subscriptionValueCents(subscriptionId: string): Promise<number | null>;
+  // Cobranças da assinatura, da mais recente para a mais antiga.
+  listPayments(subscriptionId: string): Promise<PaymentRecord[]>;
+  // Troca a forma de pagamento das próximas cobranças (e das em aberto).
+  updateBillingType(
+    subscriptionId: string,
+    method: BillingMethod,
+  ): Promise<void>;
 }
 
 export class PaymentError extends Error {}

@@ -9,6 +9,7 @@ const NOTICES: Record<string, string> = {
   link: "O link expirou ou já foi usado. Entre com sua senha ou peça um novo link.",
   google:
     "Não foi possível entrar com o Google agora. Tente de novo ou use e-mail e senha.",
+  sessoes: "Você saiu de todos os aparelhos. Entre de novo para continuar.",
   excluida:
     "Sua conta foi excluída: os dados foram apagados e a assinatura, cancelada.",
 };

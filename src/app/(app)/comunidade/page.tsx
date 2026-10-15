@@ -33,7 +33,7 @@ export default async function ComunidadePage() {
     myNote = (
       <>
         Para aparecer no ranking, escolha um apelido em{" "}
-        <Link href="/conta/perfil" className="text-accent-text hover:underline">
+        <Link href="/conta#perfil" className="text-accent-text hover:underline">
           Conta → Perfil
         </Link>
         .
@@ -43,7 +43,7 @@ export default async function ComunidadePage() {
     myNote = (
       <>
         Você escolheu não aparecer no ranking. Dá para mudar em{" "}
-        <Link href="/conta/perfil" className="text-accent-text hover:underline">
+        <Link href="/conta#perfil" className="text-accent-text hover:underline">
           Conta → Perfil
         </Link>
         .

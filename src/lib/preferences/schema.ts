@@ -47,9 +47,12 @@ export const DEFAULT_PREFERENCES = {
     animation: "normal" as AnimationSpeed,
     moveMethod: "ambos" as MoveMethod,
     autoQueen: false,
+    confirmMove: false,
   },
   pieces: "cburnett" as PieceSet,
   sound: { enabled: true, volume: 50, pack: "suave" as SoundPack },
+  // E-mails que o aluno aceita receber (guardado mesmo antes de o site enviar).
+  emails: { lembretes: true, novidades: false, assinatura: true },
 };
 
 export type Preferences = typeof DEFAULT_PREFERENCES;
@@ -67,6 +70,7 @@ export const preferencesSchema = z.object({
       animation: z.enum(ANIMATION_SPEEDS).catch(d.board.animation),
       moveMethod: z.enum(MOVE_METHODS).catch(d.board.moveMethod),
       autoQueen: z.boolean().catch(d.board.autoQueen),
+      confirmMove: z.boolean().catch(d.board.confirmMove),
     })
     .catch(d.board),
   pieces: z.enum(PIECE_SETS).catch(d.pieces),
@@ -77,6 +81,13 @@ export const preferencesSchema = z.object({
       pack: z.enum(SOUND_PACKS).catch(d.sound.pack),
     })
     .catch(d.sound),
+  emails: z
+    .object({
+      lembretes: z.boolean().catch(d.emails.lembretes),
+      novidades: z.boolean().catch(d.emails.novidades),
+      assinatura: z.boolean().catch(d.emails.assinatura),
+    })
+    .catch(d.emails),
 });
 
 export const MAX_PREFERENCES_BYTES = 2048;
@@ -90,6 +101,7 @@ export function parsePreferences(value: unknown): Preferences {
     ...source,
     board: { ...d.board, ...((source as { board?: object }).board ?? {}) },
     sound: { ...d.sound, ...((source as { sound?: object }).sound ?? {}) },
+    emails: { ...d.emails, ...((source as { emails?: object }).emails ?? {}) },
   };
   return preferencesSchema.parse(filled) as Preferences;
 }

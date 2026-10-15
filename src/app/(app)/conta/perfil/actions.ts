@@ -1,12 +1,14 @@
 "use server";
 
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import sharp from "sharp";
 import { z } from "zod";
 import { requireUser } from "@/lib/data/account";
+import { publicEnv } from "@/lib/env";
+import { formatLongDate } from "@/lib/format";
 import { siteOrigin } from "@/lib/origin";
-import { getPaymentProvider } from "@/lib/payments";
 import {
   NICKNAME_MESSAGES,
   nextNicknameChange,
@@ -18,9 +20,10 @@ import {
   AVATAR_FORMATS,
   AVATAR_MAX_BYTES,
   AVATAR_SIZE,
+  DELETE_CONFIRM_WORD,
+  passwordChangeSchema,
   profileSchema,
 } from "@/lib/validation/profile";
-import { formatLongDate } from "@/lib/format";
 
 export type ProfileState = {
   ok?: boolean;
@@ -29,18 +32,26 @@ export type ProfileState = {
 };
 
 const AVATAR_BUCKET = "avatars";
+const CONTA = "/conta";
 
-// Nome, bio, WhatsApp e "aparecer no ranking". Gravado com o cliente do aluno:
-// a RLS limita à própria linha.
+// Depois de mudar foto ou nome, o cabeçalho (layout) e a conta se atualizam.
+function refreshAccount() {
+  revalidatePath("/", "layout");
+}
+
+// Nome, bio, WhatsApp, cidade, rating declarado e "aparecer no ranking".
+// Gravado com o cliente do aluno: a RLS limita à própria linha.
 export async function updateProfile(
   _prev: ProfileState,
   formData: FormData,
 ): Promise<ProfileState> {
-  const user = await requireUser("/conta/perfil");
+  const user = await requireUser(CONTA);
   const parsed = profileSchema.safeParse({
     name: String(formData.get("name") ?? ""),
     bio: String(formData.get("bio") ?? ""),
     whatsapp: String(formData.get("whatsapp") ?? ""),
+    location: String(formData.get("location") ?? ""),
+    declaredRating: String(formData.get("declaredRating") ?? ""),
     showInRanking: formData.get("showInRanking") === "on",
   });
   if (!parsed.success)
@@ -56,13 +67,57 @@ export async function updateProfile(
       name: parsed.data.name,
       bio: parsed.data.bio || null,
       whatsapp: parsed.data.whatsapp ?? null,
+      location: parsed.data.location || null,
+      declared_rating: parsed.data.declaredRating,
       show_in_ranking: parsed.data.showInRanking,
     })
     .eq("id", user.id);
-  if (error) return { message: "Não consegui salvar agora. Tente de novo." };
-  revalidatePath("/conta");
-  revalidatePath("/conta/perfil");
+  if (error)
+    return { message: "Não consegui salvar o perfil agora. Tente de novo." };
+  refreshAccount();
   return { ok: true, message: "Perfil salvo." };
+}
+
+// Confere o apelido enquanto o aluno digita (formato, palavras proibidas,
+// reservados, prazo de 30 dias e se outra pessoa já usa).
+export async function checkNickname(
+  nickname: string,
+): Promise<{ ok: boolean; message: string }> {
+  const user = await requireUser(CONTA);
+  const value = nickname.trim();
+  const problem = nicknameProblem(value);
+  if (problem) return { ok: false, message: NICKNAME_MESSAGES[problem] };
+  const admin = createAdminClient();
+  const [{ data: mine }, { data: taken }] = await Promise.all([
+    admin
+      .from("profiles")
+      .select("display_name, display_name_changed_at")
+      .eq("id", user.id)
+      .single(),
+    admin
+      .from("profiles")
+      .select("id")
+      .eq("display_name", value)
+      .neq("id", user.id)
+      .maybeSingle(),
+  ]);
+  if (mine?.display_name === value)
+    return { ok: true, message: "Este é o seu apelido atual." };
+  if (taken) return { ok: false, message: NICKNAME_MESSAGES["em-uso"] };
+  const sameName = mine?.display_name?.toLowerCase() === value.toLowerCase();
+  const next = sameName
+    ? null
+    : nextNicknameChange(
+        mine?.display_name_changed_at
+          ? new Date(mine.display_name_changed_at)
+          : null,
+      );
+  if (next)
+    return {
+      ok: false,
+      message: `Você poderá trocar o apelido de novo em ${formatLongDate(next)}.`,
+    };
+  return { ok: true, message: "Disponível." };
 }
 
 // Apelido: regras no servidor (formato, palavras proibidas, reservados, único,
@@ -72,35 +127,21 @@ export async function setNickname(
   _prev: ProfileState,
   formData: FormData,
 ): Promise<ProfileState> {
-  const user = await requireUser("/conta/perfil");
+  const user = await requireUser(CONTA);
   const nickname = String(formData.get("nickname") ?? "").trim();
-  const problem = nicknameProblem(nickname);
-  if (problem) return { errors: { nickname: NICKNAME_MESSAGES[problem] } };
+  const check = await checkNickname(nickname);
+  if (!check.ok) return { errors: { nickname: check.message } };
+  if (check.message === "Este é o seu apelido atual.")
+    return { ok: true, message: "Nada mudou no apelido." };
 
   const admin = createAdminClient();
   const { data: current } = await admin
     .from("profiles")
-    .select("display_name, display_name_changed_at")
+    .select("display_name")
     .eq("id", user.id)
     .single();
-  if (current?.display_name === nickname) return { ok: true };
-  // Só maiúsculas/minúsculas diferentes: ajuste livre, sem contar como troca.
   const sameName =
     current?.display_name?.toLowerCase() === nickname.toLowerCase();
-  const next = sameName
-    ? null
-    : nextNicknameChange(
-        current?.display_name_changed_at
-          ? new Date(current.display_name_changed_at)
-          : null,
-      );
-  if (next)
-    return {
-      errors: {
-        nickname: `Você poderá trocar o apelido de novo em ${formatLongDate(next)}.`,
-      },
-    };
-
   const { error } = await admin
     .from("profiles")
     .update({
@@ -113,18 +154,23 @@ export async function setNickname(
   if (error?.code === "23505")
     return { errors: { nickname: NICKNAME_MESSAGES["em-uso"] } };
   if (error) return { message: "Não consegui salvar o apelido agora." };
-  revalidatePath("/conta/perfil");
-  revalidatePath("/conta");
+  refreshAccount();
   return { ok: true, message: "Apelido salvo." };
 }
 
-// Foto: confere o conteúdo de verdade (não a extensão), redimensiona para
-// 256x256, converte para webp e grava sem metadados (EXIF, GPS).
-export async function uploadAvatar(
-  _prev: ProfileState,
-  formData: FormData,
-): Promise<ProfileState> {
-  const user = await requireUser("/conta/perfil");
+// Arquivos de foto na pasta do aluno (para apagar a anterior ao trocar).
+async function avatarFiles(userId: string): Promise<string[]> {
+  const { data } = await createAdminClient()
+    .storage.from(AVATAR_BUCKET)
+    .list(userId);
+  return (data ?? []).map((file) => `${userId}/${file.name}`);
+}
+
+// Foto: o navegador já recorta e reduz, mas o servidor confere o conteúdo de
+// verdade (não a extensão), refaz em 512x512 webp e grava sem metadados
+// (EXIF, GPS), com nome único. A foto anterior é apagada.
+export async function uploadAvatar(formData: FormData): Promise<ProfileState> {
+  const user = await requireUser(CONTA);
   const file = formData.get("avatar");
   if (!(file instanceof File) || file.size === 0)
     return { errors: { avatar: "Escolha uma imagem." } };
@@ -145,30 +191,42 @@ export async function uploadAvatar(
       .webp({ quality: 82 })
       .toBuffer();
   } catch {
-    return { errors: { avatar: "Não consegui ler essa imagem." } };
+    return {
+      errors: { avatar: "Não consegui ler essa imagem. Tente outra foto." },
+    };
   }
 
   const admin = createAdminClient();
-  const path = `${user.id}/avatar.webp`;
+  const previous = await avatarFiles(user.id);
+  const path = `${user.id}/avatar-${Date.now()}.webp`;
   const { error: uploadError } = await admin.storage
     .from(AVATAR_BUCKET)
     .upload(path, output, {
       contentType: "image/webp",
-      upsert: true,
-      cacheControl: "60",
+      cacheControl: "31536000",
     });
-  if (uploadError) return { message: "Não consegui enviar a foto agora." };
-  await admin.from("profiles").update({ avatar_path: path }).eq("id", user.id);
-  revalidatePath("/conta/perfil");
+  if (uploadError)
+    return { message: "Não consegui enviar a foto agora. Tente de novo." };
+  const { error } = await admin
+    .from("profiles")
+    .update({ avatar_path: path })
+    .eq("id", user.id);
+  if (error) {
+    await admin.storage.from(AVATAR_BUCKET).remove([path]);
+    return { message: "Não consegui salvar a foto agora. Tente de novo." };
+  }
+  if (previous.length) await admin.storage.from(AVATAR_BUCKET).remove(previous);
+  refreshAccount();
   return { ok: true, message: "Foto atualizada." };
 }
 
 export async function removeAvatar(): Promise<ProfileState> {
-  const user = await requireUser("/conta/perfil");
+  const user = await requireUser(CONTA);
   const admin = createAdminClient();
-  await admin.storage.from(AVATAR_BUCKET).remove([`${user.id}/avatar.webp`]);
+  const files = await avatarFiles(user.id);
+  if (files.length) await admin.storage.from(AVATAR_BUCKET).remove(files);
   await admin.from("profiles").update({ avatar_path: null }).eq("id", user.id);
-  revalidatePath("/conta/perfil");
+  refreshAccount();
   return { ok: true, message: "Foto removida." };
 }
 
@@ -177,97 +235,134 @@ export async function changeEmail(
   _prev: ProfileState,
   formData: FormData,
 ): Promise<ProfileState> {
-  await requireUser("/conta/perfil");
+  const user = await requireUser(CONTA);
   const parsed = z
     .string()
     .trim()
     .toLowerCase()
-    .pipe(z.email("Digite um e-mail válido."))
+    .pipe(z.email("Digite um e-mail válido, ex.: nome@gmail.com."))
     .safeParse(String(formData.get("email") ?? ""));
   if (!parsed.success)
     return { errors: { email: parsed.error.issues[0].message } };
+  if (parsed.data === user.email.toLowerCase())
+    return { errors: { email: "Este já é o seu e-mail." } };
   const supabase = await createClient();
   const { error } = await supabase.auth.updateUser(
     { email: parsed.data },
     {
-      emailRedirectTo: `${await siteOrigin()}/auth/confirm?next=${encodeURIComponent("/conta/perfil")}`,
+      emailRedirectTo: `${await siteOrigin()}/auth/confirm?next=${encodeURIComponent(CONTA)}`,
     },
   );
   if (error)
     return {
       errors: {
         email: /already|registered|exists/i.test(error.message)
-          ? "Esse e-mail já está em uso."
-          : "Não consegui trocar o e-mail agora.",
+          ? "Esse e-mail já está em uso em outra conta."
+          : "Não consegui trocar o e-mail agora. Tente de novo.",
       },
     };
   return {
     ok: true,
     message:
-      "Enviamos um link de confirmação. A troca só vale depois de você confirmar pelo e-mail.",
+      "Enviamos um link de confirmação. A troca só vale depois que você confirmar pelo e-mail.",
   };
 }
 
-// Excluir conta: confirma digitando o apelido (ou o e-mail, se não tiver
-// apelido), cancela a assinatura no Asaas, apaga foto e dados e desloga.
+// Troca de senha: confere a senha atual antes (com um cliente sem sessão,
+// só para validar) e grava a nova na sessão do aluno.
+export async function changePassword(
+  _prev: ProfileState,
+  formData: FormData,
+): Promise<ProfileState> {
+  const user = await requireUser(CONTA);
+  const parsed = passwordChangeSchema.safeParse({
+    current: String(formData.get("current") ?? ""),
+    password: String(formData.get("password") ?? ""),
+    confirm: String(formData.get("confirm") ?? ""),
+  });
+  if (!parsed.success)
+    return {
+      errors: Object.fromEntries(
+        parsed.error.issues.map((issue) => [issue.path[0], issue.message]),
+      ),
+    };
+  const env = publicEnv();
+  const checker = createSupabaseClient(
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    { auth: { persistSession: false, autoRefreshToken: false } },
+  );
+  const { error: wrong } = await checker.auth.signInWithPassword({
+    email: user.email,
+    password: parsed.data.current,
+  });
+  if (wrong) return { errors: { current: "A senha atual não confere." } };
+  await checker.auth.signOut({ scope: "local" });
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({
+    password: parsed.data.password,
+  });
+  if (error)
+    return {
+      errors: {
+        password:
+          error.code === "weak_password"
+            ? "Escolha uma senha mais forte (misture letras, números e símbolos)."
+            : "Não consegui trocar a senha agora. Tente de novo.",
+      },
+    };
+  return { ok: true, message: "Senha alterada." };
+}
+
+// Encerra a sessão em todos os aparelhos (inclusive este).
+export async function signOutEverywhere(): Promise<void> {
+  await requireUser(CONTA);
+  const supabase = await createClient();
+  await supabase.auth.signOut({ scope: "global" });
+  redirect("/entrar?erro=sessoes");
+}
+
+// Excluir conta: confirma digitando EXCLUIR. Assinatura paga com renovação
+// ativa precisa ser cancelada antes (na seção Assinatura). Apaga foto, dados e
+// desloga; registra o que foi apagado.
 export async function deleteAccount(
   _prev: ProfileState,
   formData: FormData,
 ): Promise<ProfileState> {
-  const user = await requireUser("/conta/perfil");
+  const user = await requireUser(CONTA);
   const admin = createAdminClient();
 
-  const [{ data: profile }, { data: isAdmin }] = await Promise.all([
-    admin.from("profiles").select("display_name").eq("id", user.id).single(),
+  const typed = String(formData.get("confirm") ?? "").trim();
+  if (typed !== DELETE_CONFIRM_WORD)
+    return {
+      errors: {
+        confirm: `Digite ${DELETE_CONFIRM_WORD} em letras maiúsculas para confirmar.`,
+      },
+    };
+  const [{ data: isAdmin }, { data: subs }] = await Promise.all([
     admin.from("admins").select("user_id").eq("user_id", user.id).maybeSingle(),
+    admin
+      .from("subscriptions")
+      .select("id, source, status, cancel_at_period_end")
+      .eq("user_id", user.id),
   ]);
   if (isAdmin)
     return {
       message:
         "Contas de administrador não podem ser excluídas por aqui. Tire o acesso de admin antes.",
     };
-  const expected = (profile?.display_name ?? user.email).toLowerCase();
-  const typed = String(formData.get("confirm") ?? "")
-    .trim()
-    .toLowerCase();
-  if (typed !== expected)
+  const renewing = (subs ?? []).some(
+    (sub) =>
+      sub.source === "asaas" &&
+      ["active", "past_due", "incomplete"].includes(sub.status) &&
+      !sub.cancel_at_period_end,
+  );
+  if (renewing)
     return {
-      errors: {
-        confirm: profile?.display_name
-          ? "Digite o seu apelido exatamente como aparece."
-          : "Digite o seu e-mail exatamente como aparece.",
-      },
+      message:
+        "Você tem uma assinatura com renovação ativa. Cancele a assinatura na seção Assinatura antes de excluir a conta.",
     };
 
-  // 1. Assinaturas pagas: cancela a cobrança no Asaas antes de apagar.
-  const { data: subs } = await admin
-    .from("subscriptions")
-    .select("id, source, status, provider_subscription_id")
-    .eq("user_id", user.id);
-  let canceled = 0;
-  for (const sub of subs ?? []) {
-    if (
-      sub.source === "asaas" &&
-      sub.provider_subscription_id &&
-      ["active", "trialing", "past_due", "incomplete"].includes(sub.status)
-    ) {
-      try {
-        await getPaymentProvider().cancelSubscription(
-          sub.provider_subscription_id,
-        );
-        canceled++;
-      } catch (error) {
-        console.error("Excluir conta: falha ao cancelar no Asaas", error);
-        return {
-          message:
-            "Não consegui cancelar sua assinatura agora, então a conta não foi excluída. Tente de novo em instantes.",
-        };
-      }
-    }
-  }
-
-  // 2. Conta o que vai ser apagado (para o registro) e apaga o que não cai
-  //    sozinho com o usuário.
   const count = async (table: string, column = "user_id") => {
     const { count: n } = await admin
       .from(table)
@@ -275,25 +370,17 @@ export async function deleteAccount(
       .eq(column, user.id);
     return n ?? 0;
   };
+  const files = await avatarFiles(user.id);
   const summary = {
     assinaturas: subs?.length ?? 0,
-    assinaturas_canceladas_no_asaas: canceled,
     tentativas_de_puzzles: await count("attempts"),
     partidas_importadas: await count("imported_games"),
     analises: await count("game_analyses"),
     progresso_de_licoes: await count("lesson_study"),
     puzzles_personalizados: await count("puzzles", "created_by"),
-    foto: Boolean(
-      (
-        await admin
-          .from("profiles")
-          .select("avatar_path")
-          .eq("id", user.id)
-          .single()
-      ).data?.avatar_path,
-    ),
+    fotos: files.length,
   };
-  await admin.storage.from(AVATAR_BUCKET).remove([`${user.id}/avatar.webp`]);
+  if (files.length) await admin.storage.from(AVATAR_BUCKET).remove(files);
   await admin
     .from("puzzles")
     .delete()
@@ -301,8 +388,8 @@ export async function deleteAccount(
     .eq("source", "custom");
   await admin.from("waitlist").delete().eq("user_id", user.id);
 
-  // 3. Apaga o usuário: perfil, assinaturas, progresso e o resto caem juntos
-  //    (on delete cascade). Eventos de pagamento ficam (registro fiscal).
+  // Perfil, assinaturas, progresso e o resto caem juntos (on delete cascade).
+  // Eventos de pagamento ficam (registro fiscal).
   const { error } = await admin.auth.admin.deleteUser(user.id);
   if (error) {
     console.error("Excluir conta:", error);

@@ -26,3 +26,5 @@
 - **E-mails do teste grátis não foram criados**: o projeto ainda não envia e-mails transacionais (só os do Supabase Auth). Para boas-vindas, aviso de 7 dias, último dia e fim do teste, é preciso escolher um provedor (ex.: Resend) e configurar as chaves; os dados necessários já estão em `trial_claims` (início, fim, conversão).
 - **Analytics do teste**: o projeto não tem ferramenta de eventos. Hoje dá para medir pelo banco: testes ativados (`trial_claims`), conversões (`converted_at`) e expirados (`ends_at` no passado sem conversão).
 - **Revisar o parágrafo do teste grátis nos Termos de uso** (seção 3) na revisão jurídica.
+- **E-mails da Minha conta:** as opções de lembretes, novidades e avisos de assinatura ficam guardadas, mas só passam a valer quando houver um provedor de e-mail (ex.: Resend).
+- **Recibos:** o histórico de pagamentos mostra o link do recibo/fatura só quando o Asaas fornece; não há recibo próprio da Finale.

@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PlanRequired } from "@/components/app/PlanRequired";
 import { GameStatsView } from "@/components/games/GameStatsView";
-import { ImportButton } from "@/components/games/ImportButton";
-import { LinkAccountForm } from "@/components/games/LinkAccountForm";
+import { LinkedAccounts } from "@/components/games/LinkedAccounts";
 import { Card } from "@/components/ui/Card";
 import { SectionLabel } from "@/components/ui/Label";
 import { requireUser } from "@/lib/data/account";
@@ -15,10 +14,9 @@ import {
   getLinkedAccounts,
   getRecentGames,
 } from "@/lib/data/games";
-import { formatDate, formatLongDate } from "@/lib/format";
+import { formatDate } from "@/lib/format";
 import { PLATFORM_LABELS, type Platform } from "@/lib/games/normalize";
 import { computeStats } from "@/lib/games/stats";
-import { unlinkAccount } from "./actions";
 
 export const metadata: Metadata = { title: "Minhas partidas" };
 
@@ -76,48 +74,7 @@ export default async function PartidasPage({
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {PLATFORMS.map((platform) => {
-          const account = accounts.find((item) => item.platform === platform);
-          return (
-            <Card key={platform} className="flex flex-col gap-4">
-              <h2 className="text-lg font-semibold">
-                {PLATFORM_LABELS[platform]}
-              </h2>
-              {account ? (
-                <>
-                  <div className="flex flex-col gap-1 text-sm">
-                    <span>
-                      Conta:{" "}
-                      <span className="font-semibold">{account.username}</span>
-                    </span>
-                    <span className="text-muted">
-                      {account.games} partidas salvas
-                      {account.lastImportAt &&
-                        ` · última atualização em ${formatLongDate(account.lastImportAt)}`}
-                    </span>
-                  </div>
-                  <ImportButton
-                    platform={platform}
-                    firstTime={!account.lastImportAt}
-                  />
-                  <form action={unlinkAccount}>
-                    <input type="hidden" name="platform" value={platform} />
-                    <button
-                      type="submit"
-                      className="text-sm text-muted underline-offset-4 hover:text-text hover:underline"
-                    >
-                      Desvincular (apaga as partidas importadas desta conta)
-                    </button>
-                  </form>
-                </>
-              ) : (
-                <LinkAccountForm platform={platform} />
-              )}
-            </Card>
-          );
-        })}
-      </div>
+      <LinkedAccounts accounts={accounts} />
 
       <section className="flex flex-col gap-4" aria-labelledby="estatisticas">
         <div className="flex flex-wrap items-center justify-between gap-3">

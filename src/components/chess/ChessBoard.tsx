@@ -84,6 +84,14 @@ export function ChessBoard({
     from: Square;
     to: Square;
   } | null>(null);
+  // Preferência "confirmar lance": o lance espera Confirmar ou Desfazer.
+  const [pending, setPending] = useState<{
+    from: Square;
+    to: Square;
+    promo?: string;
+    fen: string;
+  } | null>(null);
+  const pendingMove = pending && pending.fen === fen ? pending : null;
   const reducedMotion = useReducedMotion();
   const canMove = movableColor !== null;
   const canDrag = canMove && board.moveMethod !== "clicar";
@@ -113,7 +121,18 @@ export function ChessBoard({
       return false;
     }
     setSelected(null);
+    if (board.confirmMove) {
+      setPending({ from, to, promo, fen });
+      return false;
+    }
     return onMove(from, to, promo);
+  }
+
+  function confirmPending() {
+    if (!pendingMove) return;
+    const { from, to, promo } = pendingMove;
+    setPending(null);
+    onMove(from, to, promo);
   }
 
   function onSquareClick(square: Square) {
@@ -175,7 +194,16 @@ export function ChessBoard({
           darkSquareNotationStyle: { color: theme.light, fontWeight: 600 },
           lightSquareNotationStyle: { color: theme.dark, fontWeight: 600 },
           squareStyles,
-          arrows,
+          arrows: pendingMove
+            ? [
+                ...arrows,
+                {
+                  startSquare: pendingMove.from,
+                  endSquare: pendingMove.to,
+                  color: BOARD_COLORS.arrow,
+                },
+              ]
+            : arrows,
           allowDrawingArrows: true,
           showAnimations: !reducedMotion && animationMs > 0,
           animationDurationInMs: animationMs || 1,
@@ -188,6 +216,29 @@ export function ChessBoard({
           onSquareClick: ({ square }) => onSquareClick(square as Square),
         }}
       />
+
+      {pendingMove && (
+        <div
+          role="group"
+          aria-label="Confirmar o lance"
+          className="absolute inset-x-2 bottom-2 z-10 flex justify-center gap-2"
+        >
+          <button
+            type="button"
+            onClick={confirmPending}
+            className="min-h-touch rounded-control bg-accent px-5 font-semibold text-on-accent shadow-card"
+          >
+            Confirmar lance
+          </button>
+          <button
+            type="button"
+            onClick={() => setPending(null)}
+            className="min-h-touch rounded-control border border-border-strong bg-surface px-5 font-semibold shadow-card"
+          >
+            Desfazer
+          </button>
+        </div>
+      )}
 
       {promotion && movableColor && (
         <div
