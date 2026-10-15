@@ -46,7 +46,7 @@ export function CancelSubscription({
       <p className="text-[0.9375rem] leading-relaxed text-muted">
         Nenhuma cobrança nova será feita.{" "}
         {accessUntil
-          ? `Você continua com acesso até ${accessUntil}.`
+          ? `Você continua com acesso até ${accessUntil} e pode desfazer o cancelamento aqui mesmo até essa data.`
           : "O acesso termina agora, porque o primeiro pagamento não foi feito."}
       </p>
       <input type="hidden" name="subscriptionId" value={subscriptionId} />

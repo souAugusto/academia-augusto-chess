@@ -4,6 +4,7 @@ import {
   applyPaymentEvent,
   applySubscriptionEvent,
   periodEndFor,
+  reactivationDueDate,
   todayInSaoPaulo,
   type SubscriptionState,
 } from "./rules";
@@ -144,5 +145,28 @@ describe("eventos de assinatura", () => {
 
   it("ignora outros eventos", () => {
     expect(applySubscriptionEvent(pending, "SUBSCRIPTION_UPDATED")).toBe(null);
+  });
+});
+
+describe("reactivationDueDate", () => {
+  const now = new Date("2026-10-14T15:00:00Z");
+  const canceled = {
+    status: "active" as const,
+    currentPeriodEnd: periodEndFor("2026-10-01"), // acesso até 01/11 23:59
+    cancelAtPeriodEnd: true,
+  };
+  it("volta a cobrar no dia em que o período pago acaba", () => {
+    expect(reactivationDueDate(canceled, now)).toBe("2026-11-01");
+  });
+  it("não reativa o que não foi cancelado ou já acabou", () => {
+    expect(
+      reactivationDueDate({ ...canceled, cancelAtPeriodEnd: false }, now),
+    ).toBeNull();
+    expect(
+      reactivationDueDate(canceled, new Date("2026-11-02T12:00:00Z")),
+    ).toBeNull();
+    expect(
+      reactivationDueDate({ ...canceled, status: "canceled" }, now),
+    ).toBeNull();
   });
 });

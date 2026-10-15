@@ -58,3 +58,14 @@ Decisões do Augusto: **sem cartão**, ao fim fica liberado **só o que já é p
 - **Status único** (`getAccessStatus` em `src/lib/data/trial.ts`): pago, em teste (dias restantes), teste expirado ou gratuito (e se pode testar). Usado pela faixa do app, Minha conta, /planos, /teste-gratis e a tela de "plano necessário".
 - **Cadastro com intenção de teste:** o botão leva a `/entrar?aba=criar&next=/teste-gratis`; o cadastro (e-mail ou Google) passou a respeitar esse destino depois do questionário; quem já está logado vai direto para a confirmação.
 - **Oferta na landing:** a página inicial é a mesma para todos (rápida, em cache), então mostra a oferta também para quem já assina; a página `/teste-gratis` responde "você já é assinante". Em `/planos`, que sabe quem está logado, a oferta some para pagantes e para quem já testou.
+
+## Minha conta e foto de perfil (2026-10-14)
+- **Causa do bug da foto:** a foto era salva certo (arquivo no bucket e `avatar_path` preenchido), mas a página `/conta` nunca desenhava o avatar; ele só aparecia na subpágina `/conta/perfil` e no ranking, e o cabeçalho usava um ícone genérico.
+- **Avatar único** (`src/components/account/Avatar.tsx`) em todo o site: foto ou, se faltar ou falhar, as iniciais sobre o dourado. Quem entra com Google e não enviou foto usa a foto do Google.
+- **Storage sem políticas de escrita para o aluno:** envio e remoção passam só por ações do servidor, que conferem a sessão, validam o tipo real do arquivo com `sharp`, reduzem para 512 px em WebP e gravam com a service role em `{user_id}/avatar-<data>.webp` (nome único; os arquivos antigos da pasta são apagados). Leitura do bucket continua pública. A migration 0017 ajusta a checagem de `avatar_path` para o nome novo.
+- **Página única com seções** (Perfil, Assinatura, Segurança, Preferências, Contas vinculadas, Privacidade); `/conta/perfil` e `/conta/aparencia` redirecionam para as âncoras.
+- **Desfazer cancelamento** cria uma assinatura nova no Asaas com o mesmo valor da anterior e primeira cobrança no dia em que o período pago termina (sem cobrança dupla).
+- **Trocar senha** exige a senha atual. **Sair de todos os aparelhos** encerra todas as sessões. **Excluir conta** exige digitar EXCLUIR e fica bloqueada enquanto houver assinatura renovando.
+- **Tema** (escuro, claro ou do aparelho) fica salvo no navegador; tabuleiro, peças, sons e e-mails ficam na conta.
+- **Preferências de e-mail** ficam guardadas, mas a Finale ainda não envia esses e-mails.
+- **Rating declarado** e cidade são privados (não aparecem no ranking).

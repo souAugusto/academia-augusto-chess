@@ -1,5 +1,6 @@
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { PreferencesProvider } from "@/components/preferences/PreferencesProvider";
+import { ToastProvider } from "@/components/ui/Toast";
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
@@ -54,7 +55,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="flex min-h-full flex-col">
         <MotionProvider>
-          <PreferencesProvider>{children}</PreferencesProvider>
+          <PreferencesProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </PreferencesProvider>
         </MotionProvider>
         <ServiceWorkerRegister />
       </body>

@@ -1,9 +1,11 @@
 import "server-only";
 import {
   PaymentError,
+  type BillingMethod,
   type CustomerInput,
   type NewSubscription,
   type PaymentProvider,
+  type PaymentRecord,
 } from "./types";
 
 // Cliente da API v3 do Asaas (https://docs.asaas.com). Só roda no servidor.
@@ -66,7 +68,29 @@ type AsaasPayment = {
   status: string;
   dueDate: string;
   invoiceUrl: string;
+  value?: number;
+  paymentDate?: string | null;
+  clientPaymentDate?: string | null;
+  billingType?: string;
+  transactionReceiptUrl?: string | null;
 };
+
+function toRecord(payment: AsaasPayment): PaymentRecord {
+  const method =
+    payment.billingType === "PIX" || payment.billingType === "CREDIT_CARD"
+      ? (payment.billingType as BillingMethod)
+      : null;
+  return {
+    id: payment.id,
+    status: payment.status,
+    dueDate: payment.dueDate,
+    paidDate: payment.paymentDate ?? payment.clientPaymentDate ?? null,
+    valueCents: Math.round((payment.value ?? 0) * 100),
+    method,
+    invoiceUrl: payment.invoiceUrl ?? null,
+    receiptUrl: payment.transactionReceiptUrl ?? null,
+  };
+}
 
 export const asaas: PaymentProvider = {
   name: "asaas",
@@ -100,7 +124,9 @@ export const asaas: PaymentProvider = {
       cycle: "MONTHLY",
       description: input.description,
       externalReference: input.externalReference,
-      callback: { successUrl: input.successUrl, autoRedirect: true },
+      ...(input.successUrl && {
+        callback: { successUrl: input.successUrl, autoRedirect: true },
+      }),
     });
   },
 
@@ -122,6 +148,32 @@ export const asaas: PaymentProvider = {
     await request(
       "DELETE",
       `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+    );
+  },
+
+  async subscriptionValueCents(subscriptionId: string) {
+    const sub = await request<{ value?: number }>(
+      "GET",
+      `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+    );
+    return typeof sub.value === "number" ? Math.round(sub.value * 100) : null;
+  },
+
+  async listPayments(subscriptionId: string) {
+    const list = await request<{ data: AsaasPayment[] }>(
+      "GET",
+      `/subscriptions/${encodeURIComponent(subscriptionId)}/payments`,
+    );
+    return list.data
+      .map(toRecord)
+      .sort((a, b) => b.dueDate.localeCompare(a.dueDate));
+  },
+
+  async updateBillingType(subscriptionId: string, method: BillingMethod) {
+    await request(
+      "PUT",
+      `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+      { billingType: method, updatePendingPayments: true },
     );
   },
 };

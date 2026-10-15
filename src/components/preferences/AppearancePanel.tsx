@@ -105,7 +105,7 @@ function Toggle({
 }
 
 // Painel único de aparência: tabuleiro, peças e sons, com pré-visualização ao
-// vivo. Usado em /conta/aparencia e na janela da engrenagem dos tabuleiros.
+// vivo. Usado em Minha conta (Preferências) e na janela da engrenagem dos tabuleiros.
 export function AppearancePanel({
   idPrefix = "ap",
   inDialog = false,
@@ -183,6 +183,12 @@ export function AppearancePanel({
               label="Promover direto para dama (sem perguntar)"
               checked={prefs.board.autoQueen}
               onChange={(v) => setBoard("autoQueen", v)}
+            />
+            <Toggle
+              id={id("confirmar")}
+              label="Confirmar o lance antes de ele valer"
+              checked={prefs.board.confirmMove}
+              onChange={(v) => setBoard("confirmMove", v)}
             />
           </div>
         </Group>
