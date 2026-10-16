@@ -10,8 +10,8 @@
   avaliar alternativas gratuitas com uso comercial permitido, como Cloudflare Pages ou Netlify.
 - **Revisar os textos jurídicos novos.** A cláusula "7. Componentes de terceiros" dos Termos e o
   parágrafo sobre a nuvem do Lichess na Privacidade foram escritos nesta rodada (rascunho, sem
-  revisão de advogado). Os campos entre colchetes (razão social, CNPJ, foro, e-mail de suporte)
-  continuam pendentes.
+  revisão de advogado). Responsável, foro (Parobé, RS), e-mail de suporte e regra de reembolso (7 dias, CDC art. 49) foram preenchidos em 2026-10-16; falta a revisão de advogado
+  (texto ainda marcado como rascunho).
 - **Exceção de licença do sharp/libvips (LGPL-3.0).** A biblioteca de imagens do Next.js usa a
   libvips (LGPL) no servidor. Foi aceita como exceção em `scripts/licencas.ts` por ser uma
   biblioteca dinâmica usada só no servidor; confirmar na revisão jurídica.

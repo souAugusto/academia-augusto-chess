@@ -10,7 +10,7 @@ export const TERMS: LegalSection[] = [
   {
     title: "1. Quem somos",
     paragraphs: [
-      "A Academia Finale de Xadrez é um serviço de assinatura para treino de xadrez, mantido por [RAZÃO SOCIAL E CNPJ]. Ao criar uma conta, você concorda com estes Termos de uso e com a Política de privacidade.",
+      "A Academia Finale de Xadrez é um serviço de assinatura para treino de xadrez, mantido por Sergio Augusto Leite Rolim (pessoa física), de Parobé (RS). Ao criar uma conta, você concorda com estes Termos de uso e com a Política de privacidade.",
     ],
   },
   {
@@ -33,7 +33,8 @@ export const TERMS: LegalSection[] = [
     title: "4. Cancelamento",
     paragraphs: [
       "Você pode cancelar a qualquer momento pela página Minha conta. O acesso continua até o fim do período já pago e não há cobrança nos meses seguintes.",
-      "[DEFINIR REGRA DE REEMBOLSO E DIREITO DE ARREPENDIMENTO]",
+      "Você pode desistir em até 7 dias depois do primeiro pagamento de um plano e receber o valor integral de volta (direito de arrependimento, art. 49 do Código de Defesa do Consumidor). Basta pedir pelo e-mail sergioaugustorolim@gmail.com; a devolução é feita pelo mesmo meio de pagamento.",
+      "Depois desse prazo, o cancelamento evita as próximas cobranças, mas não há reembolso do período em curso.",
     ],
   },
   {
@@ -62,7 +63,7 @@ export const TERMS: LegalSection[] = [
     title: "8. Alterações e contato",
     paragraphs: [
       "Estes termos podem ser atualizados. Mudanças relevantes serão avisadas por e-mail ou na sua área de membro.",
-      "Dúvidas: [E-MAIL DE SUPORTE]. Fica eleito o foro de [CIDADE E ESTADO DO FORO] para resolver eventuais conflitos, ressalvados os direitos do consumidor.",
+      "Dúvidas: sergioaugustorolim@gmail.com. Fica eleito o foro de Parobé (RS) para resolver eventuais conflitos, ressalvados os direitos do consumidor.",
     ],
   },
 ];
@@ -71,7 +72,7 @@ export const PRIVACY: LegalSection[] = [
   {
     title: "1. Controlador dos dados",
     paragraphs: [
-      "[RAZÃO SOCIAL E CNPJ] é o controlador dos dados pessoais tratados na Academia Finale de Xadrez, nos termos da Lei Geral de Proteção de Dados (Lei 13.709/2018).",
+      "Sergio Augusto Leite Rolim (pessoa física), de Parobé (RS), é o controlador dos dados pessoais tratados na Academia Finale de Xadrez, nos termos da Lei Geral de Proteção de Dados (Lei 13.709/2018).",
     ],
   },
   {
@@ -108,7 +109,7 @@ export const PRIVACY: LegalSection[] = [
   {
     title: "6. Seus direitos",
     paragraphs: [
-      "Você pode pedir acesso, correção, exclusão ou portabilidade dos seus dados, e revogar consentimentos, pelo e-mail [E-MAIL DE SUPORTE]. A exclusão da conta também ficará disponível na página Minha conta.",
+      "Você pode pedir acesso, correção, exclusão ou portabilidade dos seus dados, e revogar consentimentos, pelo e-mail sergioaugustorolim@gmail.com. A exclusão da conta também ficará disponível na página Minha conta.",
     ],
   },
   {
