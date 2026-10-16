@@ -24,6 +24,7 @@ import type { OpeningBook } from "@/lib/analysis/theory";
 import { formatEval, winChance } from "@/lib/analysis/winprob";
 import { sanToPortuguese } from "@/lib/chess/notation";
 import { StockfishClient } from "@/lib/engine/client";
+import { playSound } from "@/lib/sound";
 import { DeepBadge } from "./DeepBadge";
 import { EvalBar } from "./EvalBar";
 import { EvalGraph, type GraphMark } from "./EvalGraph";
@@ -153,6 +154,14 @@ export function AnalysisView({
   );
 
   const moveReview = index > 0 ? reviewed[index - 1] : undefined;
+
+  // Lance brilhante: som especial ao chegar nele (além do som do lance).
+  const brilliantShown = moveReview?.cls === "brilhante" ? moveReview.ply : null;
+  useEffect(() => {
+    if (brilliantShown === null) return;
+    const timer = setTimeout(() => playSound("brilliant"), 180);
+    return () => clearTimeout(timer);
+  }, [brilliantShown]);
   const fen = retry ? game.fens[retry.ply] : game.fens[index];
   const turn = fen.split(" ")[1] === "b" ? "b" : "w";
   const lastUci = !retry && index > 0 ? game.ucis[index - 1] : null;
@@ -414,7 +423,10 @@ export function AnalysisView({
             id={`aba-${value}`}
             aria-selected={tab === value}
             aria-controls={`painel-${value}`}
-            onClick={() => setTab(value)}
+            onClick={() => {
+              playSound("ui");
+              setTab(value);
+            }}
             className={`min-h-touch px-3 text-sm font-semibold ${tab === value ? "border-b-2 border-accent text-text" : "text-muted hover:text-text"}`}
           >
             {label}
@@ -516,6 +528,7 @@ export function AnalysisView({
             <div className="min-w-0 flex-1">
               <ChessBoard
                 id="analise"
+                soundMode="replay"
                 fen={fen}
                 orientation={orientation}
                 movableColor={retry && !retry.done && !checking ? turn : null}

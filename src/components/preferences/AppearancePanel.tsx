@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ChessBoard } from "@/components/chess/ChessBoard";
 import { buttonClasses } from "@/components/ui/button";
 import {
@@ -12,8 +12,12 @@ import {
   pieceUrl,
   SOUND_PACK_OPTIONS,
 } from "@/lib/preferences/options";
-import type { Preferences } from "@/lib/preferences/schema";
-import { playSound } from "@/lib/sound";
+import {
+  SOUND_PACKS,
+  type Preferences,
+  type SoundPack,
+} from "@/lib/preferences/schema";
+import { playSample, playSound, vibrationSupported } from "@/lib/sound";
 import { SOUND_EVENT_LABELS, type SoundEvent } from "@/lib/sound/synth";
 import { usePreferences } from "./PreferencesProvider";
 
@@ -26,10 +30,18 @@ const TEST_SOUNDS: SoundEvent[] = [
   "move",
   "capture",
   "check",
+  "mate",
   "correct",
   "wrong",
   "solved",
+  "brilliant",
 ];
+
+const GROUP_LABELS: Record<keyof Preferences["sound"]["groups"], string> = {
+  lances: "Sons dos lances (movimento, captura, xeque...)",
+  feedback: "Sons de acerto, erro e conquistas",
+  interface: "Sons de interface (cliques em botões e abas)",
+};
 
 function Group({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -123,6 +135,21 @@ export function AppearancePanel({
     key: K,
     value: Preferences["sound"][K],
   ) => update((p) => ({ ...p, sound: { ...p.sound, [key]: value } }));
+  const setGroup = (key: keyof Preferences["sound"]["groups"], value: boolean) =>
+    update((p) => ({
+      ...p,
+      sound: { ...p.sound, groups: { ...p.sound.groups, [key]: value } },
+    }));
+  // "Só vibração" só aparece onde o aparelho vibra (confere no navegador).
+  const [canVibrate, setCanVibrate] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- navigator só existe no navegador
+    setCanVibrate(vibrationSupported());
+  }, []);
+  const packs = SOUND_PACKS.filter(
+    (pack) => pack !== "vibracao" || canVibrate || prefs.sound.pack === pack,
+  );
+  const silent = prefs.sound.pack === "vibracao";
 
   const themes = Object.fromEntries(
     Object.entries(BOARD_THEME_OPTIONS).map(([k, v]) => [k, v.label]),
@@ -239,51 +266,102 @@ export function AppearancePanel({
             checked={prefs.sound.enabled}
             onChange={(v) => setSound("enabled", v)}
           />
-          <div className="flex flex-col gap-2">
-            <label htmlFor={id("volume")} className="text-sm font-semibold">
-              Volume: {prefs.sound.volume}
-            </label>
-            <input
-              id={id("volume")}
-              type="range"
-              min={0}
-              max={100}
-              step={5}
-              value={prefs.sound.volume}
-              disabled={!prefs.sound.enabled}
-              onChange={(event) =>
-                setSound("volume", Number(event.target.value))
-              }
-              className="accent-[var(--accent)]"
+          {!silent && (
+            <div className="flex flex-col gap-2">
+              <label htmlFor={id("volume")} className="text-sm font-semibold">
+                Volume: {prefs.sound.volume}
+              </label>
+              <input
+                id={id("volume")}
+                type="range"
+                min={0}
+                max={100}
+                step={5}
+                value={prefs.sound.volume}
+                disabled={!prefs.sound.enabled}
+                onChange={(event) =>
+                  setSound("volume", Number(event.target.value))
+                }
+                className="accent-[var(--accent)]"
+              />
+            </div>
+          )}
+          <div
+            role="radiogroup"
+            aria-label="Pacote de sons"
+            className="flex flex-col gap-2"
+          >
+            <span className="text-sm font-semibold">Pacote de sons</span>
+            {packs.map((pack: SoundPack) => {
+              const chosen = prefs.sound.pack === pack;
+              return (
+                <div
+                  key={pack}
+                  className={`flex items-center gap-2 rounded-control border p-2 ${chosen ? "border-accent bg-accent/10" : "border-border"}`}
+                >
+                  <button
+                    type="button"
+                    role="radio"
+                    aria-checked={chosen}
+                    onClick={() => setSound("pack", pack)}
+                    className="flex min-h-touch flex-1 flex-col items-start justify-center px-2 text-left"
+                  >
+                    <span className="text-[0.9375rem] font-semibold">
+                      {SOUND_PACK_OPTIONS[pack].label}
+                    </span>
+                    <span className="text-xs text-muted">
+                      {SOUND_PACK_OPTIONS[pack].description}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => playSample(pack)}
+                    aria-label={`Ouvir exemplo do pacote ${SOUND_PACK_OPTIONS[pack].label}`}
+                    className={buttonClasses("secondary", "md", "shrink-0 px-3 text-sm")}
+                  >
+                    Ouvir exemplo
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex flex-col">
+            {(Object.keys(GROUP_LABELS) as (keyof typeof GROUP_LABELS)[]).map(
+              (group) => (
+                <Toggle
+                  key={group}
+                  id={id(`grupo-${group}`)}
+                  label={GROUP_LABELS[group]}
+                  checked={prefs.sound.groups[group]}
+                  onChange={(v) => setGroup(group, v)}
+                />
+              ),
+            )}
+            <Toggle
+              id={id("adversario")}
+              label="Tocar o som do lance do adversário"
+              checked={prefs.sound.opponent}
+              onChange={(v) => setSound("opponent", v)}
             />
           </div>
-          <Select
-            id={id("pacote")}
-            label="Pacote de sons"
-            value={prefs.sound.pack}
-            options={SOUND_PACK_OPTIONS}
-            onChange={(v) => setSound("pack", v)}
-          />
-          <div className="flex flex-col gap-2">
-            <span className="text-sm font-semibold">Ouvir</span>
-            <div className="flex flex-wrap gap-2">
-              {TEST_SOUNDS.map((event) => (
-                <button
-                  key={event}
-                  type="button"
-                  disabled={!prefs.sound.enabled}
-                  onClick={() => playSound(event)}
-                  className={buttonClasses(
-                    "secondary",
-                    "md",
-                    "!min-h-0 !py-1.5 text-sm",
-                  )}
-                >
-                  {SOUND_EVENT_LABELS[event]}
-                </button>
-              ))}
+          {!silent && (
+            <div className="flex flex-col gap-2">
+              <span className="text-sm font-semibold">Ouvir cada som</span>
+              <div className="flex flex-wrap gap-2">
+                {TEST_SOUNDS.map((event) => (
+                  <button
+                    key={event}
+                    type="button"
+                    disabled={!prefs.sound.enabled}
+                    onClick={() => playSound(event)}
+                    className={buttonClasses("secondary", "md", "text-sm")}
+                  >
+                    {SOUND_EVENT_LABELS[event]}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </Group>
 
         <div>

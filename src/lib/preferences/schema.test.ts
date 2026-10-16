@@ -21,7 +21,10 @@ describe("parsePreferences", () => {
     });
     expect(prefs.board.theme).toBe("madeira");
     expect(prefs.board.coordinates).toBe("dentro");
-    expect(prefs.sound).toEqual({ enabled: true, volume: 80, pack: "suave" });
+    expect(prefs.sound).toEqual({
+      ...DEFAULT_PREFERENCES.sound,
+      volume: 80,
+    });
   });
 
   it("valor fora da lista volta ao padrão, sem afetar os outros", () => {

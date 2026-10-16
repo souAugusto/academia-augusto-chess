@@ -28,7 +28,15 @@ export const PIECE_SETS = [
   "fantasy",
   "spatial",
 ] as const;
-export const SOUND_PACKS = ["suave", "madeira"] as const;
+// "engracado" nunca é o padrão; "vibracao" só aparece onde o aparelho vibra.
+export const SOUND_PACKS = [
+  "suave",
+  "madeira",
+  "oco",
+  "arcade",
+  "engracado",
+  "vibracao",
+] as const;
 
 export type BoardTheme = (typeof BOARD_THEMES)[number];
 export type Coordinates = (typeof COORDINATES)[number];
@@ -50,7 +58,15 @@ export const DEFAULT_PREFERENCES = {
     confirmMove: false,
   },
   pieces: "cburnett" as PieceSet,
-  sound: { enabled: true, volume: 50, pack: "suave" as SoundPack },
+  sound: {
+    enabled: true,
+    volume: 50,
+    pack: "suave" as SoundPack,
+    // Grupos: lances (movimento, captura...), feedback (certo, errado,
+    // título) e interface (cliques). Interface começa desligada.
+    groups: { lances: true, feedback: true, interface: false },
+    opponent: true, // tocar o som do lance do adversário
+  },
   // E-mails que o aluno aceita receber (guardado mesmo antes de o site enviar).
   emails: { lembretes: true, novidades: false, assinatura: true },
 };
@@ -79,6 +95,14 @@ export const preferencesSchema = z.object({
       enabled: z.boolean().catch(d.sound.enabled),
       volume: z.number().int().min(0).max(100).catch(d.sound.volume),
       pack: z.enum(SOUND_PACKS).catch(d.sound.pack),
+      groups: z
+        .object({
+          lances: z.boolean().catch(d.sound.groups.lances),
+          feedback: z.boolean().catch(d.sound.groups.feedback),
+          interface: z.boolean().catch(d.sound.groups.interface),
+        })
+        .catch(d.sound.groups),
+      opponent: z.boolean().catch(d.sound.opponent),
     })
     .catch(d.sound),
   emails: z
@@ -100,7 +124,14 @@ export function parsePreferences(value: unknown): Preferences {
   const filled = {
     ...source,
     board: { ...d.board, ...((source as { board?: object }).board ?? {}) },
-    sound: { ...d.sound, ...((source as { sound?: object }).sound ?? {}) },
+    sound: (() => {
+      const sound = (source as { sound?: { groups?: object } }).sound ?? {};
+      return {
+        ...d.sound,
+        ...sound,
+        groups: { ...d.sound.groups, ...(sound.groups ?? {}) },
+      };
+    })(),
     emails: { ...d.emails, ...((source as { emails?: object }).emails ?? {}) },
   };
   return preferencesSchema.parse(filled) as Preferences;
