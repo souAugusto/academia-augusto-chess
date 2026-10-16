@@ -7,13 +7,25 @@ import { z } from "zod";
 
 export const BOARD_THEMES = [
   "finale",
-  "verde",
+  "esmeralda",
+  "oceano",
+  "coral",
+  "uva",
+  "limao",
+  "rosa",
   "madeira",
-  "azul",
-  "cinza",
-  "roxo",
+  "concreto",
+  "meianoite",
   "contraste",
 ] as const;
+
+// Temas antigos que mudaram de nome: a escolha do aluno é convertida sozinha.
+export const LEGACY_BOARD_THEMES: Record<string, (typeof BOARD_THEMES)[number]> = {
+  verde: "esmeralda",
+  azul: "oceano",
+  cinza: "concreto",
+  roxo: "uva",
+};
 export const COORDINATES = ["dentro", "margem", "ocultas"] as const;
 export const ANIMATION_SPEEDS = [
   "desligada",
@@ -24,6 +36,7 @@ export const ANIMATION_SPEEDS = [
 export const MOVE_METHODS = ["ambos", "arrastar", "clicar"] as const;
 export const PIECE_SETS = [
   "cburnett",
+  "colorido",
   "chessnut",
   "fantasy",
   "spatial",
@@ -123,7 +136,16 @@ export function parsePreferences(value: unknown): Preferences {
     value && typeof value === "object" && !Array.isArray(value) ? value : {};
   const filled = {
     ...source,
-    board: { ...d.board, ...((source as { board?: object }).board ?? {}) },
+    board: (() => {
+      const board: Record<string, unknown> = {
+        ...d.board,
+        ...((source as { board?: object }).board ?? {}),
+      };
+      const theme = board.theme;
+      if (typeof theme === "string" && theme in LEGACY_BOARD_THEMES)
+        board.theme = LEGACY_BOARD_THEMES[theme];
+      return board;
+    })(),
     sound: (() => {
       const sound = (source as { sound?: { groups?: object } }).sound ?? {};
       return {

@@ -5,6 +5,7 @@ Só entram recursos cuja licença permite uso comercial, conferida na fonte orig
 | Recurso | Autor | Licença | Fonte original | Texto |
 |---|---|---|---|---|
 | Peças "Clássico" (cburnett) | Colin M.L. Burnett | BSD 3-clause (o autor oferece GFDL, CC BY-SA 3.0, BSD ou GPLv2+, à escolha) | https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces | `pecas-cburnett-BSD.txt` |
+| Peças "Colorido" (colorido) | Colin M.L. Burnett; cores alteradas pela Academia Finale (obra derivada permitida pela BSD) | BSD 3-clause | https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces | `pecas-colorido-BSD.txt` |
 | Peças "Moderno" (chessnut) | Alexis Luengas | Apache 2.0 | https://github.com/LexLuengas/chessnut-pieces | `pecas-chessnut-APACHE-2.0.txt`, `pecas-chessnut-NOTICE.txt` |
 | Peças "Fantasia" (fantasy) e "Minimalista" (spatial) | Maurizio Monge | MIT | https://github.com/maurimo/chess-art (SVGs copiados de lichess-org/lila/public/piece, que também lista MIT) | `pecas-fantasy-spatial-MIT.txt` |
 | Motor Stockfish 19 (lite, 1 thread, WebAssembly), pacote npm `stockfish` 19.0.1, sem modificação | T. Romstad, M. Costalba, J. Kiiski, G. Linscott e colaboradores; build de Nathan Rugg | GPL-3.0 | Código-fonte: https://github.com/nmrugg/stockfish.js/tree/v19.0.1 e https://github.com/official-stockfish/Stockfish | `stockfish-GPL-3.0.txt` (também em `public/engine/COPYING.txt` e `/licencas/stockfish-GPL-3.0.txt`) |

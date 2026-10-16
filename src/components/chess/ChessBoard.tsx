@@ -15,6 +15,7 @@ import {
   ANIMATION_OPTIONS,
   BOARD_THEME_OPTIONS,
   pieceUrl,
+  type BoardColors,
 } from "@/lib/preferences/options";
 import { playSound } from "@/lib/sound";
 import { soundForMove } from "@/lib/sound/synth";
@@ -191,6 +192,20 @@ export function ChessBoard({
         };
       }
   }
+  // Xeque: anel em volta do rei (forma, não só cor).
+  const position = new Chess(fen);
+  if (position.inCheck()) {
+    const king = position
+      .board()
+      .flat()
+      .find((p) => p?.type === "k" && p.color === position.turn());
+    if (king)
+      squareStyles[king.square] = {
+        ...squareStyles[king.square],
+        background: `radial-gradient(circle, ${theme.check} 0 30%, transparent 72%)`,
+        boxShadow: `inset 0 0 0 3px ${theme.check}`,
+      };
+  }
   for (const [square, style] of Object.entries(highlights)) {
     squareStyles[square] = { ...squareStyles[square], ...style };
   }
@@ -200,8 +215,13 @@ export function ChessBoard({
   const ranks =
     orientation === "w" ? "87654321".split("") : "12345678".split("");
 
+  // Setas na cor do tema (as telas mandam a cor padrão de seta).
+  const themedArrows = arrows.map((arrow) =>
+    arrow.color === BOARD_COLORS.arrow ? { ...arrow, color: theme.arrow } : arrow,
+  );
+
   const frame = (
-    <div className="board-frame">
+    <div className="board-frame" style={boardFrameStyle(theme)}>
       <Chessboard
         options={{
           id,
@@ -217,14 +237,14 @@ export function ChessBoard({
           squareStyles,
           arrows: pendingMove
             ? [
-                ...arrows,
+                ...themedArrows,
                 {
                   startSquare: pendingMove.from,
                   endSquare: pendingMove.to,
-                  color: BOARD_COLORS.arrow,
+                  color: theme.arrow,
                 },
               ]
-            : arrows,
+            : themedArrows,
           allowDrawingArrows: true,
           showAnimations: !reducedMotion && animationMs > 0,
           animationDurationInMs: animationMs || 1,
@@ -348,4 +368,18 @@ function SquareBadge({
       </div>
     </div>
   );
+}
+
+// Moldura na cor do tema e contorno extra das peças (halo) onde a cor da peça
+// some na casa. O halo vai por variável CSS, lida pelas imagens das peças.
+export function boardFrameStyle(theme: BoardColors): CSSProperties {
+  const halo = (color?: string) =>
+    color
+      ? `drop-shadow(0 0 0.6px ${color}) drop-shadow(0 0 0.6px ${color}) drop-shadow(0 0 0.6px ${color})`
+      : "none";
+  return {
+    boxShadow: `0 0 0 3px ${theme.frame}, 0 12px 32px -20px var(--shadow-color)`,
+    ["--piece-halo-w" as string]: halo(theme.halo?.w),
+    ["--piece-halo-b" as string]: halo(theme.halo?.b),
+  };
 }

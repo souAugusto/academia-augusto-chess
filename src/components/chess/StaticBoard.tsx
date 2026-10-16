@@ -3,6 +3,7 @@
 import { useBoardPreferences } from "@/components/preferences/PreferencesProvider";
 import { boardSquares, type Color } from "@/lib/chess/puzzle";
 import { BOARD_THEME_OPTIONS, pieceUrl } from "@/lib/preferences/options";
+import { boardFrameStyle } from "./ChessBoard";
 
 type StaticBoardProps = {
   fen: string;
@@ -36,7 +37,12 @@ export function StaticBoard({
   const pieces = decorative ? "cburnett" : prefs.pieces;
   const squares = boardSquares(fen, orientation);
   return (
-    <div role="img" aria-label={label} className="board-frame grid grid-cols-8">
+    <div
+      role="img"
+      aria-label={label}
+      className="board-frame grid grid-cols-8"
+      style={boardFrameStyle(theme)}
+    >
       {squares.map(({ square, piece, isLight }) => (
         <div
           key={square}
@@ -56,6 +62,7 @@ export function StaticBoard({
               alt=""
               title={`${piece[0] === "w" ? "Brancas" : "Pretas"}: ${PIECE_NAMES[piece[1]]} em ${square}`}
               className="absolute inset-0 size-full"
+              style={{ filter: `var(--piece-halo-${piece[0]}, none)` }}
               draggable={false}
             />
           )}
