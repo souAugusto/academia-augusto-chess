@@ -41,6 +41,9 @@ type ChessBoardProps = {
   lastMove?: { from: string; to: string } | null;
   highlights?: Record<string, CSSProperties>; // destaques extras (dica, acerto, erro)
   arrows?: Arrow[];
+  // "replay": os lances vêm da navegação por uma partida (análise, aulas) e não
+  // contam como lance do adversário para a opção de som.
+  soundMode?: "jogo" | "replay";
   // Selo no canto de uma casa (ex.: ícone da classe do lance na análise).
   badge?: { square: string; node: ReactNode } | null;
   // Retorna true se o lance foi aceito (a peça fica na casa nova).
@@ -79,6 +82,7 @@ export function ChessBoard({
   highlights = {},
   arrows = [],
   badge = null,
+  soundMode = "jogo",
   onMove,
 }: ChessBoardProps) {
   const { board, pieces } = useBoardPreferences();
@@ -102,15 +106,28 @@ export function ChessBoard({
   const canClick = canMove && board.moveMethod !== "arrastar";
   const pieceSet = useMemo(() => pieceRenderer(pieces), [pieces]);
 
-  // Som quando a posição muda por um lance (do aluno ou do adversário).
+  // Som quando a posição muda por um lance. Lance aceito do aluno marca
+  // ownMove; o próximo lance que não foi dele é do adversário.
   const previousFen = useRef(fen);
+  const ownMove = useRef(false);
   useEffect(() => {
     const before = previousFen.current;
     previousFen.current = fen;
     if (before === fen) return;
+    const mine = ownMove.current;
+    ownMove.current = false;
     const move = moveBetween(before, fen);
-    if (move) playSound(soundForMove(move));
-  }, [fen]);
+    if (move)
+      playSound(soundForMove(move), {
+        opponent: soundMode === "jogo" && !mine,
+      });
+  }, [fen, soundMode]);
+
+  function submit(from: Square, to: Square, promo?: string): boolean {
+    const accepted = onMove(from, to, promo);
+    if (accepted) ownMove.current = true;
+    return accepted;
+  }
 
   function attempt(from: Square, to: Square, promo?: string): boolean {
     if (!canMove) return false;
@@ -129,14 +146,14 @@ export function ChessBoard({
       setPending({ from, to, promo, fen });
       return false;
     }
-    return onMove(from, to, promo);
+    return submit(from, to, promo);
   }
 
   function confirmPending() {
     if (!pendingMove) return;
     const { from, to, promo } = pendingMove;
     setPending(null);
-    onMove(from, to, promo);
+    submit(from, to, promo);
   }
 
   function onSquareClick(square: Square) {

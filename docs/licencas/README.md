@@ -9,7 +9,7 @@ Só entram recursos cuja licença permite uso comercial, conferida na fonte orig
 | Peças "Fantasia" (fantasy) e "Minimalista" (spatial) | Maurizio Monge | MIT | https://github.com/maurimo/chess-art (SVGs copiados de lichess-org/lila/public/piece, que também lista MIT) | `pecas-fantasy-spatial-MIT.txt` |
 | Motor Stockfish 19 (lite, 1 thread, WebAssembly), pacote npm `stockfish` 19.0.1, sem modificação | T. Romstad, M. Costalba, J. Kiiski, G. Linscott e colaboradores; build de Nathan Rugg | GPL-3.0 | Código-fonte: https://github.com/nmrugg/stockfish.js/tree/v19.0.1 e https://github.com/official-stockfish/Stockfish | `stockfish-GPL-3.0.txt` (também em `public/engine/COPYING.txt` e `/licencas/stockfish-GPL-3.0.txt`) |
 | Linhas de abertura para "Teoria" (`src/content/teoria-aberturas.json`) | lichess-org/chess-openings | CC0 | https://github.com/lichess-org/chess-openings | domínio público |
-| Sons "Suave" e "Madeira" | Finale (gerados por código em `src/lib/sound/synth.ts`) | próprios | — | — |
+| Sons "Suave", "Madeira", "Oco", "Arcade" e "Engraçado" e padrões de vibração | Academia Finale (gerados por código em `src/lib/sound/synth.ts`) | próprios | — | — |
 
 ## Descartados (licença não comercial ou incerta)
 

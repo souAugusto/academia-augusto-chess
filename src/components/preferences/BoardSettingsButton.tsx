@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { IconClose, IconGear } from "@/components/ui/icons";
+import { playSound } from "@/lib/sound";
 import { AppearancePanel } from "./AppearancePanel";
 
 // Engrenagem no cabeçalho do tabuleiro: abre as preferências de aparência
@@ -12,7 +13,10 @@ export function BoardSettingsButton() {
     <>
       <button
         type="button"
-        onClick={() => dialog.current?.showModal()}
+        onClick={() => {
+          playSound("ui");
+          dialog.current?.showModal();
+        }}
         className="flex size-10 shrink-0 items-center justify-center rounded-control text-muted transition hover:bg-surface-2 hover:text-text"
         aria-label="Aparência do tabuleiro, peças e sons"
         title="Aparência do tabuleiro, peças e sons"

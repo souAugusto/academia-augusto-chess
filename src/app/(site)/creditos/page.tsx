@@ -17,7 +17,7 @@ const SECTIONS = [
   {
     title: "Sons",
     paragraphs: [
-      "Os sons do tabuleiro (pacotes Suave e Madeira) são gerados por código no seu navegador, criados pela própria Finale. Não usam gravações de terceiros.",
+      "Os sons do tabuleiro (pacotes Suave, Madeira, Oco, Arcade e Engraçado) e os padrões de vibração são criados pela Academia Finale e gerados por código no seu navegador. Não usam gravações de terceiros.",
     ],
   },
   {

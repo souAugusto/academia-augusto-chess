@@ -139,9 +139,17 @@ export const PIECE_SET_OPTIONS: Record<
   },
 };
 
-export const SOUND_PACK_OPTIONS: Record<SoundPack, string> = {
-  suave: "Suave",
-  madeira: "Madeira",
+// Pacotes de som (todos gerados por código pela própria Finale).
+export const SOUND_PACK_OPTIONS: Record<
+  SoundPack,
+  { label: string; description: string }
+> = {
+  suave: { label: "Suave", description: "Discreto, o som de sempre." },
+  madeira: { label: "Madeira", description: "Peça de madeira no tabuleiro, com corpo." },
+  oco: { label: "Oco", description: "Toc grave e redondo, bem presente." },
+  arcade: { label: "Arcade", description: "Bipes e moedinhas de videogame." },
+  engracado: { label: "Engraçado", description: "Boing, pop, apito e splat." },
+  vibracao: { label: "Só vibração", description: "Sem som: o celular vibra nos lances." },
 };
 
 export const pieceUrl = (set: PieceSet, code: string) =>

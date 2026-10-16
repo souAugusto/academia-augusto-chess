@@ -88,6 +88,7 @@ export function MoveSequenceViewer({
       board={
         <ChessBoard
           id={id}
+          soundMode="replay"
           fen={fen}
           orientation={orientation}
           movableColor={null}
