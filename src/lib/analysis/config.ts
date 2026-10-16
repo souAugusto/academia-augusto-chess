@@ -8,10 +8,7 @@ export const ANALYSIS_MIN_PLAN_RANK: number = 1;
 // A landing usa isto para decidir se chama a análise de "gratuita".
 export const ANALYSIS_IS_FREE = ANALYSIS_MIN_PLAN_RANK === 0;
 
-// Profundidades oferecidas na tela (meias-jogadas que o motor calcula).
-export const ANALYSIS_DEPTHS = [12, 14, 16, 20] as const;
-export const DEFAULT_ANALYSIS_DEPTH = 14;
-
-// Quantas análises salvas cada aluno pode ter. Ao atingir o limite, o site pede
-// para o aluno apagar alguma antes de salvar outra (nada é apagado sozinho).
+// Quantas análises guardadas cada aluno pode ter. Ao passar do limite, a mais
+// antiga é apagada sozinha (decisão do Augusto, 2026-10-16). A profundidade e o
+// resto do perfil do motor ficam em profile.ts.
 export const MAX_SAVED_ANALYSES = 100;

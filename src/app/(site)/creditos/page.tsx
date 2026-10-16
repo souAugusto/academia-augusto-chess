@@ -29,16 +29,16 @@ const SECTIONS = [
     ],
   },
   {
-    title: "Avaliações do Lichess",
+    title: "Fórmulas da análise",
     paragraphs: [
-      "Nas primeiras jogadas, a análise de partidas consulta a nuvem de avaliações pública do Lichess (lichess.org), um serviço gratuito e de código aberto. Em partidas importadas do Lichess que já foram analisadas lá, reaproveitamos essas avaliações.",
+      "A chance de vitória e a precisão de cada lance usam as fórmulas abertas publicadas pelo Lichess (lichess.org). A implementação é da própria Finale, feita a partir das fórmulas, sem usar código do Lichess. Os ícones, nomes e textos das classes de lance também são próprios.",
     ],
   },
   {
     title: "Puzzles e aberturas",
     paragraphs: [
       "Os puzzles de táticas vêm do banco aberto do Lichess (database.lichess.org), em domínio público (CC0).",
-      "Os nomes e códigos ECO das aberturas vêm do repositório lichess-org/chess-openings, em domínio público (CC0).",
+      "Os nomes e códigos ECO das aberturas, e as linhas usadas para marcar os lances de Teoria na análise, vêm do repositório lichess-org/chess-openings, em domínio público (CC0).",
     ],
   },
   {

@@ -1,7 +1,7 @@
 // Sugestões de estudo a partir de uma partida analisada. Lógica pura: recebe um
 // índice leve das lições (montado no servidor) e a revisão da partida.
 import { Chess } from "chess.js";
-import type { ReviewedMove } from "./review";
+import type { ReviewedMove } from "./classify";
 
 export type LessonIndexEntry = {
   slug: string;
@@ -108,13 +108,13 @@ export function suggestLessons(input: {
     break;
   }
 
-  // 3. Muitas gafes: treino de táticas.
-  const blunders = reviewed.filter((m) => mine(m) && m.cls === "gafe").length;
+  // 3. Muitos erros graves: treino de táticas.
+  const blunders = reviewed.filter((m) => mine(m) && m.cls === "erro_grave").length;
   if (blunders >= 2)
     suggestions.push({
       href: "/taticas",
       title: "Treino de táticas",
-      reason: `Foram ${blunders} gafes nesta partida. Resolver táticas treina a atenção a peças soltas e golpes.`,
+      reason: `Foram ${blunders} erros graves nesta partida. Resolver táticas treina a atenção a peças soltas e golpes.`,
     });
 
   return suggestions.slice(0, input.limit ?? 3);

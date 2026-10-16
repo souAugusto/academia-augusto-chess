@@ -1,33 +1,41 @@
-// Calcula a avaliação de cada posição de uma partida, escolhendo a fonte mais
-// barata disponível: análise já feita pelo Lichess, nuvem do Lichess (primeiras
-// jogadas) e, por fim, o motor no navegador. Tudo sem custo para o servidor.
-// O motor e o fetch entram como parâmetros para o código ser testável.
-import type { AnalysisData, EvalSource } from "./compact";
-import { terminalScore } from "./review";
-import { CLOUD_MAX_PLIES, cloudEvalUrl, parseCloudEval } from "./sources";
+// Análise de uma partida em duas passagens, sempre com o perfil fixo
+// (ANALYSIS_PROFILE). Só o motor do site: sem nuvem nem análises de terceiros,
+// para o resultado ser o mesmo para todos.
+// - Passagem 1: todas as posições, 1 linha.
+// - Passagem 2: só as posições candidatas (deepCandidates), com várias linhas.
+// Determinismo: 1 thread, hash fixo e "ucinewgame" no começo; as posições são
+// sempre analisadas na mesma ordem. O motor entra como parâmetro (testável).
+import { deepCandidates, terminalScore, type DeepLine } from "./classify";
+import { MAX_PV, type AnalysisData } from "./compact";
+import { ANALYSIS_PROFILE } from "./profile";
 import type { EngineScore } from "./winprob";
 
 export type EngineLike = {
+  newGame: () => void;
   analyseDepth: (
     fen: string,
-    options: { depth: number; signal?: AbortSignal },
+    options: { depth: number; multipv?: number; signal?: AbortSignal },
   ) => Promise<{
-    lines: { move: string; score: EngineScore }[];
+    lines: { move: string; score: EngineScore; pv: string[] }[];
     cancelled: boolean;
   }>;
+};
+
+export type Progress = {
+  phase: 1 | 2;
+  done: number;
+  total: number;
 };
 
 export type PipelineInput = {
   fens: string[]; // posição depois de cada meia-jogada (fens[0] = início)
   moves: string[]; // lances em UCI
   ending: "mate" | "afogamento" | null;
-  depth: number;
+  bookPlies: number;
   engine: EngineLike;
-  lichessEvals?: (EngineScore | null)[] | null; // depois de cada lance
-  useCloud?: boolean;
-  fetchJson?: (url: string, signal?: AbortSignal) => Promise<unknown>;
   signal?: AbortSignal;
-  onProgress?: (done: number, total: number) => void;
+  // Chamado a cada posição concluída, com os dados parciais (análise progressiva).
+  onUpdate?: (data: AnalysisData, progress: Progress) => void;
 };
 
 export type PipelineResult = AnalysisData & { complete: boolean };
@@ -40,74 +48,79 @@ const toWhite = (score: EngineScore, fen: string): EngineScore =>
 export async function runAnalysis(
   input: PipelineInput,
 ): Promise<PipelineResult> {
-  const { fens, moves, depth, engine, signal } = input;
-  const evals: EngineScore[] = [];
-  const best: (string | null)[] = [];
-  const sources: EvalSource[] = [];
-  let cloudActive = input.useCloud !== false && Boolean(input.fetchJson);
-  const total = fens.length;
+  const { fens, moves, engine, signal } = input;
+  const p = ANALYSIS_PROFILE;
+  const data: AnalysisData = {
+    version: 2,
+    depth: p.depth,
+    moves,
+    evals: [],
+    best: [],
+    pv: [],
+    deep: {},
+  };
+  const snapshot = (): AnalysisData => ({
+    ...data,
+    evals: [...data.evals],
+    best: [...data.best],
+    pv: [...data.pv],
+    deep: { ...data.deep },
+  });
 
+  engine.newGame();
+  const total = fens.length;
   for (let i = 0; i < total; i++) {
     if (signal?.aborted) break;
     const fen = fens[i];
-    const last = i === total - 1;
-
-    // Fim de partida: não há lance para avaliar.
-    if (last && input.ending) {
-      evals.push(
+    if (i === total - 1 && input.ending) {
+      // Fim de partida: não há lance para avaliar.
+      data.evals.push(
         terminalScore(input.ending === "mate" ? "mate" : "empate", turnOf(fen)),
       );
-      best.push(null);
-      sources.push("m");
-      input.onProgress?.(i + 1, total);
-      continue;
+      data.best.push(null);
+      data.pv.push([]);
+    } else {
+      const result = await engine.analyseDepth(fen, {
+        depth: p.depth,
+        multipv: 1,
+        signal,
+      });
+      const line = result.lines[0];
+      if (result.cancelled || !line) break;
+      data.evals.push(toWhite(line.score, fen));
+      data.best.push(line.move);
+      data.pv.push(line.pv.slice(0, MAX_PV));
     }
-
-    const fromLichess = i > 0 ? input.lichessEvals?.[i - 1] : null;
-    if (fromLichess) {
-      evals.push(fromLichess);
-      best.push(null);
-      sources.push("l");
-      input.onProgress?.(i + 1, total);
-      continue;
-    }
-
-    if (cloudActive && i < CLOUD_MAX_PLIES && input.fetchJson) {
-      let cloud = null;
-      try {
-        cloud = parseCloudEval(
-          await input.fetchJson(cloudEvalUrl(fen), signal),
-          fen,
-        );
-      } catch {
-        cloud = null;
-      }
-      if (cloud) {
-        evals.push(cloud.score);
-        best.push(cloud.best);
-        sources.push("n");
-        input.onProgress?.(i + 1, total);
-        continue;
-      }
-      // Fora da nuvem uma vez, fora para sempre: as próximas também não estão.
-      cloudActive = false;
-    }
-
-    const result = await engine.analyseDepth(fen, { depth, signal });
-    const line = result.lines[0];
-    if (result.cancelled || !line) break;
-    evals.push(toWhite(line.score, fen));
-    best.push(line.move);
-    sources.push("m");
-    input.onProgress?.(i + 1, total);
+    input.onUpdate?.(snapshot(), { phase: 1, done: i + 1, total });
   }
+  if (data.evals.length < total) return { ...snapshot(), complete: false };
 
-  return {
-    depth,
-    moves,
-    evals,
-    best,
-    sources,
-    complete: evals.length === total,
-  };
+  const candidates = deepCandidates(
+    { fens, moves, evals: data.evals, best: data.best, pv: data.pv, deep: {}, bookPlies: input.bookPlies },
+    p.maxDeepPositions,
+  );
+  for (let k = 0; k < candidates.length; k++) {
+    if (signal?.aborted) return { ...snapshot(), complete: false };
+    const ply = candidates[k];
+    const fen = fens[ply];
+    const result = await engine.analyseDepth(fen, {
+      depth: p.deepDepth,
+      multipv: p.deepLines,
+      signal,
+    });
+    if (result.cancelled) return { ...snapshot(), complete: false };
+    data.deep[ply] = result.lines.map(
+      (line): DeepLine => ({
+        move: line.move,
+        score: toWhite(line.score, fen),
+        pv: line.pv.slice(0, MAX_PV),
+      }),
+    );
+    input.onUpdate?.(snapshot(), {
+      phase: 2,
+      done: k + 1,
+      total: candidates.length,
+    });
+  }
+  return { ...snapshot(), complete: true };
 }

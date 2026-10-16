@@ -69,9 +69,10 @@ describe("formato compacto", () => {
       expect(decodeScore(encodeScore(score))).toEqual(score);
   });
 
-  it("ida e volta de uma análise inteira", () => {
+  it("ida e volta de uma análise inteira (versão 2)", () => {
     const data = {
-      depth: 14,
+      version: 2 as const,
+      depth: 16,
       moves: ["e2e4", "e7e5"],
       evals: [
         { kind: "cp" as const, value: 20 },
@@ -79,10 +80,24 @@ describe("formato compacto", () => {
         { kind: "mate" as const, value: 5 },
       ],
       best: ["e2e4", null, "g1f3"],
-      sources: ["n" as const, "m" as const, "m" as const],
+      pv: [["e2e4", "e7e5"], [], ["g1f3"]],
+      deep: {
+        0: [
+          { move: "e2e4", score: { kind: "cp" as const, value: 20 }, pv: ["e2e4"] },
+          { move: "d2d4", score: { kind: "cp" as const, value: 15 }, pv: ["d2d4", "d7d5"] },
+        ],
+      },
     };
     expect(decodeAnalysis(encodeAnalysis(data))).toEqual(data);
-    expect(decodeAnalysis({ v: 2 })).toBeNull();
+    expect(decodeAnalysis({ v: 3 })).toBeNull();
     expect(decodeAnalysis(null)).toBeNull();
+  });
+
+  it("lê análises antigas (versão 1) sem linhas", () => {
+    const old = { v: 1, d: 14, m: "e2e4 e7e5", e: [20, 30, 25], b: "e2e4 - g1f3", s: "nmm" };
+    const data = decodeAnalysis(old);
+    expect(data?.version).toBe(1);
+    expect(data?.pv).toEqual([]);
+    expect(data?.best).toEqual(["e2e4", null, "g1f3"]);
   });
 });

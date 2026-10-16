@@ -2,16 +2,25 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { decodeAnalysis } from "@/lib/analysis/compact";
+import { Chess } from "chess.js";
+import { decodeAnalysis, encodeAnalysis } from "@/lib/analysis/compact";
 import {
-  ANALYSIS_DEPTHS,
   ANALYSIS_MIN_PLAN_RANK,
   MAX_SAVED_ANALYSES,
 } from "@/lib/analysis/config";
 import { gameFromUcis, parsePgn, sansToUcis } from "@/lib/analysis/pgn";
-import { gameAccuracy, reviewMoves } from "@/lib/analysis/review";
-import { parseLichessAnalysis } from "@/lib/analysis/sources";
-import type { EngineScore } from "@/lib/analysis/winprob";
+import {
+  ANALYSIS_PROFILE,
+  currentEngineProfile,
+  sameEngineProfile,
+  type EngineProfile,
+} from "@/lib/analysis/profile";
+import {
+  buildReport,
+  loadOpeningBook,
+  pgnGameKey,
+  reportSummary,
+} from "@/lib/analysis/report";
 import { checkPlan } from "@/lib/data/access";
 import {
   fetchChessComGameForAnalysis,
@@ -24,8 +33,11 @@ export type LoadedGame = {
   ucis: string[];
   headers: Record<string, string>;
   title: string;
-  lichessEvals: (EngineScore | null)[] | null;
 };
+
+const UCI = /^[a-h][1-8][a-h][1-8][qrbn]?$/;
+const GAME_KEY = /^(chesscom|lichess|pgn):[A-Za-z0-9_-]{1,80}$/;
+const MY_MISTAKES_SET = "Meus erros";
 
 const FETCH_ERRORS: Record<string, string> = {
   not_found: "Não encontrei essa partida no site de origem.",
@@ -34,7 +46,7 @@ const FETCH_ERRORS: Record<string, string> = {
   rate_limited: "O site de origem pediu uma pausa. Tente de novo em um minuto.",
 };
 
-// Busca os lances de uma partida importada (e a análise do Lichess, se houver).
+// Busca os lances de uma partida importada no site de origem.
 export async function loadImportedGame(
   gameId: number,
 ): Promise<{ ok: true; game: LoadedGame } | { ok: false; message: string }> {
@@ -55,12 +67,9 @@ export async function loadImportedGame(
   try {
     let ucis: string[] | null = null;
     let headers: Record<string, string> = {};
-    let lichessEvals: (EngineScore | null)[] | null = null;
     if (row.platform === "lichess") {
       const game = await fetchLichessGameForAnalysis(row.external_id);
       ucis = game.sans ? sansToUcis(game.sans) : null;
-      if (ucis)
-        lichessEvals = parseLichessAnalysis(game.lichessAnalysis, ucis.length);
     } else {
       const { data: account } = await supabase
         .from("linked_accounts")
@@ -91,7 +100,7 @@ export async function loadImportedGame(
         : (row.opening_name ?? "Partida importada");
     return {
       ok: true,
-      game: { ucis, headers, title: title.slice(0, 120), lichessEvals },
+      game: { ucis, headers, title: title.slice(0, 120) },
     };
   } catch (error) {
     const kind = error instanceof GamesFetchError ? error.kind : "unavailable";
@@ -109,8 +118,9 @@ const saveSchema = z.object({
   data: z.unknown(),
 });
 
-// Salva (ou substitui, se for de partida importada) uma análise. A precisão é
-// recalculada aqui a partir das avaliações; o navegador não manda números finais.
+// Guarda (ou substitui) a análise de uma partida, sozinha, quando ela termina.
+// Classes, precisão e resumo são recalculados aqui a partir dos dados do motor;
+// o navegador não manda números finais. Passou do limite: a mais antiga sai.
 export async function saveAnalysis(
   input: z.input<typeof saveSchema>,
 ): Promise<{ ok: true; id: string } | { ok: false; message: string }> {
@@ -121,70 +131,236 @@ export async function saveAnalysis(
     return { ok: false, message: "A análise faz parte da assinatura." };
 
   const analysis = decodeAnalysis(parsed.data.data);
+  const game = analysis ? gameFromUcis(analysis.moves) : null;
   if (
     !analysis ||
-    !(ANALYSIS_DEPTHS as readonly number[]).includes(analysis.depth) ||
+    !game ||
+    analysis.version !== 2 ||
+    analysis.depth !== ANALYSIS_PROFILE.depth ||
     analysis.moves.length === 0 ||
     analysis.evals.length !== analysis.moves.length + 1 ||
     analysis.best.length !== analysis.evals.length ||
-    !gameFromUcis(analysis.moves)
+    analysis.pv.length !== analysis.evals.length ||
+    Object.keys(analysis.deep).some(
+      (ply) => Number(ply) >= analysis.moves.length,
+    )
   )
     return { ok: false, message: "Análise incompleta ou inválida." };
 
-  const reviewed = reviewMoves(analysis.evals, analysis.best, analysis.moves);
+  const supabase = await createClient();
+  // A chave da partida é decidida aqui: importada (pela tabela) ou colada (hash).
+  let gameKey = pgnGameKey(analysis.moves);
+  if (parsed.data.importedGameId !== null) {
+    const { data: imported } = await supabase
+      .from("imported_games")
+      .select("platform, external_id")
+      .eq("id", parsed.data.importedGameId)
+      .eq("user_id", access.userId)
+      .maybeSingle();
+    if (!imported) return { ok: false, message: "Partida não encontrada." };
+    gameKey = `${imported.platform}:${imported.external_id}`;
+  }
+  if (!GAME_KEY.test(gameKey))
+    return { ok: false, message: "Partida inválida." };
+
+  const report = buildReport(analysis, game.fens, await loadOpeningBook());
   const headers = Object.fromEntries(
     Object.entries(parsed.data.headers).slice(0, 12),
   );
-  const supabase = await createClient();
-
   const row = {
     user_id: access.userId,
     imported_game_id: parsed.data.importedGameId,
+    game_key: gameKey,
     title: parsed.data.title,
     headers,
-    data: parsed.data.data as object,
+    data: encodeAnalysis(analysis),
     depth: analysis.depth,
-    accuracy_white: gameAccuracy(reviewed, "w"),
-    accuracy_black: gameAccuracy(reviewed, "b"),
+    engine_profile: currentEngineProfile(),
+    algo_version: ANALYSIS_PROFILE.algoVersion,
+    summary: reportSummary(report),
+    accuracy_white: report.accuracy.w,
+    accuracy_black: report.accuracy.b,
     updated_at: new Date().toISOString(),
   };
-  // Partida importada: reanalisar substitui a análise anterior da mesma partida.
-  // (O índice único é parcial, então o upsert do PostgREST não serve aqui.)
-  let existingId: string | null = null;
-  if (parsed.data.importedGameId !== null) {
-    const { data: existing } = await supabase
+
+  // Mesma partida: substitui. (O índice único é parcial, então o upsert do
+  // PostgREST não serve aqui.)
+  const { data: existing } = await supabase
+    .from("game_analyses")
+    .select("id")
+    .eq("user_id", access.userId)
+    .or(
+      parsed.data.importedGameId !== null
+        ? `game_key.eq.${gameKey},imported_game_id.eq.${parsed.data.importedGameId}`
+        : `game_key.eq.${gameKey}`,
+    )
+    .limit(1)
+    .maybeSingle();
+  if (!existing) {
+    const { data: all } = await supabase
       .from("game_analyses")
       .select("id")
       .eq("user_id", access.userId)
-      .eq("imported_game_id", parsed.data.importedGameId)
-      .maybeSingle();
-    existingId = existing?.id ?? null;
+      .order("updated_at", { ascending: true });
+    const excess = (all?.length ?? 0) - (MAX_SAVED_ANALYSES - 1);
+    if (excess > 0)
+      await supabase
+        .from("game_analyses")
+        .delete()
+        .eq("user_id", access.userId)
+        .in(
+          "id",
+          (all ?? []).slice(0, excess).map((item) => item.id),
+        );
   }
-  if (!existingId) {
-    const { count } = await supabase
-      .from("game_analyses")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", access.userId);
-    if ((count ?? 0) >= MAX_SAVED_ANALYSES)
-      return {
-        ok: false,
-        message: `Você já tem ${MAX_SAVED_ANALYSES} análises salvas. Apague alguma para salvar outra.`,
-      };
-  }
-  const { data, error } = existingId
+  const { data, error } = existing
     ? await supabase
         .from("game_analyses")
         .update(row)
-        .eq("id", existingId)
+        .eq("id", existing.id)
         .eq("user_id", access.userId)
         .select("id")
         .single()
     : await supabase.from("game_analyses").insert(row).select("id").single();
   if (error || !data)
-    return { ok: false, message: "Não consegui salvar a análise." };
+    return { ok: false, message: "Não consegui guardar a análise." };
   revalidatePath("/analise");
   revalidatePath("/partidas");
   return { ok: true, id: data.id };
+}
+
+// Análise já guardada desta partida (para reabrir sem recalcular).
+export async function findSavedAnalysis(input: {
+  importedGameId: number | null;
+  moves: string[];
+}): Promise<{ id: string; fresh: boolean } | null> {
+  const access = await checkPlan(ANALYSIS_MIN_PLAN_RANK);
+  if (!access.ok) return null;
+  const supabase = await createClient();
+  let query = supabase
+    .from("game_analyses")
+    .select("id, engine_profile, algo_version")
+    .eq("user_id", access.userId);
+  if (
+    input.importedGameId !== null &&
+    Number.isSafeInteger(input.importedGameId)
+  )
+    query = query.eq("imported_game_id", input.importedGameId);
+  else {
+    const moves = z
+      .array(z.string().regex(UCI))
+      .max(600)
+      .safeParse(input.moves);
+    if (!moves.success) return null;
+    query = query.eq("game_key", pgnGameKey(moves.data));
+  }
+  const { data } = await query.limit(1).maybeSingle();
+  if (!data) return null;
+  return {
+    id: data.id,
+    fresh: sameEngineProfile(data.engine_profile as EngineProfile),
+  };
+}
+
+const tacticSchema = z.object({
+  fen: z.string().min(10).max(100),
+  line: z.array(z.string().regex(UCI)).min(1).max(7),
+});
+
+// "Salvar como tática": cria uma tática do próprio aluno (posição antes do erro
+// + linha do motor) e a coloca no conjunto "Meus erros". Táticas próprias não
+// contam para o rating tático. Segue a regra que já existe: táticas e conjuntos
+// próprios são do plano Intensivo.
+export async function saveAsTactic(
+  input: z.input<typeof tacticSchema>,
+): Promise<{ ok: true } | { ok: false; message: string }> {
+  const parsed = tacticSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, message: "Dados inválidos." };
+  const access = await checkPlan(2);
+  if (!access.ok)
+    return {
+      ok: false,
+      message: "Salvar táticas próprias faz parte do plano Intensivo.",
+    };
+  // Confere a posição e a linha (lances legais, termina num lance do aluno).
+  let fen: string;
+  try {
+    const chess = new Chess(parsed.data.fen);
+    fen = chess.fen();
+    for (const uci of parsed.data.line)
+      chess.move({
+        from: uci.slice(0, 2),
+        to: uci.slice(2, 4),
+        promotion: uci[4],
+      });
+  } catch {
+    return { ok: false, message: "Posição ou linha inválida." };
+  }
+  const line =
+    parsed.data.line.length % 2 === 0
+      ? parsed.data.line.slice(0, -1)
+      : parsed.data.line;
+
+  const supabase = await createClient();
+  const { data: duplicate } = await supabase
+    .from("puzzles")
+    .select("id")
+    .eq("source", "custom")
+    .eq("created_by", access.userId)
+    .eq("fen", fen)
+    .limit(1)
+    .maybeSingle();
+  let puzzleId = duplicate?.id as string | undefined;
+  if (!puzzleId) {
+    puzzleId = crypto.randomUUID();
+    const { error } = await supabase.from("puzzles").insert({
+      id: puzzleId,
+      fen,
+      moves: line.join(" "),
+      first_move_is_setup: false,
+      source: "custom",
+      created_by: access.userId,
+      themes: [],
+    });
+    if (error) return { ok: false, message: "Não consegui salvar a tática." };
+  }
+
+  const { data: set } = await supabase
+    .from("puzzle_sets")
+    .select("id")
+    .eq("owner_id", access.userId)
+    .eq("name", MY_MISTAKES_SET)
+    .limit(1)
+    .maybeSingle();
+  let setId = set?.id as string | undefined;
+  if (!setId) {
+    const { data: created, error } = await supabase
+      .from("puzzle_sets")
+      .insert({
+        owner_id: access.userId,
+        name: MY_MISTAKES_SET,
+        description: "Posições dos seus erros nas partidas analisadas.",
+        is_official: false,
+      })
+      .select("id")
+      .single();
+    if (error || !created)
+      return { ok: false, message: "Não consegui criar o conjunto Meus erros." };
+    setId = created.id as string;
+  }
+  const { count } = await supabase
+    .from("puzzle_set_items")
+    .select("puzzle_id", { count: "exact", head: true })
+    .eq("set_id", setId);
+  const { error: itemError } = await supabase
+    .from("puzzle_set_items")
+    .upsert(
+      { set_id: setId, puzzle_id: puzzleId, position: count ?? 0 },
+      { onConflict: "set_id,puzzle_id", ignoreDuplicates: true },
+    );
+  if (itemError) return { ok: false, message: "Não consegui salvar a tática." };
+  revalidatePath("/treino");
+  return { ok: true };
 }
 
 export async function deleteAnalysis(id: string): Promise<{ ok: boolean }> {

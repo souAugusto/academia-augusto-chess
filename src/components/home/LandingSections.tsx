@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CLASS_STYLE } from "@/components/analysis/classStyle";
+import { MoveClassIcon } from "@/components/analysis/MoveClassIcon";
 import { buttonClasses } from "@/components/ui/button";
 import { Card } from "@/components/ui/Card";
 import {
@@ -10,7 +10,7 @@ import {
   PROBLEM,
   STYLE_SECTION,
 } from "@/content/home";
-import { CLASS_LABELS, type MoveClass } from "@/lib/analysis/review";
+import { CLASS_LABELS, type MoveClass } from "@/lib/analysis/classify";
 import { STYLES } from "@/lib/style/styles";
 import { Section, SectionHeading } from "./Section";
 
@@ -127,12 +127,12 @@ export function ImportSection() {
 }
 
 const MOCK_MOVES: { label: string; cls: MoveClass }[] = [
-  { label: "12.Cd5", cls: "melhor" },
+  { label: "12.Cd5!!", cls: "brilhante" },
   { label: "12...exd5", cls: "bom" },
   { label: "13.exd5", cls: "excelente" },
   { label: "13...Dc7", cls: "imprecisao" },
   { label: "14.Te1", cls: "melhor" },
-  { label: "14...Bf5??", cls: "gafe" },
+  { label: "14...Bf5??", cls: "erro_grave" },
 ];
 // Chance das brancas (0 a 100) ao longo do exemplo.
 const MOCK_CURVE = [52, 54, 50, 55, 58, 57, 61, 60, 72, 70, 92, 94];
@@ -178,17 +178,15 @@ export function AnalysisSection({ free }: { free: boolean }) {
                 className="flex items-center justify-between rounded-control bg-surface-2 px-3 py-1.5 font-mono text-sm"
               >
                 <span>{move.label}</span>
-                <span
-                  className={CLASS_STYLE[move.cls].text}
-                  title={CLASS_LABELS[move.cls]}
-                >
-                  {CLASS_STYLE[move.cls].symbol}
+                <span className="flex items-center gap-1.5 font-sans text-xs text-muted">
+                  {CLASS_LABELS[move.cls]}
+                  <MoveClassIcon cls={move.cls} size={18} decorative />
                 </span>
               </li>
             ))}
           </ul>
           <p className="text-sm text-muted">
-            Precisão: 91,2% contra 74,5% · 3 momentos críticos
+            Precisão: 91,2% contra 74,5% · 3 momentos-chave
           </p>
         </Card>
       </div>
