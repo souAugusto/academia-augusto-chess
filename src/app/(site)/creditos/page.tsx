@@ -9,9 +9,10 @@ const SECTIONS = [
     title: "Peças do tabuleiro",
     paragraphs: [
       "Clássico (padrão): conjunto de Colin M. L. Burnett (Wikimedia Commons), usado sob a licença BSD. Copyright (c) Colin M. L. Burnett.",
+      "Colorido: o mesmo conjunto de Colin M. L. Burnett, com as cores alteradas pela Academia Finale (brancas em creme, pretas em azul-marinho), também sob a licença BSD. Licença em /pieces/colorido/LICENSE.txt.",
       "Moderno: conjunto Chessnut, de Alexis Luengas (github.com/LexLuengas/chessnut-pieces), sob a Apache License 2.0. Copyright 2015 Alexis Luengas. Licença em /pieces/chessnut/LICENSE.txt.",
       "Fantasia e Minimalista: conjuntos Fantasy e Spatial, de Maurizio Monge (github.com/maurimo/chess-art), sob a licença MIT. Copyright (c) Maurizio Monge. Licença em /pieces/fantasy/LICENSE.txt.",
-      "Todos os conjuntos são usados sem modificação.",
+      "Os demais conjuntos são usados sem modificação.",
     ],
   },
   {

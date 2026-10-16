@@ -33,7 +33,12 @@ export function pieceRenderer(set: PieceSet): PieceRenderObject {
           src={pieceUrl(set, code)}
           alt=""
           draggable={false}
-          style={{ width: "100%", height: "100%", pointerEvents: "none" }}
+          style={{
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+            filter: `var(--piece-halo-${code[0]}, none)`,
+          }}
         />
       ),
     ]),

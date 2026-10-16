@@ -95,3 +95,11 @@ Decisões do Augusto: só o motor do site (sem nuvem nem análise do Lichess), g
 - **Mixagem:** limite de 6 vozes, compressor leve no fim da cadeia e variação de tom de ±3% só nos sons de lance.
 - **Grupos:** lances e feedback ligados por padrão; **interface desligada por padrão** (clique de botão costuma incomodar). "Tocar o som do lance do adversário" ligado por padrão: o tabuleiro sabe qual lance foi do aluno (o `onMove` aceito); nas telas que só reproduzem uma partida (análise e aulas) nada conta como adversário.
 - **Preferências:** `sound.groups` e `sound.opponent` entram no mesmo jsonb; formato antigo é completado com os padrões, sem perder pacote e volume. Sem migração de banco.
+
+## Temas e peças — Bloco 3 do prompt de sons e temas (2026-10-16)
+- **11 temas** (`src/lib/preferences/options.ts`): Finale (padrão, mesmas cores de antes), Esmeralda, Oceano, Coral, Uva, Limão, Rosa, Madeira (casa escura mais saturada: #b4763f), Concreto, Meia-noite e Alto contraste. Cores da tabela do prompt mantidas. Cada tema define último lance, lances possíveis, xeque, setas e moldura.
+- **Temas antigos convertidos** ao ler as preferências: Verde e creme → Esmeralda (o verde/creme antigo era quase igual ao do Chess.com), Azul → Oceano, Cinza → Concreto, Roxo → Uva.
+- **Destaques sem depender só de cor:** último lance = casa tingida; lances possíveis = ponto/anel; xeque = anel em volta do rei (novo).
+- **Peça na casa escura muito escura** (Meia-noite, Alto contraste): contorno claro em volta das peças pretas (`halo`, por `drop-shadow` em variável CSS). É o que fecha 3:1 na Meia-noite e 7:1 no Alto contraste sem mudar as cores das casas.
+- **Conjunto Colorido:** derivado do Clássico de Colin M.L. Burnett (a BSD permite obra derivada e uso comercial), brancas em creme com contorno marrom, pretas em azul-marinho com detalhes dourados. Arquivos estáticos em `public/pieces/colorido/` (as peças são `<img>`, então cores por variável CSS dentro do SVG não funcionariam sem trocar todo o desenho das peças; ficou para depois, se fizer falta).
+- **Teste de contraste** (`src/lib/preferences/contrast.test.ts`): 220 combinações tema × conjunto × cor da peça × casa; separação = o melhor entre corpo, contorno e halo; mínimo 3:1 (7:1 no Alto contraste).
