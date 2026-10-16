@@ -22,6 +22,7 @@ import { LinkedAccounts } from "@/components/games/LinkedAccounts";
 import { StyleBadge } from "@/components/style/StyleBadge";
 import { TitleBadge } from "@/components/titles/TitleBadge";
 import { buttonClasses } from "@/components/ui/button";
+import { IconLogout } from "@/components/ui/icons";
 import { SectionLabel } from "@/components/ui/Label";
 import { SectionCard } from "@/components/ui/SectionCard";
 import { PLAN_NAMES, requireUser } from "@/lib/data/account";
@@ -188,9 +189,17 @@ export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
 
   return (
     <>
-      <div className="flex flex-col gap-1.5">
-        <SectionLabel>Conta</SectionLabel>
-        <h1 className="font-display text-page font-bold">Minha conta</h1>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="flex flex-col gap-1.5">
+          <SectionLabel>Conta</SectionLabel>
+          <h1 className="font-display text-page font-bold">Minha conta</h1>
+        </div>
+        <form action={signOut}>
+          <button type="submit" className={buttonClasses("secondary")}>
+            <IconLogout className="size-5" />
+            Sair da conta
+          </button>
+        </form>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[200px_minmax(0,1fr)]">
@@ -595,7 +604,7 @@ export default async function ContaPage({ searchParams }: PageProps<"/conta">) {
               <SignOutEverywhere />
               <form action={signOut}>
                 <button type="submit" className={buttonClasses("ghost")}>
-                  Sair só deste aparelho
+                  Sair deste aparelho
                 </button>
               </form>
             </SectionCard>
