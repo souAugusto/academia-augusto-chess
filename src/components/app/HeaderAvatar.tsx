@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { Avatar } from "@/components/account/Avatar";
+import { AccountMenu } from "@/components/app/AccountMenu";
 import { avatarUrl } from "@/lib/data/profile";
 import { createClient } from "@/lib/supabase/server";
 
-// Foto (ou iniciais) no cabeçalho do app, com link para Minha conta.
+// Foto (ou iniciais) no cabeçalho do app, que abre o menu da conta (com Sair).
 // Atualiza sozinha quando a foto muda (as actions revalidam o layout).
 export async function HeaderAvatar() {
   const supabase = await createClient();
@@ -31,13 +30,5 @@ export async function HeaderAvatar() {
         : null);
     name = data?.display_name ?? data?.name ?? user.email ?? "Conta";
   }
-  return (
-    <Link
-      href="/conta"
-      className="flex size-touch items-center justify-center rounded-full transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-      aria-label="Minha conta"
-    >
-      <Avatar url={url} name={name} size={32} decorative />
-    </Link>
-  );
+  return <AccountMenu url={url} name={name} email={user?.email ?? null} />;
 }
