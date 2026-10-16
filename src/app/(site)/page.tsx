@@ -32,7 +32,7 @@ import {
 import { homeJsonLd, serializeJsonLd } from "@/lib/seo/jsonld";
 
 const SITE =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://finale-xadrez.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.academiafinale.site";
 
 const DESCRIPTION =
   "Treino de xadrez com método: lições de aberturas e finais, táticas, análise das suas partidas com motor e um plano sob medida para o seu estilo.";

@@ -14,7 +14,7 @@ import {
 
 export const MAX_GAMES_PER_IMPORT = 500;
 const USER_AGENT =
-  "FinaleXadrez/1.0 (+https://finale-xadrez.vercel.app; academia de xadrez)";
+  "FinaleXadrez/1.0 (+https://www.academiafinale.site; academia de xadrez)";
 const TIMEOUT_MS = 25_000;
 // O Lichess manda umas 20 partidas por segundo: 500 levam perto de 30s.
 const LICHESS_STREAM_TIMEOUT_MS = 100_000;
