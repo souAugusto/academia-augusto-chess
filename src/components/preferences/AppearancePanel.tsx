@@ -162,14 +162,74 @@ export function AppearancePanel({
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
       <div className="flex flex-col gap-5">
         <Group title="Tabuleiro">
+          <div
+            role="radiogroup"
+            aria-label="Tema de cores"
+            id={id("tema")}
+            className="grid grid-cols-3 gap-2 sm:grid-cols-4"
+          >
+            {(Object.keys(themes) as Preferences["board"]["theme"][]).map(
+              (theme) => {
+                const colors = BOARD_THEME_OPTIONS[theme].colors;
+                const active = prefs.board.theme === theme;
+                return (
+                  <button
+                    key={theme}
+                    type="button"
+                    role="radio"
+                    aria-checked={active}
+                    data-theme-option={theme}
+                    onClick={() => setBoard("theme", theme)}
+                    className={`flex min-h-touch flex-col items-center gap-1.5 rounded-control border p-2 transition ${active ? "border-accent bg-surface-2 ring-1 ring-accent" : "border-border hover:border-border-strong"}`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="grid size-14 grid-cols-2 overflow-hidden rounded-[6px]"
+                      style={{ boxShadow: `0 0 0 2px ${colors.frame}` }}
+                    >
+                      {[0, 1, 2, 3].map((i) => (
+                        <span
+                          key={i}
+                          className="relative"
+                          style={{
+                            backgroundColor:
+                              i === 0 || i === 3 ? colors.light : colors.dark,
+                          }}
+                        >
+                          {i === 1 && (
+                            // eslint-disable-next-line @next/next/no-img-element -- SVG pequeno e estático
+                            <img
+                              src={pieceUrl(prefs.pieces, "wN")}
+                              alt=""
+                              className="absolute inset-0 size-full"
+                              style={{ filter: "none" }}
+                            />
+                          )}
+                          {i === 2 && (
+                            // eslint-disable-next-line @next/next/no-img-element -- SVG pequeno e estático
+                            <img
+                              src={pieceUrl(prefs.pieces, "bQ")}
+                              alt=""
+                              className="absolute inset-0 size-full"
+                              style={{
+                                filter: colors.halo?.b
+                                  ? `drop-shadow(0 0 0.6px ${colors.halo.b}) drop-shadow(0 0 0.6px ${colors.halo.b})`
+                                  : "none",
+                              }}
+                            />
+                          )}
+                        </span>
+                      ))}
+                    </span>
+                    <span className="text-center text-xs font-semibold leading-tight">
+                      {themes[theme].replace(" (padrão)", "")}
+                    </span>
+                  </button>
+                );
+              },
+            )}
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Select
-              id={id("tema")}
-              label="Tema de cores"
-              value={prefs.board.theme}
-              options={themes}
-              onChange={(v) => setBoard("theme", v)}
-            />
             <Select
               id={id("coordenadas")}
               label="Coordenadas"
@@ -224,7 +284,7 @@ export function AppearancePanel({
           <div
             role="radiogroup"
             aria-label="Conjunto de peças"
-            className="grid grid-cols-2 gap-3 sm:grid-cols-4"
+            className="grid grid-cols-2 gap-3 sm:grid-cols-3"
           >
             {(Object.keys(PIECE_SET_OPTIONS) as Preferences["pieces"][]).map(
               (set) => {
@@ -238,15 +298,28 @@ export function AppearancePanel({
                     onClick={() => update((p) => ({ ...p, pieces: set }))}
                     className={`flex flex-col items-center gap-2 rounded-control border p-3 transition ${active ? "border-accent bg-surface-2" : "border-border hover:border-border-strong"}`}
                   >
-                    <span className="flex gap-1" aria-hidden="true">
-                      {["wN", "bQ"].map((code) => (
-                        // eslint-disable-next-line @next/next/no-img-element -- SVG pequeno e estático
-                        <img
+                    <span
+                      className="grid grid-cols-4 overflow-hidden rounded-[6px]"
+                      aria-hidden="true"
+                    >
+                      {["wK", "wN", "bQ", "bP"].map((code, i) => (
+                        <span
                           key={code}
-                          src={pieceUrl(set, code)}
-                          alt=""
-                          className="size-9"
-                        />
+                          className="flex size-10 items-center justify-center"
+                          style={{
+                            backgroundColor:
+                              i % 2 === 0
+                                ? BOARD_THEME_OPTIONS[prefs.board.theme].colors.light
+                                : BOARD_THEME_OPTIONS[prefs.board.theme].colors.dark,
+                          }}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element -- SVG pequeno e estático */}
+                          <img
+                            src={pieceUrl(set, code)}
+                            alt=""
+                            className="size-full"
+                          />
+                        </span>
                       ))}
                     </span>
                     <span className="text-sm font-semibold">
@@ -367,7 +440,9 @@ export function AppearancePanel({
         <div>
           <button
             type="button"
-            onClick={reset}
+            onClick={() => {
+              reset();
+            }}
             className={buttonClasses("ghost")}
           >
             Restaurar padrão

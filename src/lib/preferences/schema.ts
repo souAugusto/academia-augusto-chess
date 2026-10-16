@@ -59,7 +59,9 @@ export type PieceSet = (typeof PIECE_SETS)[number];
 export type SoundPack = (typeof SOUND_PACKS)[number];
 
 export const DEFAULT_PREFERENCES = {
-  v: 1 as const,
+  // Versão do formato. 1: até o Bloco 1 do prompt de sons e temas (temas
+  // verde/azul/cinza/roxo, sons sem grupos). 2: atual. Ver migratePreferences.
+  v: 2 as const,
   board: {
     theme: "finale" as BoardTheme,
     coordinates: "dentro" as Coordinates,
@@ -89,7 +91,7 @@ export type Preferences = typeof DEFAULT_PREFERENCES;
 const d = DEFAULT_PREFERENCES;
 
 export const preferencesSchema = z.object({
-  v: z.literal(1).catch(1),
+  v: z.literal(2).catch(2),
   board: z
     .object({
       theme: z.enum(BOARD_THEMES).catch(d.board.theme),
@@ -129,23 +131,36 @@ export const preferencesSchema = z.object({
 
 export const MAX_PREFERENCES_BYTES = 2048;
 
+export const PREFERENCES_VERSION = 2;
+
+// Converte um formato antigo para o atual, sem perder a escolha do aluno:
+// - temas renomeados (verde, azul, cinza, roxo) viram os equivalentes novos;
+// - sons ganham grupos e a opção do adversário com os valores padrão (feito
+//   abaixo, ao completar com os padrões).
+// Chaves desconhecidas continuam sendo descartadas pelo esquema.
+export function migratePreferences(value: object): object {
+  const source = value as { v?: unknown; board?: { theme?: unknown } };
+  if (source.v === PREFERENCES_VERSION) return value;
+  const theme = source.board?.theme;
+  return {
+    ...value,
+    v: PREFERENCES_VERSION,
+    board:
+      typeof theme === "string" && theme in LEGACY_BOARD_THEMES
+        ? { ...source.board, theme: LEGACY_BOARD_THEMES[theme] }
+        : source.board,
+  };
+}
+
 // Lê qualquer valor (do banco, do localStorage ou do navegador) e devolve
-// preferências completas e válidas.
+// preferências completas, válidas e na versão atual.
 export function parsePreferences(value: unknown): Preferences {
-  const source =
-    value && typeof value === "object" && !Array.isArray(value) ? value : {};
+  const source = migratePreferences(
+    value && typeof value === "object" && !Array.isArray(value) ? value : {},
+  );
   const filled = {
     ...source,
-    board: (() => {
-      const board: Record<string, unknown> = {
-        ...d.board,
-        ...((source as { board?: object }).board ?? {}),
-      };
-      const theme = board.theme;
-      if (typeof theme === "string" && theme in LEGACY_BOARD_THEMES)
-        board.theme = LEGACY_BOARD_THEMES[theme];
-      return board;
-    })(),
+    board: { ...d.board, ...((source as { board?: object }).board ?? {}) },
     sound: (() => {
       const sound = (source as { sound?: { groups?: object } }).sound ?? {};
       return {

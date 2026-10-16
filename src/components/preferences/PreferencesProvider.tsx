@@ -28,6 +28,9 @@ const PENDING_KEY = "finale:preferencias:pendente";
 
 type Ctx = {
   prefs: Preferences;
+  // false até saber as preferências do aluno (cache do aparelho ou servidor):
+  // os tabuleiros esperam, para não aparecerem no tema errado e trocarem.
+  ready: boolean;
   update: (change: (current: Preferences) => Preferences) => void;
   reset: () => void;
 };
@@ -36,6 +39,7 @@ const PreferencesContext = createContext<Ctx>({
   prefs: DEFAULT_PREFERENCES,
   update: () => {},
   reset: () => {},
+  ready: true,
 });
 
 function readLocal(): Preferences | null {
@@ -105,6 +109,7 @@ export function PreferencesProvider({
   children: React.ReactNode;
 }) {
   const [prefs, setPrefs] = useState<Preferences>(DEFAULT_PREFERENCES);
+  const [ready, setReady] = useState(false);
   // null = ainda conferindo com o servidor.
   const logged = useRef<boolean | null>(null);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -132,6 +137,7 @@ export function PreferencesProvider({
         // Sem rede: fica com o cache local.
       } finally {
         syncing.current = null;
+        setReady(true);
       }
     })();
     return syncing.current;
@@ -140,9 +146,15 @@ export function PreferencesProvider({
   useEffect(() => {
     const local = readLocal();
     // Aplica o cache local assim que a página abre, antes de falar com o servidor.
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage só existe no navegador
-    if (local) setPrefs(local);
+    if (local) {
+      /* eslint-disable react-hooks/set-state-in-effect -- localStorage só existe no navegador */
+      setPrefs(local);
+      setReady(true);
+      /* eslint-enable react-hooks/set-state-in-effect */
+    }
     void sync();
+    // Sem cache e sem resposta do servidor: não segura o tabuleiro para sempre.
+    const fallback = setTimeout(() => setReady(true), 1500);
     const { data } = createClient().auth.onAuthStateChange((event) => {
       // Só quando a pessoa acaba de entrar (não a cada aviso de sessão).
       if (event === "SIGNED_IN" && !logged.current) void sync();
@@ -151,7 +163,10 @@ export function PreferencesProvider({
         clearPending(readPending());
       }
     });
-    return () => data.subscription.unsubscribe();
+    return () => {
+      clearTimeout(fallback);
+      data.subscription.unsubscribe();
+    };
   }, [sync]);
 
   useEffect(() => {
@@ -198,13 +213,18 @@ export function PreferencesProvider({
     [persist],
   );
 
+  // "Restaurar padrão" volta a aparência (tabuleiro, peças e sons) ao padrão;
+  // as opções de e-mail não são aparência e ficam como o aluno deixou.
   const reset = useCallback(() => {
-    setPrefs(DEFAULT_PREFERENCES);
-    persist(DEFAULT_PREFERENCES);
+    setPrefs((current) => {
+      const next = { ...DEFAULT_PREFERENCES, emails: current.emails };
+      persist(next);
+      return next;
+    });
   }, [persist]);
 
   return (
-    <PreferencesContext.Provider value={{ prefs, update, reset }}>
+    <PreferencesContext.Provider value={{ prefs, update, reset, ready }}>
       {children}
     </PreferencesContext.Provider>
   );
@@ -216,6 +236,6 @@ export function usePreferences() {
 
 // Atalho para os tabuleiros.
 export function useBoardPreferences() {
-  const { prefs } = useContext(PreferencesContext);
-  return { board: prefs.board, pieces: prefs.pieces };
+  const { prefs, ready } = useContext(PreferencesContext);
+  return { board: prefs.board, pieces: prefs.pieces, ready };
 }
