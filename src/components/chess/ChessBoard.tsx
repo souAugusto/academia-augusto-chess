@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type ReactNode,
 } from "react";
 import { Chessboard, type Arrow } from "react-chessboard";
 import { useBoardPreferences } from "@/components/preferences/PreferencesProvider";
@@ -40,6 +41,8 @@ type ChessBoardProps = {
   lastMove?: { from: string; to: string } | null;
   highlights?: Record<string, CSSProperties>; // destaques extras (dica, acerto, erro)
   arrows?: Arrow[];
+  // Selo no canto de uma casa (ex.: ícone da classe do lance na análise).
+  badge?: { square: string; node: ReactNode } | null;
   // Retorna true se o lance foi aceito (a peça fica na casa nova).
   onMove: (from: Square, to: Square, promotion?: string) => boolean;
 };
@@ -75,6 +78,7 @@ export function ChessBoard({
   lastMove,
   highlights = {},
   arrows = [],
+  badge = null,
   onMove,
 }: ChessBoardProps) {
   const { board, pieces } = useBoardPreferences();
@@ -217,6 +221,8 @@ export function ChessBoard({
         }}
       />
 
+      {badge && <SquareBadge {...badge} orientation={orientation} />}
+
       {pendingMove && (
         <div
           role="group"
@@ -290,6 +296,38 @@ export function ChessBoard({
         {[...files].map((file) => (
           <span key={file}>{file}</span>
         ))}
+      </div>
+    </div>
+  );
+}
+
+// Posição de uma casa no tabuleiro, em porcentagem, conforme o lado de baixo.
+function SquareBadge({
+  square,
+  node,
+  orientation,
+}: {
+  square: string;
+  node: ReactNode;
+  orientation: Side;
+}) {
+  const file = FILES.indexOf(square[0]);
+  const rank = Number(square[1]);
+  if (file < 0 || !(rank >= 1 && rank <= 8)) return null;
+  const col = orientation === "w" ? file : 7 - file;
+  const row = orientation === "w" ? 8 - rank : rank - 1;
+  return (
+    <div
+      className="pointer-events-none absolute z-10 flex justify-end"
+      style={{
+        left: `${col * 12.5}%`,
+        top: `${row * 12.5}%`,
+        width: "12.5%",
+        height: "12.5%",
+      }}
+    >
+      <div className="h-[46%] w-[46%] -translate-y-[12%] translate-x-[12%] drop-shadow-md [&>svg]:h-full [&>svg]:w-full">
+        {node}
       </div>
     </div>
   );

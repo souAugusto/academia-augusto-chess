@@ -1,10 +1,11 @@
 "use client";
 
+import { ANALYSIS_PROFILE } from "@/lib/analysis/profile";
 import { parseBestMove, parseInfo, type Score } from "./uci";
 
 // Cliente do Stockfish no navegador. O motor (GPL) roda como programa separado,
 // num Web Worker servido de /engine/, e só troca mensagens UCI com o site.
-const ENGINE_URL = "/engine/stockfish-19-lite-single.js";
+const ENGINE_URL = ANALYSIS_PROFILE.engineFile;
 
 export type Analysis = {
   bestMove: string | null;
@@ -54,7 +55,8 @@ export class StockfishClient {
       this.onLine(event.data),
     );
     this.send("uci");
-    this.send("setoption name Hash value 16");
+    this.send(`setoption name Hash value ${ANALYSIS_PROFILE.hashMb}`);
+    this.send(`setoption name Threads value ${ANALYSIS_PROFILE.threads}`);
     this.send("isready");
   }
 
@@ -171,9 +173,13 @@ export class StockfishClient {
     });
   }
 
+  // Zera a memória do motor (tabela hash): mesma partida, mesmo resultado.
+  // Entra na fila, para não cair no meio de uma análise.
   newGame() {
-    this.send("ucinewgame");
-    this.send("isready");
+    void this.enqueue(async () => {
+      await this.ready;
+      this.send("ucinewgame");
+    });
   }
 
   terminate() {

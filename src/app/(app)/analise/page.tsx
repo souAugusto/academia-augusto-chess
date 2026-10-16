@@ -63,7 +63,7 @@ export default async function AnalisePage({
         <p className="max-w-2xl leading-relaxed text-muted">
           {imported
             ? `Partida importada: ${imported.label}.`
-            : "Cole uma partida em PGN ou escolha uma das suas partidas importadas. O motor mostra os erros, os momentos críticos e o melhor lance em cada posição."}
+            : "Cole uma partida em PGN ou escolha uma das suas partidas importadas. A análise classifica cada lance, mostra a precisão de cada lado e os momentos-chave."}
         </p>
       </div>
       <AnalysisWorkbench
@@ -76,14 +76,16 @@ export default async function AnalisePage({
         lessons={lessonIndex()}
         completed={completed}
         userColor={imported?.color ?? null}
+        canSaveTactic={user.planRank >= 2}
       />
       <section aria-labelledby="salvas" className="flex flex-col gap-3">
         <h2 id="salvas" className="text-lg font-semibold">
-          Análises salvas
+          Análises guardadas
         </h2>
         {saved.length === 0 ? (
           <p className="text-muted">
-            Nenhuma análise salva ainda.{" "}
+            Nenhuma análise guardada ainda. Toda análise concluída fica
+            guardada aqui.{" "}
             <Link
               href="/partidas"
               className="text-accent-text underline-offset-4 hover:underline"
@@ -102,8 +104,8 @@ export default async function AnalisePage({
                   <span className="font-semibold">{item.title}</span>
                   <span className="text-sm text-muted">
                     {formatDate(item.createdAt)} · precisão{" "}
-                    {item.accuracyWhite ?? "—"} / {item.accuracyBlack ?? "—"} ·
-                    profundidade {item.depth}
+                    {item.accuracyWhite ?? "—"} / {item.accuracyBlack ?? "—"}
+                    {item.outdated && " · padrão antigo, reanalise"}
                   </span>
                 </Link>
               </li>

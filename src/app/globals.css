@@ -88,6 +88,18 @@
   /* Barra e gráfico de avaliação (claro = brancas, escuro = pretas). */
   --color-eval-light: #e9e6dd;
   --color-eval-dark: #20232d;
+  /* Classes dos lances na análise (ícone: círculo com símbolo branco; todas
+     com contraste de pelo menos 4,5:1 contra o branco, nos dois temas). */
+  --color-cls-brilhante: #0f766e;
+  --color-cls-otimo: #2456c9;
+  --color-cls-melhor: #15803d;
+  --color-cls-excelente: #3f6f1f;
+  --color-cls-bom: #4f5b6e;
+  --color-cls-teoria: #8a5a2b;
+  --color-cls-imprecisao: #9a5b00;
+  --color-cls-erro: #c2410c;
+  --color-cls-chance-perdida: #7e22ce;
+  --color-cls-erro-grave: #b91c1c;
 
   --text-hero: clamp(2.5rem, 6vw, 4.5rem);
   --text-hero--line-height: 1.04;
@@ -420,4 +432,24 @@ body {
       rgb(11 13 18 / 0.84) 72%,
       var(--bg) 100%
     );
+}
+
+/* Lance brilhante: brilho suave na casa de destino (some com movimento reduzido). */
+@keyframes brilho-lance {
+  0%,
+  100% {
+    box-shadow: inset 0 0 0 3px rgb(20 184 166 / 0.55);
+  }
+  50% {
+    box-shadow: inset 0 0 18px 6px rgb(45 212 191 / 0.75);
+  }
+}
+.brilho-lance {
+  animation: brilho-lance 1.4s ease-in-out 2;
+}
+@media (prefers-reduced-motion: reduce) {
+  .brilho-lance {
+    animation: none;
+    box-shadow: inset 0 0 0 3px rgb(20 184 166 / 0.7);
+  }
 }

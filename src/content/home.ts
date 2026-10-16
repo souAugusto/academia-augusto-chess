@@ -137,7 +137,7 @@ export const IMPORT_SECTION = {
 export const ANALYSIS_SECTION = {
   label: "Análise com motor",
   title: "Veja onde a partida virou.",
-  text: "O Stockfish roda no seu próprio navegador e mostra o melhor lance de cada posição, os erros, a precisão de cada lado e os três momentos críticos. Depois, o modo Tente de novo pede que você encontre o lance certo.",
+  text: "O Stockfish roda no seu próprio navegador, com uma análise profunda e igual para todos: classifica cada lance (de brilhante a erro grave), mostra a precisão de cada lado e os momentos-chave. Depois, o modo Tente de novo pede que você encontre o lance certo.",
   freeNote: "A análise de partidas é gratuita.",
   paidNote: "A análise de partidas está incluída na assinatura.",
   mockupLabel: "Exemplo ilustrativo",

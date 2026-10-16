@@ -28,3 +28,5 @@
 - **Revisar o parágrafo do teste grátis nos Termos de uso** (seção 3) na revisão jurídica.
 - **E-mails da Minha conta:** as opções de lembretes, novidades e avisos de assinatura ficam guardadas, mas só passam a valer quando houver um provedor de e-mail (ex.: Resend).
 - **Recibos:** o histórico de pagamentos mostra o link do recibo/fatura só quando o Asaas fornece; não há recibo próprio da Finale.
+- **Medir a análise profunda num celular Android intermediário.** Abra uma partida de ~40 lances na versão de teste e anote o tempo. Se passar muito de 5 minutos, reduzir a passagem 2 ou a profundidade em `ANALYSIS_PROFILE` (e subir `algoVersion` se mudar regra).
+- **Calibrar Brilhante/Ótimo com partidas reais dos alunos** (`npx tsx scripts/calibrar-analise.ts`). As regras são uma heurística própria e podem divergir do Chess.com.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parsePgn } from "./pgn";
-import type { ReviewedMove } from "./review";
+import type { ReviewedMove } from "./classify";
 import {
   endgameGroupOf,
   suggestLessons,
@@ -43,6 +43,11 @@ const move = (
   loss,
   accuracy: 50,
   cls,
+  sacrifice: null,
+  onlyMoveGap: null,
+  allowedMate: null,
+  missedMate: null,
+  impact: 0,
 });
 
 describe("endgameGroupOf", () => {
@@ -69,8 +74,8 @@ describe("suggestLessons", () => {
       fens,
       reviewed: [
         move(2, 6, "imprecisao"),
-        move(6, 20, "gafe"),
-        move(4, 30, "gafe"),
+        move(6, 20, "erro_grave"),
+        move(4, 30, "erro_grave"),
       ],
       lessons,
       userColor: "w",

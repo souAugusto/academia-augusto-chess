@@ -18,6 +18,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "import:puzzles": "node --env-file=.env.local scripts/import-lichess-puzzles.ts",
     "schedule:daily": "node --env-file=.env.local scripts/schedule-daily-puzzles.ts",
+    "build:opening-book": "node scripts/build-opening-book.ts",
     "import:openings": "node --env-file=.env.local scripts/import-openings.ts",
     "seed:phase3": "node --env-file=.env.local scripts/seed-phase3.ts",
     "licenses:check": "node scripts/licencas.ts",

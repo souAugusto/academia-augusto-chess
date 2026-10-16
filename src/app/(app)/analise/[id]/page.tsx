@@ -52,7 +52,7 @@ export default async function AnaliseSalvaPage({
         <Link href="/analise" className="text-sm text-muted hover:text-text">
           ← Análise de partidas
         </Link>
-        <SectionLabel>Análise salva</SectionLabel>
+        <SectionLabel>Análise guardada</SectionLabel>
       </div>
       <AnalysisWorkbench
         initial={{
@@ -62,10 +62,14 @@ export default async function AnaliseSalvaPage({
           headers: analysis.headers,
           data: analysis.data,
           orientation,
+          importedGameId: analysis.importedGameId,
+          outdated: analysis.outdated,
+          algoOutdated: analysis.algoOutdated,
         }}
         lessons={lessonIndex()}
         completed={completed}
         userColor={analysis.importedGameId ? orientation : null}
+        canSaveTactic={user.planRank >= 2}
       />
     </>
   );
