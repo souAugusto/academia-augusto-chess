@@ -86,7 +86,7 @@ export function ChessBoard({
   soundMode = "jogo",
   onMove,
 }: ChessBoardProps) {
-  const { board, pieces } = useBoardPreferences();
+  const { board, pieces, ready } = useBoardPreferences();
   const theme = BOARD_THEME_OPTIONS[board.theme].colors;
   const [selected, setSelected] = useState<Square | null>(null);
   const [promotion, setPromotion] = useState<{
@@ -214,6 +214,11 @@ export function ChessBoard({
   const files = orientation === "w" ? FILES : [...FILES].reverse().join("");
   const ranks =
     orientation === "w" ? "87654321".split("") : "12345678".split("");
+
+  // Antes de saber as preferências: só o quadrado do tabuleiro, vazio (sem
+  // mostrar o tema padrão e depois trocar).
+  if (!ready)
+    return <div className="board-frame bg-surface-2" aria-hidden="true" />;
 
   // Setas na cor do tema (as telas mandam a cor padrão de seta).
   const themedArrows = arrows.map((arrow) =>

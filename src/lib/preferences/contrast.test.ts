@@ -62,3 +62,31 @@ describe("temas antigos", () => {
     expect(DEFAULT_PREFERENCES.pieces).toBe("cburnett");
   });
 });
+
+describe("migração das preferências", () => {
+  it("versão 1 vira versão 2 com tema e sons convertidos", () => {
+    const old = {
+      v: 1,
+      board: { theme: "azul", coordinates: "margem" },
+      pieces: "chessnut",
+      sound: { enabled: true, volume: 70, pack: "madeira" },
+      emails: { novidades: true },
+      lixo: "descartado",
+    };
+    const prefs = parsePreferences(old);
+    expect(prefs.v).toBe(2);
+    expect(prefs.board.theme).toBe("oceano");
+    expect(prefs.board.coordinates).toBe("margem");
+    expect(prefs.pieces).toBe("chessnut");
+    expect(prefs.sound.pack).toBe("madeira");
+    expect(prefs.sound.volume).toBe(70);
+    expect(prefs.sound.groups).toEqual({ lances: true, feedback: true, interface: false });
+    expect(prefs.emails.novidades).toBe(true);
+    expect("lixo" in prefs).toBe(false);
+  });
+
+  it("versão 2 não é alterada", () => {
+    const current = parsePreferences({ v: 2, board: { theme: "coral" } });
+    expect(parsePreferences(current)).toEqual(current);
+  });
+});

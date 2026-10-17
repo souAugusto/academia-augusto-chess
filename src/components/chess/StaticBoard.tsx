@@ -36,6 +36,10 @@ export function StaticBoard({
     BOARD_THEME_OPTIONS[decorative ? "finale" : prefs.board.theme].colors;
   const pieces = decorative ? "cburnett" : prefs.pieces;
   const squares = boardSquares(fen, orientation);
+  if (!decorative && !prefs.ready)
+    return (
+      <div role="img" aria-label={label} className="board-frame bg-surface-2" />
+    );
   return (
     <div
       role="img"
