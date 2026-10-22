@@ -257,8 +257,11 @@ export const SOUND_PACK_OPTIONS: Record<
   SoundPack,
   { label: string; description: string }
 > = {
-  suave: { label: "Suave", description: "Discreto, o som de sempre." },
-  madeira: { label: "Madeira", description: "Peça de madeira no tabuleiro, com corpo." },
+  madeira: {
+    label: "Madeira (padrão)",
+    description: "Peça de madeira maciça: grave, seco e encorpado.",
+  },
+  suave: { label: "Suave", description: "Discreto e leve." },
   oco: { label: "Oco", description: "Toc grave e redondo, bem presente." },
   arcade: { label: "Arcade", description: "Bipes e moedinhas de videogame." },
   engracado: { label: "Engraçado", description: "Boing, pop, apito e splat." },

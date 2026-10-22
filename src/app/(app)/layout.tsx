@@ -1,5 +1,6 @@
 import { AppBottomNav, AppTopNav } from "@/components/app/AppNav";
 import { HeaderAvatar } from "@/components/app/HeaderAvatar";
+import { HeaderNotifications } from "@/components/notifications/HeaderNotifications";
 import { TrialBanner } from "@/components/app/TrialBanner";
 import { Logo } from "@/components/brand/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -14,6 +15,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
           <AppTopNav />
           <div className="flex items-center gap-1">
             <ThemeToggle />
+            <HeaderNotifications />
             <HeaderAvatar />
           </div>
         </div>

@@ -26,7 +26,7 @@ const PITCH_VARIATION = 0.03; // ±3% a cada som de lance
 let settings: Settings = {
   enabled: true,
   volume: 50,
-  pack: "suave",
+  pack: "madeira",
   groups: { lances: true, feedback: true, interface: false },
   opponent: true,
 };

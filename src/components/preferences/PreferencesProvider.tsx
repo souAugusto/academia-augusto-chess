@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -18,7 +19,6 @@ import {
   type Preferences,
 } from "@/lib/preferences/schema";
 import { setSoundSettings } from "@/lib/sound";
-import { createClient } from "@/lib/supabase/client";
 
 const STORAGE_KEY = "finale:preferencias";
 // Marca uma mudança que ainda não chegou ao servidor (aba fechada antes de
@@ -110,6 +110,7 @@ export function PreferencesProvider({
 }) {
   const [prefs, setPrefs] = useState<Preferences>(DEFAULT_PREFERENCES);
   const [ready, setReady] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
   // null = ainda conferindo com o servidor.
   const logged = useRef<boolean | null>(null);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -122,6 +123,7 @@ export function PreferencesProvider({
       try {
         const result = await getMyPreferences();
         logged.current = result.logged;
+        setIsLogged(result.logged);
         if (!result.logged) return;
         // Lido depois da resposta: inclui o que o aluno mudou enquanto isso.
         const local = readLocal();
@@ -152,22 +154,47 @@ export function PreferencesProvider({
       setReady(true);
       /* eslint-enable react-hooks/set-state-in-effect */
     }
-    void sync();
     // Sem cache e sem resposta do servidor: não segura o tabuleiro para sempre.
     const fallback = setTimeout(() => setReady(true), 1500);
-    const { data } = createClient().auth.onAuthStateChange((event) => {
-      // Só quando a pessoa acaba de entrar (não a cada aviso de sessão).
-      if (event === "SIGNED_IN" && !logged.current) void sync();
-      if (event === "SIGNED_OUT") {
-        logged.current = false;
-        clearPending(readPending());
-      }
-    });
+    return () => clearTimeout(fallback);
+  }, []);
+
+  // Quem ainda não entrou: confere de novo a cada troca de página (o login
+  // termina numa navegação). É uma chamada leve ao servidor e dispensa o
+  // cliente do Supabase para visitantes.
+  const pathname = usePathname();
+  useEffect(() => {
+    if (logged.current !== true) void sync();
+  }, [pathname, sync]);
+
+  // Quem está logado: o cliente do Supabase (o maior pacote do site) é baixado
+  // depois que a página fica pronta, só para perceber a saída da conta.
+  useEffect(() => {
+    if (!isLogged) return;
+    let unsubscribe: (() => void) | null = null;
+    let cancelled = false;
+    const listen = () =>
+      void import("@/lib/supabase/client").then(({ createClient }) => {
+        if (cancelled) return;
+        const { data } = createClient().auth.onAuthStateChange((event) => {
+          if (event === "SIGNED_OUT") {
+            logged.current = false;
+            setIsLogged(false);
+            clearPending(readPending());
+          }
+        });
+        unsubscribe = () => data.subscription.unsubscribe();
+      });
+    const idle = window.requestIdleCallback
+      ? window.requestIdleCallback(listen, { timeout: 4000 })
+      : window.setTimeout(listen, 1500);
     return () => {
-      clearTimeout(fallback);
-      data.subscription.unsubscribe();
+      cancelled = true;
+      if (window.cancelIdleCallback) window.cancelIdleCallback(idle);
+      else window.clearTimeout(idle);
+      unsubscribe?.();
     };
-  }, [sync]);
+  }, [isLogged]);
 
   useEffect(() => {
     setSoundSettings(prefs.sound);

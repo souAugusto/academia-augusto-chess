@@ -64,7 +64,7 @@ describe("temas antigos", () => {
 });
 
 describe("migração das preferências", () => {
-  it("versão 1 vira versão 2 com tema e sons convertidos", () => {
+  it("versão 1 vira a atual com tema e sons convertidos", () => {
     const old = {
       v: 1,
       board: { theme: "azul", coordinates: "margem" },
@@ -74,7 +74,7 @@ describe("migração das preferências", () => {
       lixo: "descartado",
     };
     const prefs = parsePreferences(old);
-    expect(prefs.v).toBe(2);
+    expect(prefs.v).toBe(3);
     expect(prefs.board.theme).toBe("oceano");
     expect(prefs.board.coordinates).toBe("margem");
     expect(prefs.pieces).toBe("chessnut");
@@ -85,8 +85,16 @@ describe("migração das preferências", () => {
     expect("lixo" in prefs).toBe(false);
   });
 
-  it("versão 2 não é alterada", () => {
-    const current = parsePreferences({ v: 2, board: { theme: "coral" } });
+  it("Suave (padrão antigo) vira Madeira; outros pacotes ficam", () => {
+    expect(parsePreferences({ v: 2, sound: { pack: "suave" } }).sound.pack).toBe("madeira");
+    expect(parsePreferences({ v: 2, sound: { pack: "oco" } }).sound.pack).toBe("oco");
+    expect(parsePreferences({ v: 1, sound: { pack: "suave" } }).sound.pack).toBe("madeira");
+    // Escolher Suave de novo, já na versão atual, é respeitado.
+    expect(parsePreferences({ v: 3, sound: { pack: "suave" } }).sound.pack).toBe("suave");
+  });
+
+  it("versão atual não é alterada", () => {
+    const current = parsePreferences({ v: 3, board: { theme: "coral" } });
     expect(parsePreferences(current)).toEqual(current);
   });
 });

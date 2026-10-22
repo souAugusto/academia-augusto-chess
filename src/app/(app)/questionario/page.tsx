@@ -1,3 +1,4 @@
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import type { Metadata } from "next";
 import { StyleQuiz } from "@/components/style/StyleQuiz";
 import { Card } from "@/components/ui/Card";
@@ -31,7 +32,10 @@ export default async function QuestionarioPage({
         </p>
       </div>
       <Card className="p-5 sm:p-8">
-        <StyleQuiz next={next} />
+        {/* Só o questionário usa framer-motion: o ajuste de "reduzir movimento" fica aqui. */}
+        <MotionProvider>
+          <StyleQuiz next={next} />
+        </MotionProvider>
       </Card>
     </div>
   );

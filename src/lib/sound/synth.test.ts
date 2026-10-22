@@ -52,6 +52,44 @@ describe("synthesize", () => {
     }
   });
 
+  it("Madeira é grave e seco (sem estalo agudo)", () => {
+    const rate = 16000;
+    // Centroide espectral (Hz) por uma DFT simples nos primeiros 1024 pontos.
+    const centroid = (x: Float32Array) => {
+      const n = 1024;
+      let num = 0;
+      let den = 0;
+      for (let k = 1; k < n / 2; k += 2) {
+        let re = 0;
+        let im = 0;
+        for (let i = 0; i < n; i++) {
+          const v = x[i] ?? 0;
+          re += v * Math.cos((2 * Math.PI * k * i) / n);
+          im -= v * Math.sin((2 * Math.PI * k * i) / n);
+        }
+        const m = Math.hypot(re, im);
+        num += m * ((k * rate) / n);
+        den += m;
+      }
+      return num / den;
+    };
+    const energyShare = (x: Float32Array, seconds: number) => {
+      const cut = Math.floor(seconds * rate);
+      let early = 0;
+      let total = 0;
+      x.forEach((v, i) => {
+        total += v * v;
+        if (i < cut) early += v * v;
+      });
+      return early / total;
+    };
+    for (const event of ["move", "capture"] as const) {
+      const wood = synthesize(event, "madeira", rate);
+      expect(centroid(wood), event).toBeLessThan(1300);
+      expect(energyShare(wood, 0.15), event).toBeGreaterThan(0.9);
+    }
+  });
+
   it("é determinístico", () => {
     expect(synthesize("capture", "oco", 8000)).toEqual(
       synthesize("capture", "oco", 8000),
@@ -89,8 +127,8 @@ describe("shouldPlay", () => {
 });
 
 describe("preferências de som", () => {
-  it("o padrão é o Suave (o Engraçado nunca vem ligado)", () => {
-    expect(DEFAULT_PREFERENCES.sound.pack).toBe("suave");
+  it("o padrão é o Madeira (o Engraçado nunca vem ligado)", () => {
+    expect(DEFAULT_PREFERENCES.sound.pack).toBe("madeira");
   });
 
   it("formato antigo ganha grupos e opção do adversário sem perder a escolha", () => {
@@ -103,7 +141,7 @@ describe("preferências de som", () => {
       groups: { lances: true, feedback: true, interface: false },
       opponent: true,
     });
-    expect(parsePreferences({ sound: { pack: "inexistente" } }).sound.pack).toBe("suave");
+    expect(parsePreferences({ sound: { pack: "inexistente" } }).sound.pack).toBe("madeira");
   });
 });
 

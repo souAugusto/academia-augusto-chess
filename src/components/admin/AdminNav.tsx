@@ -15,6 +15,7 @@ const LINKS = [
   { href: "/admin/titulos", label: "Títulos" },
   { href: "/admin/puzzle-do-dia", label: "Puzzle do dia" },
   { href: "/admin/configuracoes", label: "Lives e grupos" },
+  { href: "/admin/notificacoes", label: "Notificações" },
 ];
 
 export function AdminNav() {

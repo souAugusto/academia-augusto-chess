@@ -125,3 +125,9 @@ export const IconLogout = (p: IconProps) => (
     <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4" />
   </Icon>
 );
+
+export const IconBell = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M6 9a6 6 0 1 1 12 0c0 4.5 1.5 6.5 2.2 7.3a.4.4 0 0 1-.3.7H4.1a.4.4 0 0 1-.3-.7C4.5 15.5 6 13.5 6 9zM10 20a2.2 2.2 0 0 0 4 0" />
+  </Icon>
+);

@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { MoveClass } from "@/lib/analysis/classify";
 import { winChance, type EngineScore } from "@/lib/analysis/winprob";
 import { CLASS_COLOR } from "./MoveClassIcon";
@@ -12,7 +13,7 @@ export type GraphMark = { index: number; cls: MoveClass | "momento" };
 // Gráfico da chance das brancas ao longo da partida (branco em cima, preto
 // embaixo). Clicar leva ao lance; marcadores nos momentos-chave, brilhantes e
 // erros graves.
-export function EvalGraph({
+export const EvalGraph = memo(function EvalGraph({
   evals,
   total,
   current,
@@ -96,4 +97,4 @@ export function EvalGraph({
       })}
     </svg>
   );
-}
+});
