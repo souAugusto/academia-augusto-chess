@@ -13,8 +13,10 @@ export const SOUND_EVENTS = [
   "castle",
   "promote",
   "mate",
+  "gameEnd",
   "correct",
   "wrong",
+  "hint",
   "solved",
   "cycleEnd",
   "title",
@@ -30,8 +32,10 @@ export const SOUND_EVENT_LABELS: Record<SoundEvent, string> = {
   castle: "Roque",
   promote: "Promoção",
   mate: "Xeque-mate",
+  gameEnd: "Fim de partida",
   correct: "Lance correto",
   wrong: "Lance errado",
+  hint: "Dica",
   solved: "Puzzle resolvido",
   cycleEnd: "Fim de ciclo",
   title: "Título conquistado",
@@ -48,8 +52,10 @@ export const SOUND_GROUP_OF: Record<SoundEvent, SoundGroup> = {
   castle: "lances",
   promote: "lances",
   mate: "lances",
+  gameEnd: "lances",
   correct: "feedback",
   wrong: "feedback",
+  hint: "feedback",
   solved: "feedback",
   cycleEnd: "feedback",
   title: "feedback",
@@ -294,6 +300,10 @@ function suave(event: SoundEvent): Voice[] {
       return [tap(0, 520), note(0.05, 784, 0.14, 0.35), note(0.12, 1047, 0.2, 0.35)];
     case "mate":
       return [tap(0, 360, 1), note(0.06, 659, 0.2, 0.4), note(0.16, 523, 0.35, 0.4)];
+    case "gameEnd":
+      return [tap(0, 420), note(0.06, 523, 0.3, 0.35), note(0.16, 523, 0.35, 0.3)];
+    case "hint":
+      return [note(0, 880, 0.2, 0.28)];
     case "correct":
       return [note(0, 659, 0.16, 0.4), note(0.08, 831, 0.22, 0.4)];
     case "wrong":
@@ -318,38 +328,69 @@ function suave(event: SoundEvent): Voice[] {
 
 // Madeira: peça de madeira batendo num tabuleiro de madeira, com corpo.
 function madeira(event: SoundEvent): Voice[] {
-  const k = (at: number, gain = 0.9, low = 1) =>
-    knock(at, { band: 1250 * low, q: 2.2, body: 260 * low, drop: 0.7, decay: 38, gain });
+  // Peça de madeira maciça num tabuleiro de madeira: estalo seco em ~800 Hz,
+  // corpo de ~175 Hz que cai de tom e uma camada bem grave (~90 Hz) que dá
+  // peso. Decaimento curto (seco), sem estalos agudos.
+  const k = (at: number, gain = 0.95, low = 1): Voice[] => [
+    ...knock(at, {
+      band: 800 * low,
+      q: 1.6,
+      body: 175 * low,
+      drop: 0.55,
+      decay: 30,
+      gain,
+      click: 0.12,
+      noise: 0.55,
+    }),
+    tone(at, 92 * low, 0.12, gain * 0.55, 34, {
+      to: 70 * low,
+      glide: "exp",
+      attack: 0.002,
+    }),
+  ];
+  // Bloco de madeira afinado, uma oitava abaixo do antigo (mais encorpado).
+  const block = (at: number, freq: number, gain = 0.4, dur = 0.3): Voice[] => [
+    ...marimba(at, freq, gain, dur),
+    tone(at, freq / 2, dur * 0.6, gain * 0.35, 14, { attack: 0.002 }),
+  ];
   switch (event) {
     case "move":
       return k(0);
     case "capture":
-      return [...k(0, 1, 0.8), ...k(0.045, 0.6, 0.95)];
+      return [...k(0, 1, 0.85), ...k(0.035, 0.8, 0.72)];
     case "check":
-      return [...k(0), ...marimba(0.05, 784, 0.4, 0.25), ...marimba(0.13, 1047, 0.4, 0.3)];
+      return [...k(0), ...block(0.06, 392, 0.38, 0.22), ...block(0.14, 523, 0.38, 0.28)];
     case "castle":
-      return [...k(0), ...k(0.1, 0.8, 0.92)];
+      return [...k(0), ...k(0.1, 0.85, 0.9)];
     case "promote":
-      return [...k(0), ...chord(0.06, [659, 784, 1047], 0.07, (a, f) => marimba(a, f, 0.35))];
+      return [...k(0), ...chord(0.07, [392, 523, 659], 0.07, (t, f) => block(t, f, 0.32))];
     case "mate":
-      return [...k(0, 1, 0.75), ...k(0.05, 0.7, 0.8), ...chord(0.12, [523, 659, 784], 0.09, (a, f) => marimba(a, f, 0.38, 0.5))];
+      return [
+        ...k(0, 1, 0.75),
+        ...k(0.05, 0.85, 0.68),
+        ...chord(0.13, [196, 247, 294], 0.09, (t, f) => block(t, f, 0.36, 0.55)),
+      ];
+    case "gameEnd":
+      return [...k(0, 0.85, 0.8), ...chord(0.1, [262, 330, 392], 0.09, (t, f) => block(t, f, 0.3, 0.5))];
     case "correct":
-      return [...marimba(0, 659), ...marimba(0.08, 880)];
+      return [...block(0, 392), ...block(0.08, 523)];
     case "wrong":
-      return [...marimba(0, 392, 0.35, 0.25), ...marimba(0.12, 330, 0.3, 0.35)];
+      return [...block(0, 294, 0.32, 0.25), ...block(0.12, 247, 0.28, 0.35)];
+    case "hint":
+      return block(0, 523, 0.26, 0.3);
     case "solved":
-      return chord(0, [523, 659, 784], 0.08, (a, f) => marimba(a, f, 0.4));
+      return chord(0, [392, 494, 587], 0.08, (t, f) => block(t, f, 0.36));
     case "cycleEnd":
-      return chord(0, [523, 659, 784, 1047], 0.1, (a, f) => marimba(a, f, 0.38, 0.5));
+      return chord(0, [392, 494, 587, 784], 0.1, (t, f) => block(t, f, 0.34, 0.5));
     case "title":
       return [
-        ...chord(0, [392, 523, 659, 784], 0.11, (a, f) => marimba(a, f, 0.36)),
-        ...chord(0.46, [523, 784, 1047], 0, (a, f) => marimba(a, f, 0.32, 0.9)),
+        ...chord(0, [294, 392, 494, 587], 0.11, (t, f) => block(t, f, 0.32)),
+        ...chord(0.46, [392, 587, 784], 0, (t, f) => block(t, f, 0.28, 0.9)),
       ];
     case "brilliant":
-      return chord(0, [784, 988, 1175, 1568], 0.055, (a, f) => marimba(a, f, 0.3, 0.45));
+      return chord(0, [523, 659, 784, 1047], 0.055, (t, f) => block(t, f, 0.26, 0.45));
     case "ui":
-      return knock(0, { band: 2400, q: 3, body: 600, drop: 0.8, decay: 90, gain: 0.25 });
+      return knock(0, { band: 1100, q: 2, body: 320, drop: 0.7, decay: 80, gain: 0.25, click: 0.05 });
   }
 }
 
@@ -388,6 +429,10 @@ function oco(event: SoundEvent): Voice[] {
       return [...block(0, 523), ...block(0.08, 784)];
     case "wrong":
       return [...block(0, 330, 0.4), ...block(0.13, 277, 0.35, 0.35)];
+    case "hint":
+      return block(0, 659, 0.3);
+    case "gameEnd":
+      return [...k(0, 0.85), ...chord(0.1, [330, 392, 494], 0.09, (a, f) => block(a, f, 0.32, 0.5))];
     case "solved":
       return chord(0, [392, 523, 659], 0.08, (a, f) => block(a, f, 0.42));
     case "cycleEnd":
@@ -426,6 +471,10 @@ function arcade(event: SoundEvent): Voice[] {
       return coin(0);
     case "wrong":
       return [blip(0, 196, 0.12, 0.26, 165)];
+    case "hint":
+      return [blip(0, 1319, 0.05, 0.2), blip(0.06, 1568, 0.08, 0.2)];
+    case "gameEnd":
+      return [523, 392, 330].map((f, i) => blip(i * 0.09, f, 0.12, 0.26));
     case "solved":
       return [...coin(0), blip(0.3, 1568, 0.2, 0.26)];
     case "cycleEnd":
@@ -479,6 +528,10 @@ function engracado(event: SoundEvent): Voice[] {
       ];
     case "solved":
       return [pop(0, 420), pop(0.08, 520), pop(0.16, 640), boing(0.24, 440, 1100, 0.25, 0.35)];
+    case "hint":
+      return [pop(0, 600, 0.4), pop(0.09, 800, 0.35)];
+    case "gameEnd":
+      return [boing(0, 440, 330, 0.35, 0.35), pop(0.32, 500, 0.4)];
     case "cycleEnd":
       return [whistle(0, 400, 1400, 0.4), ...chord(0.42, [523, 659, 784, 1047], 0.07, (a, f) => [pop(a, f / 2, 0.45)])];
     case "title":
@@ -520,6 +573,8 @@ export const VIBRATION_PATTERNS: Record<SoundEvent, number[]> = {
   castle: [12, 40, 12],
   promote: [15, 30, 25],
   mate: [40, 50, 40],
+  gameEnd: [30, 50, 30],
+  hint: [8, 30, 8],
   correct: [10],
   wrong: [30, 40, 10],
   solved: [15, 30, 15, 30, 15],

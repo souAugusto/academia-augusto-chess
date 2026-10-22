@@ -202,6 +202,7 @@ export function PuzzleBoard({
   }
 
   function showHint() {
+    playSound("hint");
     const expected = line[game.index];
     if (!active || !expected) return;
     assisted.current = true;

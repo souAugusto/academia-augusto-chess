@@ -43,8 +43,8 @@ export const PIECE_SETS = [
 ] as const;
 // "engracado" nunca é o padrão; "vibracao" só aparece onde o aparelho vibra.
 export const SOUND_PACKS = [
-  "suave",
   "madeira",
+  "suave",
   "oco",
   "arcade",
   "engracado",
@@ -61,7 +61,7 @@ export type SoundPack = (typeof SOUND_PACKS)[number];
 export const DEFAULT_PREFERENCES = {
   // Versão do formato. 1: até o Bloco 1 do prompt de sons e temas (temas
   // verde/azul/cinza/roxo, sons sem grupos). 2: atual. Ver migratePreferences.
-  v: 2 as const,
+  v: 3 as const,
   board: {
     theme: "finale" as BoardTheme,
     coordinates: "dentro" as Coordinates,
@@ -76,7 +76,7 @@ export const DEFAULT_PREFERENCES = {
   sound: {
     enabled: true,
     volume: 50,
-    pack: "suave" as SoundPack,
+    pack: "madeira" as SoundPack, // padrão desde 2026-10-22 (antes: suave)
     // Grupos: lances (movimento, captura...), feedback (certo, errado,
     // título) e interface (cliques). Interface começa desligada.
     groups: { lances: true, feedback: true, interface: false },
@@ -96,7 +96,7 @@ const keep = z.catch;
 const bool = (value: boolean) => keep(z.boolean(), value);
 
 export const preferencesSchema = z.object({
-  v: keep(z.literal(2), 2),
+  v: keep(z.literal(3), 3),
   board: keep(
     z.object({
       theme: keep(z.enum(BOARD_THEMES), d.board.theme),
@@ -143,16 +143,24 @@ export const preferencesSchema = z.object({
 
 export const MAX_PREFERENCES_BYTES = 2048;
 
-export const PREFERENCES_VERSION = 2;
+export const PREFERENCES_VERSION = 3;
 
 // Converte um formato antigo para o atual, sem perder a escolha do aluno:
-// - temas renomeados (verde, azul, cinza, roxo) viram os equivalentes novos;
+// - v1 → v2: temas renomeados (verde, azul, cinza, roxo) viram os novos;
+// - v2 → v3: o padrão de som passou a ser Madeira; quem estava no Suave (o
+//   padrão antigo, quase sempre sem ter escolhido) vai para Madeira (decisão
+//   do Augusto em 2026-10-22). Outros pacotes ficam como estão;
 // - sons ganham grupos e a opção do adversário com os valores padrão (feito
 //   abaixo, ao completar com os padrões).
 // Chaves desconhecidas continuam sendo descartadas pelo esquema.
 export function migratePreferences(value: object): object {
-  const source = value as { v?: unknown; board?: { theme?: unknown } };
+  const source = value as {
+    v?: unknown;
+    board?: { theme?: unknown };
+    sound?: { pack?: unknown };
+  };
   if (source.v === PREFERENCES_VERSION) return value;
+  const version = typeof source.v === "number" ? source.v : 1;
   const theme = source.board?.theme;
   return {
     ...value,
@@ -161,6 +169,10 @@ export function migratePreferences(value: object): object {
       typeof theme === "string" && theme in LEGACY_BOARD_THEMES
         ? { ...source.board, theme: LEGACY_BOARD_THEMES[theme] }
         : source.board,
+    sound:
+      version < 3 && source.sound?.pack === "suave"
+        ? { ...source.sound, pack: "madeira" }
+        : source.sound,
   };
 }
 

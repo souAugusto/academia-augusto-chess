@@ -134,10 +134,17 @@ export function ChessBoard({
     const mine = ownMove.current;
     ownMove.current = false;
     const move = moveBetween(before, fen);
-    if (move)
-      playSound(soundForMove(move), {
-        opponent: soundMode === "jogo" && !mine,
-      });
+    if (!move) return;
+    const opponent = soundMode === "jogo" && !mine;
+    playSound(soundForMove(move), { opponent });
+    // Partida terminada sem mate (afogamento, repetição, material): som de fim.
+    if (soundMode === "jogo" && !move.san.includes("#")) {
+      try {
+        if (new Chess(fen).isDraw()) setTimeout(() => playSound("gameEnd"), 220);
+      } catch {
+        // FEN inválido: sem som.
+      }
+    }
   }, [fen, soundMode]);
 
   function submit(from: Square, to: Square, promo?: string): boolean {
