@@ -21,6 +21,7 @@ export const SOUND_EVENTS = [
   "cycleEnd",
   "title",
   "brilliant",
+  "notification",
   "ui",
 ] as const;
 export type SoundEvent = (typeof SOUND_EVENTS)[number];
@@ -40,6 +41,7 @@ export const SOUND_EVENT_LABELS: Record<SoundEvent, string> = {
   cycleEnd: "Fim de ciclo",
   title: "Título conquistado",
   brilliant: "Lance brilhante",
+  notification: "Nova notificação",
   ui: "Clique de interface",
 };
 
@@ -60,6 +62,7 @@ export const SOUND_GROUP_OF: Record<SoundEvent, SoundGroup> = {
   cycleEnd: "feedback",
   title: "feedback",
   brilliant: "feedback",
+  notification: "feedback",
   ui: "interface",
 };
 
@@ -321,6 +324,8 @@ function suave(event: SoundEvent): Voice[] {
       ];
     case "brilliant":
       return [784, 988, 1319].map((f, i) => note(i * 0.06, f, 0.4, 0.32, "sine"));
+    case "notification":
+      return [note(0, 880, 0.12, 0.22, "sine"), note(0.1, 1175, 0.2, 0.2, "sine")];
     case "ui":
       return [tone(0, 1200, 0.03, 0.18, 120, { wave: "sine" })];
   }
@@ -389,6 +394,8 @@ function madeira(event: SoundEvent): Voice[] {
       ];
     case "brilliant":
       return chord(0, [523, 659, 784, 1047], 0.055, (t, f) => block(t, f, 0.26, 0.45));
+    case "notification":
+      return [...block(0, 523, 0.22, 0.2), ...block(0.1, 659, 0.2, 0.3)];
     case "ui":
       return knock(0, { band: 1100, q: 2, body: 320, drop: 0.7, decay: 80, gain: 0.25, click: 0.05 });
   }
@@ -444,6 +451,8 @@ function oco(event: SoundEvent): Voice[] {
       ];
     case "brilliant":
       return chord(0, [523, 659, 784, 1047], 0.055, (a, f) => block(a, f, 0.32, 0.4));
+    case "notification":
+      return [...block(0, 523, 0.25, 0.2), ...block(0.1, 659, 0.22, 0.3)];
     case "ui":
       return knock(0, { band: 900, q: 4, body: 320, drop: 0.7, decay: 80, gain: 0.3, click: 0.1 });
   }
@@ -487,6 +496,8 @@ function arcade(event: SoundEvent): Voice[] {
       ];
     case "brilliant":
       return [1319, 1568, 2093, 2637].map((f, i) => blip(i * 0.04, f, 0.07, 0.22));
+    case "notification":
+      return [blip(0, 1319, 0.05, 0.18), blip(0.07, 1760, 0.08, 0.18)];
     case "ui":
       return [blip(0, 1760, 0.02, 0.16)];
   }
@@ -538,6 +549,8 @@ function engracado(event: SoundEvent): Voice[] {
       return [whistle(0, 350, 1500, 0.55), ...chord(0.55, [523, 659, 784], 0, (a, f) => [tone(a, f, 0.7, 0.3, 4, { wave: "triangle" })])];
     case "brilliant":
       return [boing(0, 440, 1320, 0.3, 0.38), pop(0.28, 900, 0.4)];
+    case "notification":
+      return [pop(0, 600, 0.35), pop(0.1, 900, 0.3)];
     case "ui":
       return [pop(0, 700, 0.3)];
   }
@@ -581,6 +594,7 @@ export const VIBRATION_PATTERNS: Record<SoundEvent, number[]> = {
   cycleEnd: [20, 30, 20, 30, 40],
   title: [30, 40, 30, 40, 60],
   brilliant: [10, 20, 10, 20, 30],
+  notification: [10, 60, 10],
   ui: [6],
 };
 
