@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FinaleMark } from "@/components/brand/FinaleMark";
+import { InstallButton } from "@/components/pwa/InstallButton";
 import { BRAND } from "@/content/brand";
 
 const LINKS = [
@@ -27,6 +28,7 @@ export function SiteFooter() {
               {link.label}
             </Link>
           ))}
+          <InstallButton />
         </nav>
       </div>
     </footer>

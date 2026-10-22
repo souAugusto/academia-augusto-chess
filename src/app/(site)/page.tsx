@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import Link from "next/link";
 import { SectionIcon } from "@/components/app/SectionIcon";
 import { Hero } from "@/components/home/Hero";
@@ -62,6 +63,8 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* Convite para instalar o app (só celular, só nas páginas de entrada). */}
+      <InstallPrompt />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

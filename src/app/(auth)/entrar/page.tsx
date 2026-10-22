@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { GoogleButton, OrDivider } from "@/components/auth/GoogleButton";
+import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { HOME_LOGGED_IN, safeNextPath } from "@/lib/routes";
 
 export const metadata: Metadata = { title: "Entrar" };
@@ -26,6 +27,8 @@ export default async function EntrarPage({
 
   return (
     <>
+      {/* Convite para instalar o app (só celular, só nas páginas de entrada). */}
+      <InstallPrompt />
       <AuthTabs
         initialTab={tab}
         next={next}
