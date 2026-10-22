@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { CLASS_LABELS, type ReviewedMove } from "@/lib/analysis/classify";
 import { sanToPortuguese } from "@/lib/chess/notation";
 import { MoveClassIcon } from "./MoveClassIcon";
 
 // Lista de lances em duas colunas (brancas e pretas) com o ícone da classe.
 // O lance atual fica destacado e a lista rola sozinha até ele.
-export function MoveList({
+// memo: a lista só redesenha quando os lances, as classes ou o lance atual mudam
+// (e não a cada atualização do painel da análise).
+export const MoveList = memo(function MoveList({
   sans,
   reviewed,
   current,
@@ -70,4 +72,4 @@ export function MoveList({
       ))}
     </ol>
   );
-}
+});

@@ -46,6 +46,8 @@ export function HeroVideo() {
           alt=""
           className="hero-media"
           decoding="async"
+          // É o maior elemento visível da página inicial: baixa primeiro.
+          fetchPriority="high"
         />
       </picture>
       {allowed && (

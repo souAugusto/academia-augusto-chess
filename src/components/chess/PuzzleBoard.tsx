@@ -10,7 +10,6 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { motion } from "framer-motion";
 import type { Arrow } from "react-chessboard";
 import { buttonClasses } from "@/components/ui/button";
 import type { PuzzleRecord } from "@/lib/chess/puzzle";
@@ -305,13 +304,10 @@ export function PuzzleBoard({
       below={below}
     >
       {/* Altura mínima fixa: o painel não pula quando a mensagem muda. */}
-      <motion.p
+      <p
         key={statusText}
-        initial={{ opacity: 0, y: 4 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2 }}
         aria-live="polite"
-        className={`min-h-12 text-[0.9375rem] font-medium ${
+        className={`reveal-in min-h-12 text-[0.9375rem] font-medium ${
           game.phase === "solved"
             ? "text-success"
             : game.phase === "failed"
@@ -320,7 +316,7 @@ export function PuzzleBoard({
         }`}
       >
         {statusText}
-      </motion.p>
+      </p>
       {result}
       <MoveInput
         fen={game.fen}

@@ -1,10 +1,11 @@
-import { z } from "zod";
+// zod/mini: este arquivo também roda no navegador (cliente do Supabase).
+import * as z from "zod/mini";
 
 // Variáveis públicas: o Next embute no bundle do navegador. Precisam ser lidas
 // por nome literal (process.env.NEXT_PUBLIC_X) para a substituição funcionar.
 const publicSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.url(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().check(z.minLength(1)),
 });
 
 export function publicEnv() {

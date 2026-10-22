@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod/mini";
 
 // Preferências de tabuleiro, peças e sons. Ficam em profiles.preferences (jsonb,
 // até 2 KB) para quem está logado e no localStorage para visitantes e como cache.
@@ -90,43 +90,55 @@ export type Preferences = typeof DEFAULT_PREFERENCES;
 
 const d = DEFAULT_PREFERENCES;
 
+// zod/mini: a mesma validação, num pacote bem menor (este arquivo vai para o
+// navegador em todas as páginas, junto com as preferências).
+const keep = z.catch;
+const bool = (value: boolean) => keep(z.boolean(), value);
+
 export const preferencesSchema = z.object({
-  v: z.literal(2).catch(2),
-  board: z
-    .object({
-      theme: z.enum(BOARD_THEMES).catch(d.board.theme),
-      coordinates: z.enum(COORDINATES).catch(d.board.coordinates),
-      lastMove: z.boolean().catch(d.board.lastMove),
-      legalMoves: z.boolean().catch(d.board.legalMoves),
-      animation: z.enum(ANIMATION_SPEEDS).catch(d.board.animation),
-      moveMethod: z.enum(MOVE_METHODS).catch(d.board.moveMethod),
-      autoQueen: z.boolean().catch(d.board.autoQueen),
-      confirmMove: z.boolean().catch(d.board.confirmMove),
-    })
-    .catch(d.board),
-  pieces: z.enum(PIECE_SETS).catch(d.pieces),
-  sound: z
-    .object({
-      enabled: z.boolean().catch(d.sound.enabled),
-      volume: z.number().int().min(0).max(100).catch(d.sound.volume),
-      pack: z.enum(SOUND_PACKS).catch(d.sound.pack),
-      groups: z
-        .object({
-          lances: z.boolean().catch(d.sound.groups.lances),
-          feedback: z.boolean().catch(d.sound.groups.feedback),
-          interface: z.boolean().catch(d.sound.groups.interface),
-        })
-        .catch(d.sound.groups),
-      opponent: z.boolean().catch(d.sound.opponent),
-    })
-    .catch(d.sound),
-  emails: z
-    .object({
-      lembretes: z.boolean().catch(d.emails.lembretes),
-      novidades: z.boolean().catch(d.emails.novidades),
-      assinatura: z.boolean().catch(d.emails.assinatura),
-    })
-    .catch(d.emails),
+  v: keep(z.literal(2), 2),
+  board: keep(
+    z.object({
+      theme: keep(z.enum(BOARD_THEMES), d.board.theme),
+      coordinates: keep(z.enum(COORDINATES), d.board.coordinates),
+      lastMove: bool(d.board.lastMove),
+      legalMoves: bool(d.board.legalMoves),
+      animation: keep(z.enum(ANIMATION_SPEEDS), d.board.animation),
+      moveMethod: keep(z.enum(MOVE_METHODS), d.board.moveMethod),
+      autoQueen: bool(d.board.autoQueen),
+      confirmMove: bool(d.board.confirmMove),
+    }),
+    d.board,
+  ),
+  pieces: keep(z.enum(PIECE_SETS), d.pieces),
+  sound: keep(
+    z.object({
+      enabled: bool(d.sound.enabled),
+      volume: keep(
+        z.number().check(z.int(), z.minimum(0), z.maximum(100)),
+        d.sound.volume,
+      ),
+      pack: keep(z.enum(SOUND_PACKS), d.sound.pack),
+      groups: keep(
+        z.object({
+          lances: bool(d.sound.groups.lances),
+          feedback: bool(d.sound.groups.feedback),
+          interface: bool(d.sound.groups.interface),
+        }),
+        d.sound.groups,
+      ),
+      opponent: bool(d.sound.opponent),
+    }),
+    d.sound,
+  ),
+  emails: keep(
+    z.object({
+      lembretes: bool(d.emails.lembretes),
+      novidades: bool(d.emails.novidades),
+      assinatura: bool(d.emails.assinatura),
+    }),
+    d.emails,
+  ),
 });
 
 export const MAX_PREFERENCES_BYTES = 2048;

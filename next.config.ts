@@ -27,6 +27,18 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // Peças, vídeo da página inicial e licenças: os nomes não mudam a cada
+        // versão, então cache de 7 dias com atualização em segundo plano (uma
+        // troca de arquivo chega em até uma semana, sem travar ninguém).
+        source: "/:dir(pieces|videos|licencas)/:file*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
         // O service worker nunca fica em cache, para as atualizações chegarem logo.
         source: "/sw.js",
         headers: [

@@ -102,16 +102,20 @@ export function AnalysisWorkbench({
   const engine = useRef<StockfishClient | null>(null);
   const abort = useRef<AbortController | null>(null);
 
+  // A teoria de aberturas (~76 KB) só é baixada quando há partida para
+  // mostrar: análise guardada agora, partida nova quando a análise começa.
   useEffect(() => {
     let alive = true;
-    void loadOpeningBook().then((value) => {
-      if (alive) setBook(value);
-    });
+    if (initial.kind === "salva")
+      void loadOpeningBook().then((value) => {
+        if (alive) setBook(value);
+      });
     return () => {
       alive = false;
       abort.current?.abort();
       engine.current?.terminate();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- só ao abrir
   }, []);
 
   // Análise guardada com regras antigas (mesmo motor): o resumo é refeito no
@@ -164,6 +168,9 @@ export function AnalysisWorkbench({
     setSaved(null);
     setOutdated(false);
     setSlowDismissed(false);
+    // Teoria de aberturas: carregada agora (vale para cache, servidor e motor).
+    const openingBook = book ?? (await loadOpeningBook());
+    setBook(openingBook);
 
     if (options.useCache) {
       // 1. Cache do aparelho. 2. Análise guardada no servidor.
@@ -193,7 +200,6 @@ export function AnalysisWorkbench({
       progress: { phase: 1, done: 0, total },
       slow: false,
     });
-    const openingBook = book ?? (await loadOpeningBook());
     const { bookPlies } = theoryOf(target.game.fens, openingBook);
     const started = performance.now();
     const result = await runAnalysis({

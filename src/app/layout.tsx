@@ -1,4 +1,3 @@
-import { MotionProvider } from "@/components/motion/MotionProvider";
 import { PreferencesProvider } from "@/components/preferences/PreferencesProvider";
 import { ToastProvider } from "@/components/ui/Toast";
 import type { Metadata, Viewport } from "next";
@@ -10,8 +9,9 @@ import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 
+// Sem o eixo "opsz" (ajuste óptico): o arquivo cai pela metade e a diferença
+// nos títulos é imperceptível.
 const fraunces = Fraunces({
-  axes: ["opsz"],
   variable: "--font-fraunces",
   subsets: ["latin"],
 });
@@ -54,11 +54,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>
       <body className="flex min-h-full flex-col">
-        <MotionProvider>
           <PreferencesProvider>
             <ToastProvider>{children}</ToastProvider>
           </PreferencesProvider>
-        </MotionProvider>
         <ServiceWorkerRegister />
       </body>
     </html>

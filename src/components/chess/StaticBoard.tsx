@@ -3,7 +3,7 @@
 import { useBoardPreferences } from "@/components/preferences/PreferencesProvider";
 import { boardSquares, type Color } from "@/lib/chess/puzzle";
 import { BOARD_THEME_OPTIONS, pieceUrl } from "@/lib/preferences/options";
-import { boardFrameStyle } from "./ChessBoard";
+import { boardFrameStyle } from "./frameStyle";
 
 type StaticBoardProps = {
   fen: string;
