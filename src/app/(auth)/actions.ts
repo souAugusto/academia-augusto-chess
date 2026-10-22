@@ -1,6 +1,14 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import {
+  GOOGLE_CALLBACK_PATH,
+  GOOGLE_COOKIE,
+  googleAuthUrl,
+  googleConfig,
+  randomToken,
+} from "@/lib/auth/google";
 import { siteOrigin } from "@/lib/origin";
 import { HOME_LOGGED_IN, safeNextPath } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
@@ -124,6 +132,30 @@ export async function signup(
 
 export async function signInWithGoogle(formData: FormData): Promise<void> {
   const next = safeNextPath(text(formData, "next"), PLANOS);
+  // Com as chaves do Google configuradas, o retorno passa pelo nosso domínio
+  // (a tela do Google mostra academiafinale.site). Sem elas, usa o fluxo
+  // padrão do Supabase.
+  const google = googleConfig();
+  if (google) {
+    const state = randomToken();
+    const nonce = randomToken();
+    const store = await cookies();
+    store.set(GOOGLE_COOKIE, JSON.stringify({ state, nonce, next }), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: GOOGLE_CALLBACK_PATH,
+      maxAge: 600,
+    });
+    redirect(
+      googleAuthUrl({
+        clientId: google.clientId,
+        redirectUri: `${await siteOrigin()}${GOOGLE_CALLBACK_PATH}`,
+        state,
+        nonce,
+      }),
+    );
+  }
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
