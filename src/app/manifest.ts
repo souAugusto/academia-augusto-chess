@@ -3,7 +3,9 @@ import { BRAND } from "@/content/brand";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: BRAND.fullName,
+    // id fixo: identifica o app instalado mesmo se o start_url mudar.
+    id: "/",
+    name: "Academia Finale",
     short_name: BRAND.shortName,
     description: BRAND.description,
     lang: "pt-BR",

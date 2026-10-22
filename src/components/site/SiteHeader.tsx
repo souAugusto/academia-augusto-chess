@@ -7,7 +7,7 @@ import { SITE_NAV_LINKS } from "./nav-links";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-glass backdrop-blur-xl">
+    <header className="safe-top sticky top-0 z-30 border-b border-border bg-glass backdrop-blur-xl">
       <div className="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6">
         <Logo href="/" />
         <nav

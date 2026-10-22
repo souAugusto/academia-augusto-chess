@@ -15,7 +15,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   await requireAdmin();
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-border bg-glass backdrop-blur-xl">
+      <header className="safe-top sticky top-0 z-30 border-b border-border bg-glass backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 pt-2.5 sm:px-6">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
