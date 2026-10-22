@@ -9,7 +9,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-border bg-glass backdrop-blur-xl">
+      <header className="safe-top sticky top-0 z-30 border-b border-border bg-glass backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6">
           <Logo href="/painel" />
           <AppTopNav />

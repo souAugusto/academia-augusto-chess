@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   title: { default: `${BRAND.fullName}`, template: `%s · ${BRAND.shortName}` },
   description: BRAND.description,
   applicationName: BRAND.shortName,
+  // O Next gera "mobile-web-app-capable"; o iOS antigo ainda lê a tag da Apple.
+  other: { "apple-mobile-web-app-capable": "yes" },
   appleWebApp: {
     capable: true,
     title: BRAND.shortName,
@@ -39,6 +41,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#0B0D12",
+  width: "device-width",
+  initialScale: 1,
   viewportFit: "cover",
 };
 
