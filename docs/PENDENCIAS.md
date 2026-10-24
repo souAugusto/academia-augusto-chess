@@ -30,5 +30,4 @@
 - **Recibos:** o histórico de pagamentos mostra o link do recibo/fatura só quando o Asaas fornece; não há recibo próprio da Finale.
 - **Medir a análise profunda num celular Android intermediário.** Abra uma partida de ~40 lances na versão de teste e anote o tempo. Se passar muito de 5 minutos, reduzir a passagem 2 ou a profundidade em `ANALYSIS_PROFILE` (e subir `algoVersion` se mudar regra).
 - **Calibrar Brilhante/Ótimo com partidas reais dos alunos** (`npx tsx scripts/calibrar-analise.ts`). As regras são uma heurística própria e podem divergir do Chess.com.
-- **Migration 0023 (interruptores do site, esconder Aulas em vídeo):** escrita, aguardando "pode aplicar". Sem ela, tudo continua visível como hoje.
 - **Equilíbrio dos personagens:** a força de cada nível foi ajustada por configuração e testes automáticos, não por partidas reais. Jogar alguns níveis e dizer se algum está fácil ou difícil demais (ajuste em `src/content/personagens.ts`).
