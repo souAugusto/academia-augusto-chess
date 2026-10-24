@@ -30,7 +30,9 @@ import {
   getIntensivoSeatsLeft,
   getPlans,
 } from "@/lib/data/public";
+import { getSiteSettings } from "@/lib/data/site-settings";
 import { homeJsonLd, serializeJsonLd } from "@/lib/seo/jsonld";
+import { hiddenSections } from "@/lib/site-settings";
 
 const SITE =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.academiafinale.site";
@@ -57,11 +59,14 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [plans, seatsLeft, puzzle] = await Promise.all([
+  const [plans, seatsLeft, puzzle, settings] = await Promise.all([
     getPlans(),
     getIntensivoSeatsLeft(),
     getDailyPuzzle(),
+    getSiteSettings(),
   ]);
+  // Áreas desligadas pelo admin não aparecem nos cards (os textos ficam).
+  const hidden = hiddenSections(settings);
 
   return (
     <>
@@ -87,17 +92,19 @@ export default async function HomePage() {
       <Section id="modulos" className="py-20">
         <SectionHeading label={MODULES.label} title={MODULES.title} />
         <ul className="grid gap-5 sm:grid-cols-2">
-          {MODULES.items.map((item) => {
-            return (
-              <Card as="li" key={item.id} className="flex flex-col gap-3 p-7">
-                <span className="flex size-11 items-center justify-center rounded-control bg-surface-2 text-accent-text">
-                  <SectionIcon id={item.id} className="size-6" />
-                </span>
-                <h3 className="text-xl font-semibold">{item.title}</h3>
-                <p className="leading-relaxed text-muted">{item.text}</p>
-              </Card>
-            );
-          })}
+          {MODULES.items
+            .filter((item) => !hidden.has(item.id))
+            .map((item) => {
+              return (
+                <Card as="li" key={item.id} className="flex flex-col gap-3 p-7">
+                  <span className="flex size-11 items-center justify-center rounded-control bg-surface-2 text-accent-text">
+                    <SectionIcon id={item.id} className="size-6" />
+                  </span>
+                  <h3 className="text-xl font-semibold">{item.title}</h3>
+                  <p className="leading-relaxed text-muted">{item.text}</p>
+                </Card>
+              );
+            })}
         </ul>
       </Section>
 

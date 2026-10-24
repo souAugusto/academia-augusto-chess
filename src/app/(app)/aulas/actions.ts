@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { checkPlan } from "@/lib/data/access";
+import { siteFlagAllowed } from "@/lib/data/site-settings";
 import { createClient } from "@/lib/supabase/server";
 
 const schema = z.object({
@@ -21,6 +22,7 @@ export async function setLessonCompleted(input: {
   if (!parsed.success) return { ok: false };
   const access = await checkPlan(1);
   if (!access.ok) return { ok: false };
+  if (!(await siteFlagAllowed("video_lessons_enabled"))) return { ok: false };
 
   const supabase = await createClient();
   const { lessonId, completed, path } = parsed.data;

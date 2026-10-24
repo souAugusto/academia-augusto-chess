@@ -14,7 +14,7 @@ const LINKS = [
   { href: "/admin/trilhas", label: "Trilhas" },
   { href: "/admin/titulos", label: "Títulos" },
   { href: "/admin/puzzle-do-dia", label: "Puzzle do dia" },
-  { href: "/admin/configuracoes", label: "Lives e grupos" },
+  { href: "/admin/configuracoes", label: "Configurações" },
   { href: "/admin/notificacoes", label: "Notificações" },
 ];
 

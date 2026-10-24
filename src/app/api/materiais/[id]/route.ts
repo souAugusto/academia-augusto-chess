@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { checkPlan } from "@/lib/data/access";
 import { isUuid } from "@/lib/data/courses";
+import { siteFlagAllowed } from "@/lib/data/site-settings";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
@@ -20,6 +21,9 @@ export async function GET(
     return new NextResponse(null, {
       status: access.reason === "login" ? 401 : 403,
     });
+  // Aulas desligadas pelo admin: sem material (o RLS também esconde).
+  if (!(await siteFlagAllowed("video_lessons_enabled")))
+    return new NextResponse(null, { status: 404 });
 
   // A leitura passa pelo RLS: o arquivo só aparece se a aula for do plano do aluno.
   const supabase = await createClient();

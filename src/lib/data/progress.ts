@@ -183,6 +183,9 @@ export async function listTrails(): Promise<TrailView[]> {
         title: row.title,
         position: row.position,
       }))
+      // Aula que o aluno não enxerga (não publicada, ou aulas desligadas pelo
+      // admin) sai da trilha e da contagem; volta quando ficar visível.
+      .filter((step) => step.kind !== "lesson" || courseOf.has(step.refId))
       .sort((a, b) => a.position - b.position);
     const progress = trailProgress(trailSteps, done);
     const hrefOf = (step: TrailStep) =>
