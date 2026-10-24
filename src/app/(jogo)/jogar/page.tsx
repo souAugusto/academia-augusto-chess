@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { BotGameList } from "@/components/bot/BotGameList";
 import { BotTrail } from "@/components/bot/BotTrail";
 import { SectionLabel } from "@/components/ui/Label";
 import { BRAND } from "@/content/brand";
-import { getBotPlayer } from "@/lib/data/bot-progress";
+import { getBotGames, getBotPlayer } from "@/lib/data/bot-progress";
 
 const DESCRIPTION =
   "Jogue xadrez contra 10 personagens, do Peãozinho Curioso ao Rei Final. Grátis, no celular ou no computador.";
@@ -23,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export default async function JogarPage() {
-  const { loggedIn, progress } = await getBotPlayer();
+  const [{ loggedIn, progress }, games] = await Promise.all([getBotPlayer(), getBotGames(5)]);
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-8">
       <div className="flex flex-col gap-2">
@@ -37,6 +39,15 @@ export default async function JogarPage() {
         </p>
       </div>
       <BotTrail loggedIn={loggedIn} serverProgress={progress} />
+      <section className="flex flex-col gap-3">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="font-display text-xl font-semibold">Últimas partidas</h2>
+          <Link href="/jogar/partidas" className="text-sm font-semibold text-accent-text hover:underline">
+            Ver todas
+          </Link>
+        </div>
+        <BotGameList games={games} limit={5} />
+      </section>
     </div>
   );
 }

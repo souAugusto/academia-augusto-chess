@@ -142,3 +142,9 @@ Decisões do Augusto: só o motor do site (sem nuvem nem análise do Lichess), g
 - **Progresso aceita o resultado do navegador:** é motivação pessoal, sem ranking nem prêmio; um aluno técnico poderia forjar vitórias. Não criar ranking com prêmio sem validar as partidas no servidor.
 - **Conquistas:** calculadas do progresso (não ficam guardadas) e mostradas no fim da partida e na trilha. Não viram notificação: as notificações atuais (0020) são avisos do admin; avisos pessoais automáticos ficam para depois.
 - **Motor só na tela da partida:** a trilha não carrega o Stockfish; a partida cria o Web Worker ao abrir e encerra ao sair.
+
+## Histórico de partidas contra o computador (2026-10-24)
+- **O que guarda:** lances (UCI), cor, resultado, motivo do fim, estrelas, precisão aproximada, marcas de erro dos lances do aluno, relógio e data. Com conta: até 200 por aluno no banco (0022), a mais antiga sai. Visitante: as últimas 20 no aparelho, levadas para a conta ao entrar (o id da partida é criado no aparelho, então não duplica).
+- **Conferência no servidor:** os lances precisam ser legais e o "mate" precisa ser mate de fato; o resto (resultado de abandono, tempo, estrelas) é aceito do navegador, como o progresso (motivação pessoal, sem ranking).
+- **Gravação única:** `save_bot_game` soma no progresso e guarda a partida numa só chamada; se a mesma partida chegar duas vezes, a segunda é ignorada.
+- **Analisar a fundo:** a revisão abre `/analise?robo=<id>`, que já começa a análise completa com o PGN da partida (só para quem tem a análise no plano; os demais veem o aviso do plano).
