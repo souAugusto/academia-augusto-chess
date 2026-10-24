@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { z } from "zod";
 import {
   formObject,
@@ -8,6 +8,7 @@ import {
   zodMessage,
   type AdminState,
 } from "@/lib/data/admin";
+import { isSiteFlag, SITE_SETTINGS_TAG } from "@/lib/site-settings";
 import { createClient } from "@/lib/supabase/server";
 import {
   liveSchema,
@@ -68,4 +69,34 @@ export async function deleteLive(
   if (error) return { message: error.message };
   revalidatePath("/", "layout");
   return { success: "Live apagada." };
+}
+
+const flagSchema = z.object({
+  key: z.string().refine(isSiteFlag, "Configuração desconhecida."),
+  enabled: z.boolean(),
+});
+
+// Liga ou desliga uma área do site (site_settings). Vale na hora: expira o
+// cache das configurações e das páginas. Quando e quem alterou fica no banco.
+export async function setSiteFlag(input: {
+  key: string;
+  enabled: boolean;
+}): Promise<{ ok: boolean; message: string }> {
+  await requireAdmin();
+  const parsed = flagSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, message: zodMessage(parsed.error) };
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("site_settings")
+    .upsert({ key: parsed.data.key, enabled: parsed.data.enabled });
+  if (error)
+    return { ok: false, message: "Não consegui salvar. Tente de novo." };
+  updateTag(SITE_SETTINGS_TAG);
+  revalidatePath("/", "layout");
+  return {
+    ok: true,
+    message: parsed.data.enabled
+      ? "Aba exibida para todos."
+      : "Aba oculta para os usuários.",
+  };
 }

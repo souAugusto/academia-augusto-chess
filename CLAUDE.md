@@ -39,9 +39,9 @@ Next.js 16 (App Router) + TypeScript + Tailwind 4 · Supabase (Auth, Postgres, R
 - Dúvida de produto: perguntar uma vez, com recomendação. Não inventar regra de negócio.
 
 ## Onde está cada coisa
-- Schema e RLS: `supabase/migrations/` (0001 a 0020 aplicadas)
+- Schema e RLS: `supabase/migrations/` (0001 a 0022 aplicadas)
 - Pagamento: Asaas, webhook em `/api/pagamentos/asaas` (token no header `asaas-access-token`, idempotência em `payment_events`)
-- Painel admin: `/admin` (só quem está na tabela `admins`)
+- Painel admin: `/admin` (só quem está na tabela `admins`). Interruptores de áreas (ex.: esconder Aulas em vídeo) em `/admin/configuracoes`, tabela `site_settings`, lógica em `src/lib/site-settings.ts`
 - Vercel: projeto `finale-xadrez` (time sergio-codes), produção em https://www.academiafinale.site (domínio comprado na Vercel em 2026-10-16; academiafinale.site, finale-xadrez.vercel.app e o antigo academia-augusto-chess.vercel.app redirecionam)
 - Peças do tabuleiro: `public/pieces/cburnett/` (licença BSD)
 - Desenhos antigos da Augusto Chess (referência histórica de layout): `docs/design/`

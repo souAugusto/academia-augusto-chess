@@ -17,6 +17,8 @@ import {
   listTrails,
 } from "@/lib/data/progress";
 import { getMyTacticStats } from "@/lib/data/tactics";
+import { getSiteSettings, viewerIsAdmin } from "@/lib/data/site-settings";
+import { canSee, visibleSections } from "@/lib/site-settings";
 import { STEP_LABELS } from "@/lib/trails";
 
 export const metadata: Metadata = { title: "Painel" };
@@ -29,7 +31,16 @@ export default async function PainelPage({
     searchParams,
   ]);
   const plan = PLAN_NAMES[user.planRank];
-  const areas = APP_SECTIONS.filter((section) => section.id !== "painel");
+  const [settings, isAdmin] = await Promise.all([
+    getSiteSettings(),
+    viewerIsAdmin(),
+  ]);
+  const lessonsOn = canSee("video_lessons_enabled", settings, isAdmin);
+  const areas = visibleSections(
+    APP_SECTIONS.filter((section) => section.id !== "painel"),
+    settings,
+    isAdmin,
+  );
 
   if (!plan) {
     return (
@@ -53,7 +64,10 @@ export default async function PainelPage({
         </section>
         <p className="text-[0.9375rem] text-muted">
           Enquanto isso, você pode{" "}
-          <Link href="/jogar" className="font-semibold text-accent-text hover:underline">
+          <Link
+            href="/jogar"
+            className="font-semibold text-accent-text hover:underline"
+          >
             jogar contra o computador
           </Link>
           , aberto a todos.
@@ -67,7 +81,7 @@ export default async function PainelPage({
       getMyTacticStats(user.id),
       getStreak(user.id),
       getReviewDueCount(),
-      getNextLesson(),
+      lessonsOn ? getNextLesson() : null,
       listTrails(),
       getMyTitleSummary(user.id),
     ]);
@@ -156,34 +170,38 @@ export default async function PainelPage({
           </Card>
         </Reveal>
 
-        <Reveal index={3} className="flex">
-          <Card className="flex w-full flex-col gap-3">
-            <span className="text-sm text-muted">Próxima aula</span>
-            {nextLesson ? (
-              <>
-                <span className="font-semibold">{nextLesson.lessonTitle}</span>
+        {lessonsOn && (
+          <Reveal index={3} className="flex">
+            <Card className="flex w-full flex-col gap-3">
+              <span className="text-sm text-muted">Próxima aula</span>
+              {nextLesson ? (
+                <>
+                  <span className="font-semibold">
+                    {nextLesson.lessonTitle}
+                  </span>
+                  <span className="text-sm text-muted">
+                    {nextLesson.courseTitle} · {nextLesson.done} de{" "}
+                    {nextLesson.total}
+                  </span>
+                  <Link
+                    href={`/aulas/${nextLesson.courseId}/${nextLesson.lessonId}`}
+                    className={buttonClasses(
+                      "secondary",
+                      "md",
+                      "mt-auto self-start",
+                    )}
+                  >
+                    {nextLesson.done > 0 ? "Continuar" : "Começar"}
+                  </Link>
+                </>
+              ) : (
                 <span className="text-sm text-muted">
-                  {nextLesson.courseTitle} · {nextLesson.done} de{" "}
-                  {nextLesson.total}
+                  Nenhuma aula pendente por enquanto.
                 </span>
-                <Link
-                  href={`/aulas/${nextLesson.courseId}/${nextLesson.lessonId}`}
-                  className={buttonClasses(
-                    "secondary",
-                    "md",
-                    "mt-auto self-start",
-                  )}
-                >
-                  {nextLesson.done > 0 ? "Continuar" : "Começar"}
-                </Link>
-              </>
-            ) : (
-              <span className="text-sm text-muted">
-                Nenhuma aula pendente por enquanto.
-              </span>
-            )}
-          </Card>
-        </Reveal>
+              )}
+            </Card>
+          </Reveal>
+        )}
       </div>
 
       {user.planRank >= 2 && (
@@ -259,7 +277,7 @@ export default async function PainelPage({
           Áreas de treino
         </h2>
         <ul className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {areas.map(({ href, label, Icon }) => (
+          {areas.map(({ href, label, Icon, hiddenForUsers }) => (
             <li key={href}>
               <Link
                 href={href}
@@ -269,6 +287,11 @@ export default async function PainelPage({
                   <Icon />
                 </span>
                 <span className="font-semibold">{label}</span>
+                {hiddenForUsers && (
+                  <span className="text-xs text-muted">
+                    Oculta para usuários
+                  </span>
+                )}
               </Link>
             </li>
           ))}

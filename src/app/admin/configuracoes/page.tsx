@@ -4,14 +4,20 @@ import {
   AdminInput,
   AdminSelect,
 } from "@/components/admin/AdminForm";
+import { SiteFlagSwitch } from "@/components/admin/SiteFlagSwitch";
 import { Card } from "@/components/ui/Card";
 import { SectionLabel } from "@/components/ui/Label";
 import { requireAdmin } from "@/lib/data/admin";
 import { formatLiveDate } from "@/lib/format";
+import {
+  parseSiteSettings,
+  SITE_FLAGS,
+  type SiteFlag,
+} from "@/lib/site-settings";
 import { createClient } from "@/lib/supabase/server";
 import { createLive, deleteLive, saveSettings } from "./actions";
 
-export const metadata: Metadata = { title: "Lives e grupos" };
+export const metadata: Metadata = { title: "Configurações" };
 
 const AUDIENCE: Record<string, string> = {
   public: "Aberta",
@@ -27,14 +33,32 @@ function sinceYesterday(): string {
 export default async function ConfiguracoesAdminPage() {
   await requireAdmin("/admin/configuracoes");
   const supabase = await createClient();
-  const [{ data: settings }, { data: lives }] = await Promise.all([
-    supabase.from("app_settings").select("key, value"),
-    supabase
-      .from("live_events")
-      .select("id, title, starts_at, url, audience")
-      .gte("starts_at", sinceYesterday())
-      .order("starts_at"),
-  ]);
+  const [{ data: settings }, { data: lives }, { data: flagRows }] =
+    await Promise.all([
+      supabase.from("app_settings").select("key, value"),
+      supabase
+        .from("live_events")
+        .select("id, title, starts_at, url, audience")
+        .gte("starts_at", sinceYesterday())
+        .order("starts_at"),
+      supabase
+        .from("site_settings")
+        .select("key, enabled, updated_at, updated_by"),
+    ]);
+  const flags = parseSiteSettings(flagRows);
+  const editorIds = [
+    ...new Set((flagRows ?? []).map((row) => row.updated_by).filter(Boolean)),
+  ];
+  const { data: editors } = editorIds.length
+    ? await supabase.from("profiles").select("id, name").in("id", editorIds)
+    : { data: [] };
+  const changedText = (flag: SiteFlag): string | null => {
+    const row = flagRows?.find((item) => item.key === flag);
+    if (!row?.updated_by) return null;
+    const who =
+      editors?.find((item) => item.id === row.updated_by)?.name || "um admin";
+    return `Alterado em ${formatLiveDate(new Date(row.updated_at))}, por ${who}.`;
+  };
   const setting = (key: string) =>
     settings?.find((row) => row.key === key)?.value ?? "";
 
@@ -43,9 +67,24 @@ export default async function ConfiguracoesAdminPage() {
       <div className="flex flex-col gap-2">
         <SectionLabel>Painel</SectionLabel>
         <h1 className="font-display text-page font-semibold tracking-tight">
-          Lives e grupos
+          Configurações
         </h1>
       </div>
+
+      <Card className="flex max-w-2xl flex-col gap-4">
+        <h2 className="text-lg font-semibold">Configurações do site</h2>
+        <p className="text-sm text-muted">
+          Esconde ou reexibe áreas para os alunos na hora, sem apagar nada.
+        </p>
+        {(Object.keys(SITE_FLAGS) as SiteFlag[]).map((flag) => (
+          <SiteFlagSwitch
+            key={flag}
+            flag={flag}
+            enabled={flags[flag]}
+            changed={changedText(flag)}
+          />
+        ))}
+      </Card>
 
       <Card className="flex max-w-2xl flex-col gap-4">
         <h2 className="text-lg font-semibold">Grupos do WhatsApp</h2>

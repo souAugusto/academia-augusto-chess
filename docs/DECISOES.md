@@ -148,3 +148,12 @@ Decisões do Augusto: só o motor do site (sem nuvem nem análise do Lichess), g
 - **Conferência no servidor:** os lances precisam ser legais e o "mate" precisa ser mate de fato; o resto (resultado de abandono, tempo, estrelas) é aceito do navegador, como o progresso (motivação pessoal, sem ranking).
 - **Gravação única:** `save_bot_game` soma no progresso e guarda a partida numa só chamada; se a mesma partida chegar duas vezes, a segunda é ignorada.
 - **Analisar a fundo:** a revisão abre `/analise?robo=<id>`, que já começa a análise completa com o PGN da partida (só para quem tem a análise no plano; os demais veem o aviso do plano).
+
+## Esconder a aba Aulas em vídeo (2026-10-24)
+- **Tabela nova `site_settings`** (0023), não a `app_settings`: esta guarda os links privados dos grupos (só admin lê); os interruptores precisam ser lidos por qualquer visitante para montar o menu. Chave + booleano, com quando e quem alterou preenchidos por gatilho no banco.
+- **Bloqueio em três camadas:** (1) RLS: `courses` só aparece com o interruptor ligado (ou para admin); módulos, aulas e materiais dependem do curso, então somem juntos, inclusive os links de PDF/PGN; (2) servidor: layout de `/aulas` mostra "temporariamente indisponível", a action de concluir aula e `/api/materiais` recusam; (3) interface: menu, barra do celular, painel (card de área e "Próxima aula"), trilhas e card da página inicial.
+- **Trilhas** (decisão do Augusto): etapas de aula que o aluno não enxerga saem da trilha e da contagem; voltam ao reexibir. Nada é apagado.
+- **Textos de venda** (decisão do Augusto): só links e cards somem; frases que citam aulas em vídeo ficam (inclusive o título "Quatro frentes de treino" da página inicial).
+- **Atualização:** o servidor guarda a configuração em cache com etiqueta; ao mudar, o admin expira o cache na hora (`updateTag`) e as páginas são revalidadas. No navegador, o app confere `/api/configuracoes-site` a cada 60 s (só com a aba visível, e ao voltar para ela) e atualiza o menu e a página sem recarregar. Sem conexão em tempo real, pelo mesmo motivo do sino de notificações (desempenho).
+- **Service worker:** não precisou mudar: `/api/` nunca é guardado e páginas do aluno (como `/aulas`) também não.
+- **Falha na leitura:** vale o padrão (aba visível) e o erro vai para o log.
