@@ -51,6 +51,13 @@ export default async function PainelPage({
             Ver planos
           </Link>
         </section>
+        <p className="text-[0.9375rem] text-muted">
+          Enquanto isso, você pode{" "}
+          <Link href="/jogar" className="font-semibold text-accent-text hover:underline">
+            jogar contra o computador
+          </Link>
+          , aberto a todos.
+        </p>
       </>
     );
   }

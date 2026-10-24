@@ -36,7 +36,10 @@ export function Hero({ puzzle }: { puzzle: DailyPuzzle | null }) {
             </Link>
           </div>
           <p className="text-sm text-muted">
-            {TRIAL_NOTE} {HERO.note}
+            {TRIAL_NOTE} {HERO.note}{" "}
+            <Link href="/app" className="font-semibold text-accent-text underline-offset-4 hover:underline">
+              Baixar o app
+            </Link>
           </p>
         </div>
 

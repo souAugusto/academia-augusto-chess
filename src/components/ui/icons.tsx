@@ -131,3 +131,17 @@ export const IconBell = (p: IconProps) => (
     <path d="M6 9a6 6 0 1 1 12 0c0 4.5 1.5 6.5 2.2 7.3a.4.4 0 0 1-.3.7H4.1a.4.4 0 0 1-.3-.7C4.5 15.5 6 13.5 6 9zM10 20a2.2 2.2 0 0 0 4 0" />
   </Icon>
 );
+
+export const IconLock = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="5" y="11" width="14" height="9" rx="2" />
+    <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+  </Icon>
+);
+
+export const IconRobot = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="5" y="8" width="14" height="11" rx="3" />
+    <path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5M3 13v2M21 13v2" />
+  </Icon>
+);

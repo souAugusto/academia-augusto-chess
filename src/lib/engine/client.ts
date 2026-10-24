@@ -173,6 +173,20 @@ export class StockfishClient {
     });
   }
 
+  // Limita a força do motor (UCI_Elo, de 1320 a 3190) ou volta à força total
+  // (null). Entra na fila, para valer a partir da próxima busca.
+  setStrength(elo: number | null) {
+    void this.enqueue(async () => {
+      await this.ready;
+      if (elo === null) {
+        this.send("setoption name UCI_LimitStrength value false");
+        return;
+      }
+      this.send("setoption name UCI_LimitStrength value true");
+      this.send(`setoption name UCI_Elo value ${Math.round(elo)}`);
+    });
+  }
+
   // Zera a memória do motor (tabela hash): mesma partida, mesmo resultado.
   // Entra na fila, para não cair no meio de uma análise.
   newGame() {

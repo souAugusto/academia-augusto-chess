@@ -48,6 +48,8 @@ export const metadata: Metadata = {
     title: BRAND.fullName,
     description: DESCRIPTION,
     url: "/",
+    // O openGraph da página substitui o da raiz: repete a imagem padrão.
+    images: "/opengraph-image",
   },
 };
 

@@ -18,13 +18,14 @@ const SECTIONS = [
   {
     title: "Sons",
     paragraphs: [
+      "Os personagens do jogo contra o computador (nomes, falas e desenhos) são criações originais da Academia Finale.",
       "Os sons do tabuleiro (pacotes Suave, Madeira, Oco, Arcade e Engraçado) e os padrões de vibração são criados pela Academia Finale e gerados por código no seu navegador. Não usam gravações de terceiros.",
     ],
   },
   {
     title: "Motor de xadrez Stockfish",
     paragraphs: [
-      "A análise de partidas e o treino de finais usam o Stockfish 19, versão lite de uma linha de execução (arquivo stockfish-19-lite-single), compilada para WebAssembly no projeto stockfish.js de Nathan Rugg e publicada no pacote npm stockfish, versão 19.0.1. Os arquivos são distribuídos sem nenhuma modificação.",
+      "A análise de partidas, o treino de finais e o jogo contra o computador usam o Stockfish 19, versão lite de uma linha de execução (arquivo stockfish-19-lite-single), compilada para WebAssembly no projeto stockfish.js de Nathan Rugg e publicada no pacote npm stockfish, versão 19.0.1. Os arquivos são distribuídos sem nenhuma modificação.",
       "O Stockfish é software livre, sob a GNU General Public License versão 3 (GPL-3.0). Você pode usá-lo, estudá-lo, copiá-lo e redistribuí-lo nos termos dessa licença. O motor roda separado do site, no seu navegador (num Web Worker), e se comunica com a Finale só por mensagens no protocolo UCI.",
       "Licença completa: /licencas/stockfish-GPL-3.0.txt (também em /engine/COPYING.txt). Código-fonte correspondente: github.com/nmrugg/stockfish.js/tree/v19.0.1 e github.com/official-stockfish/Stockfish. Autores do Stockfish: T. Romstad, M. Costalba, J. Kiiski, G. Linscott e colaboradores.",
     ],

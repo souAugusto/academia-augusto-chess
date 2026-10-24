@@ -5,6 +5,7 @@ import {
   IconFlag,
   IconHome,
   IconPlay,
+  IconRobot,
   IconTarget,
 } from "@/components/ui/icons";
 
@@ -17,6 +18,13 @@ export const APP_SECTIONS = [
   { id: "finais", href: "/finais", label: "Finais", Icon: IconFlag },
   { id: "partidas", href: "/partidas", label: "Partidas", Icon: IconBoard },
   { id: "aulas", href: "/aulas", label: "Aulas", Icon: IconPlay },
+  {
+    id: "jogar",
+    href: "/jogar",
+    label: "Jogar",
+    Icon: IconRobot,
+    mobile: false,
+  },
   {
     id: "analise",
     href: "/analise",
