@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs><clipPath id="c"><circle cx="60" cy="60" r="60"/></clipPath></defs>
+  <g clip-path="url(#c)">
+  <circle cx="60" cy="60" r="60" fill="#8FB8E8"/>
+  <circle cx="60" cy="60" r="60" fill="#FFFFFF" opacity="0.18"/>
+  <path d="M26 112 L26 60 Q26 22 60 22 Q94 22 94 60 L94 112 Q86 104 80 112 Q72 120 66 110 Q60 102 54 110 Q48 120 40 112 Q34 104 26 112 Z" fill="#EEF4FF" stroke="#1B1D26" stroke-width="2.5" stroke-linejoin="round"/>
+  <ellipse cx="40" cy="78" rx="5" ry="3" fill="#C8D8F2"/>
+  <circle cx="48" cy="56" r="5.5" fill="#1B1D26"/>
+  <circle cx="72" cy="56" r="5.5" fill="#1B1D26"/>
+  <circle cx="49.8" cy="54.2" r="1.6" fill="#FFFFFF"/>
+  <circle cx="73.8" cy="54.2" r="1.6" fill="#FFFFFF"/>
+  <path d="M42 45 Q48 41 54 45" stroke="#1B1D26" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M66 45 Q72 41 78 45" stroke="#1B1D26" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <ellipse cx="60" cy="73" rx="4.5" ry="5.5" fill="#1B1D26"/>
+  </g>
+</svg>

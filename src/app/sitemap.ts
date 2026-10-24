@@ -14,6 +14,7 @@ const PUBLIC_PATHS = [
   "/creditos",
   "/como-analisamos",
   "/app",
+  "/jogar",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -18,7 +18,7 @@ Next.js 16 (App Router) + TypeScript + Tailwind 4 · Supabase (Auth, Postgres, R
 4. Escritas em `subscriptions`, `seat_reservations` e eventos de pagamento só pelo servidor com a service role.
 5. Webhook de pagamento: verificar assinatura com o corpo bruto e garantir idempotência.
 6. Validar toda entrada no servidor (Zod). Não confiar em `user_id` ou `plan` vindos do cliente.
-7. Não existe plano gratuito permanente. A única exceção é o teste grátis de 30 dias do plano Membro (sem cartão, uma vez por conta e por e-mail normalizado; decisão do Augusto em 2026-10-14). Não criar outros fluxos "grátis". O puzzle do dia é a única parte pública jogável.
+7. Não existe plano gratuito permanente. A única exceção é o teste grátis de 30 dias do plano Membro (sem cartão, uma vez por conta e por e-mail normalizado; decisão do Augusto em 2026-10-14). Não criar outros fluxos "grátis". Partes públicas jogáveis: o puzzle do dia e o "Jogar contra o computador" (`/jogar`, aberto a todos, decisão do Augusto em 2026-10-24).
 8. Não prometer resultado (ex.: "suba X pontos de rating") em nenhum texto.
 9. Nada do mestre convidado (nome, foto, currículo) aparece no site até o Augusto liberar.
 10. Só conteúdo aberto (Lichess CC0, `lichess-org/chess-openings` CC0) ou do Augusto. Não usar código ou arte GPL no front (o `chessground` foi descartado por isso); o Stockfish só roda isolado em Web Worker, com aviso de licença em `/creditos`.
