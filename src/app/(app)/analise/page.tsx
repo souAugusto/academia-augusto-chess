@@ -10,6 +10,9 @@ import { formatDate } from "@/lib/format";
 import { getStudyProgress } from "@/lib/data/lessons";
 import { lessonIndex } from "@/lib/data/lesson-index";
 import { createClient } from "@/lib/supabase/server";
+import { botById } from "@/content/personagens";
+import { gamePgn } from "@/lib/bot/history";
+import { getBotGame } from "@/lib/data/bot-progress";
 import { analysisUpgradeText } from "./gate";
 
 export const metadata: Metadata = { title: "Análise de partidas" };
@@ -45,6 +48,18 @@ export default async function AnalisePage({
         label: `${data.opening_name ?? "Partida"} · ${formatDate(data.played_at)}`,
       };
   }
+  // Partida contra o computador (?robo=<id>): abre já analisando.
+  let robo: { pgn: string; color: "w" | "b"; label: string } | null = null;
+  if (typeof params.robo === "string") {
+    const game = await getBotGame(params.robo);
+    const bot = game && game !== "login" ? botById(game.botId) : undefined;
+    if (game && game !== "login" && bot && game.moves.length > 0)
+      robo = {
+        pgn: gamePgn(game, bot.nome, user.name),
+        color: game.color,
+        label: `${user.name} contra ${bot.nome} · ${formatDate(game.playedAt)}`,
+      };
+  }
   const [saved, progress] = await Promise.all([
     listAnalyses(user.id, 20),
     getStudyProgress(user.id),
@@ -61,21 +76,35 @@ export default async function AnalisePage({
           Análise de partidas
         </h1>
         <p className="max-w-2xl leading-relaxed text-muted">
-          {imported
-            ? `Partida importada: ${imported.label}.`
-            : "Cole uma partida em PGN ou escolha uma das suas partidas importadas. A análise classifica cada lance, mostra a precisão de cada lado e os momentos-chave."}
+          {robo
+            ? `Partida contra o computador: ${robo.label}.`
+            : imported
+              ? `Partida importada: ${imported.label}.`
+              : "Cole uma partida em PGN ou escolha uma das suas partidas importadas. A análise classifica cada lance, mostra a precisão de cada lado e os momentos-chave."}
         </p>
       </div>
       <AnalysisWorkbench
-        key={imported ? `partida-${imported.id}` : "nova"}
+        key={
+          robo
+            ? `robo-${params.robo}`
+            : imported
+              ? `partida-${imported.id}`
+              : "nova"
+        }
         initial={
-          imported
-            ? { kind: "importada", gameId: imported.id, color: imported.color }
-            : { kind: "nova" }
+          robo
+            ? { kind: "pgn", pgn: robo.pgn }
+            : imported
+              ? {
+                  kind: "importada",
+                  gameId: imported.id,
+                  color: imported.color,
+                }
+              : { kind: "nova" }
         }
         lessons={lessonIndex()}
         completed={completed}
-        userColor={imported?.color ?? null}
+        userColor={robo?.color ?? imported?.color ?? null}
         canSaveTactic={user.planRank >= 2}
       />
       <section aria-labelledby="salvas" className="flex flex-col gap-3">
@@ -84,8 +113,8 @@ export default async function AnalisePage({
         </h2>
         {saved.length === 0 ? (
           <p className="text-muted">
-            Nenhuma análise guardada ainda. Toda análise concluída fica
-            guardada aqui.{" "}
+            Nenhuma análise guardada ainda. Toda análise concluída fica guardada
+            aqui.{" "}
             <Link
               href="/partidas"
               className="text-accent-text underline-offset-4 hover:underline"

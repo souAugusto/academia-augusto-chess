@@ -29,13 +29,20 @@ import {
   type ClockId,
   type Outcome,
 } from "@/lib/bot/game";
+import {
+  gamePgn,
+  MARK_CODES,
+  type BotGameRecord,
+  type MarkCode,
+} from "@/lib/bot/history";
 import { botStatus, type Achievement, type Progress } from "@/lib/bot/progress";
-import { gameAccuracy, markFor, moveLoss, type MoveMark } from "@/lib/bot/review";
+import { gameAccuracy, markFor, moveLoss } from "@/lib/bot/review";
 import { REACTION_EXPRESSION, type Bot, type Expression, type Reaction } from "@/lib/bot/types";
 import { engineSupported, StockfishClient } from "@/lib/engine/client";
 import { scoreToCp, type Score } from "@/lib/engine/uci";
 import { playSound } from "@/lib/sound";
 import { BotAvatar } from "./BotAvatar";
+import { MoveList } from "./MoveList";
 import { Stars, STYLE_LABELS } from "./BotTrail";
 import { BOT_ORDER, useBotProgress } from "./useBotProgress";
 
@@ -60,17 +67,6 @@ type PlayerMove = {
   after: EngineScore | null;
 };
 
-const MARK_SYMBOL: Record<Exclude<MoveMark, null>, string> = {
-  "erro-grave": "??",
-  erro: "?",
-  imprecisao: "?!",
-};
-const MARK_CLASS: Record<Exclude<MoveMark, null>, string> = {
-  "erro-grave": "text-cls-erro-grave",
-  erro: "text-cls-erro",
-  imprecisao: "text-cls-imprecisao",
-};
-
 const RESULT_TITLE = {
   vitoria: "Você venceu!",
   derrota: "Você perdeu",
@@ -79,6 +75,17 @@ const RESULT_TITLE = {
 
 function pick<T>(list: T[]): T {
   return list[Math.floor(Math.random() * list.length)];
+}
+
+// Id da partida (uuid). crypto.randomUUID só existe em HTTPS; fora disso, um
+// uuid v4 montado com getRandomValues.
+function newGameId(): string {
+  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  b[6] = (b[6] & 0x0f) | 0x40;
+  b[8] = (b[8] & 0x3f) | 0x80;
+  const h = [...b].map((x) => x.toString(16).padStart(2, "0")).join("");
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -183,6 +190,7 @@ export function BotGame({
   const [reviewPly, setReviewPly] = useState(0);
   const [clock, setClock] = useState({ w: 0, b: 0 });
   const [copied, setCopied] = useState(false);
+  const [savedGame, setSavedGame] = useState<BotGameRecord | null>(null);
 
   function say(reaction: Reaction, text?: string) {
     setBubble({
@@ -242,20 +250,27 @@ export function BotGame({
     setThinking(false);
     setHint(null);
     setConfirmResign(false);
-    const game = chess.current;
-    const names = playerRef.current === "w" ? ["Você", bot.nome] : [bot.nome, "Você"];
-    game.setHeader("Event", "Academia Finale: jogar contra o computador");
-    game.setHeader("White", names[0]);
-    game.setHeader("Black", names[1]);
-    const score =
-      result.result === "empate"
-        ? "1/2-1/2"
-        : (result.result === "vitoria") === (playerRef.current === "w")
-          ? "1-0"
-          : "0-1";
-    game.setHeader("Result", score);
     const earned = starsFor(result.result, usedUndo.current, usedHint.current);
-    const won = recordRef.current(bot.id, result.result, earned);
+    const record: BotGameRecord = {
+      id: newGameId(),
+      botId: bot.id,
+      color: playerRef.current,
+      result: result.result,
+      reason: result.reason,
+      stars: earned,
+      accuracy: gameAccuracy(movesRef.current),
+      moves: chess.current
+        .history({ verbose: true })
+        .map((m) => `${m.from}${m.to}${m.promotion ?? ""}`),
+      marks: movesRef.current.flatMap((m) => {
+        const mark = markFor(moveLoss(m));
+        return mark ? [[m.ply, MARK_CODES[mark]] as [number, MarkCode]] : [];
+      }),
+      clock: clockId,
+      playedAt: new Date().toISOString(),
+    };
+    const won = recordRef.current(record);
+    setSavedGame(record);
     setOutcome(result);
     setStars(earned);
     setAchievementsWon(won);
@@ -553,7 +568,8 @@ export function BotGame({
 
   async function copyPgn() {
     try {
-      await navigator.clipboard.writeText(chess.current.pgn());
+      if (!savedGame) return;
+      await navigator.clipboard.writeText(gamePgn(savedGame, bot.nome));
       setCopied(true);
     } catch {
       setCopied(false);
@@ -641,41 +657,13 @@ export function BotGame({
     </div>
   );
 
-  // Lista de lances (com marcas de erro dos lances do aluno).
   const moveList = (
-    <ol className="grid max-h-48 grid-cols-[auto_1fr_1fr] gap-x-3 gap-y-1 overflow-y-auto text-[0.9375rem] tabular-nums lg:max-h-none">
-      {Array.from({ length: Math.ceil(history.length / 2) }, (_, row) => (
-        <li key={row} className="contents">
-          <span className="text-muted">{row + 1}.</span>
-          {[0, 1].map((col) => {
-            const ply = row * 2 + col;
-            const item = history[ply];
-            if (!item) return <span key={col} />;
-            const mark = marks.get(ply) ?? null;
-            const content: ReactNode = (
-              <>
-                {item.san}
-                {mark && <span className={`ml-0.5 font-semibold ${MARK_CLASS[mark]}`}>{MARK_SYMBOL[mark]}</span>}
-              </>
-            );
-            return reviewing ? (
-              <button
-                key={col}
-                type="button"
-                onClick={() => setReviewPly(ply + 1)}
-                className={`rounded px-1 text-left ${reviewPly === ply + 1 ? "bg-accent text-on-accent" : "hover:bg-surface-2"}`}
-              >
-                {content}
-              </button>
-            ) : (
-              <span key={col} className="px-1">
-                {content}
-              </span>
-            );
-          })}
-        </li>
-      ))}
-    </ol>
+    <MoveList
+      sans={history.map((item) => item.san)}
+      marks={marks}
+      current={reviewing ? reviewPly : undefined}
+      onSelect={reviewing ? setReviewPly : undefined}
+    />
   );
 
   let body: ReactNode = null;
@@ -862,8 +850,8 @@ export function BotGame({
         >
           Revisar partida
         </button>
-        <Link href="/jogar" className={buttonClasses("ghost")}>
-          Trilha
+        <Link href="/jogar/partidas" className={buttonClasses("ghost")}>
+          Minhas partidas
         </Link>
       </>
     );

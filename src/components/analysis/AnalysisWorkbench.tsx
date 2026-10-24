@@ -31,6 +31,7 @@ import { AnalysisView, type Loaded } from "./AnalysisView";
 
 type Initial =
   | { kind: "nova" }
+  | { kind: "pgn"; pgn: string } // partida da Finale (ex.: contra o computador)
   | { kind: "importada"; gameId: number; color: Side }
   | {
       kind: "salva";
@@ -71,7 +72,7 @@ export function AnalysisWorkbench({
   canSaveTactic?: boolean;
 }) {
   const router = useRouter();
-  const [pgn, setPgn] = useState("");
+  const [pgn, setPgn] = useState(initial.kind === "pgn" ? initial.pgn : "");
   const [status, setStatus] = useState<Status>(
     initial.kind === "salva"
       ? { kind: "pronta", complete: true }
@@ -236,8 +237,8 @@ export function AnalysisWorkbench({
     if (result.complete) await store(target, result);
   }
 
-  function startFromPgn() {
-    const parsed = parsePgn(pgn);
+  function startFromPgn(text = pgn) {
+    const parsed = parsePgn(text);
     if (!parsed.ok) {
       setStatus({ kind: "entrada", error: PGN_ERROR_MESSAGES[parsed.error] });
       return;
@@ -280,6 +281,14 @@ export function AnalysisWorkbench({
     if (initial.kind !== "importada" || autoStarted.current) return;
     autoStarted.current = true;
     void startFromImported(initial.gameId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- só ao abrir
+  }, []);
+
+  // Partida da Finale (ex.: contra o computador): também começa sozinha.
+  useEffect(() => {
+    if (initial.kind !== "pgn") return;
+    const timer = window.setTimeout(() => startFromPgn(initial.pgn), 0);
+    return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- só ao abrir
   }, []);
 
