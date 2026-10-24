@@ -11,7 +11,7 @@ const BENEFITS = [
 ];
 
 // Ícone "Compartilhar" do Safari (quadrado com seta para cima).
-function ShareIcon() {
+export function ShareIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -35,12 +35,14 @@ export function InstallSheet({
   platform,
   onInstall,
   onClose,
+  initialStep = "convite",
 }: {
   platform: InstallPlatform;
+  initialStep?: "convite" | "ios"; // "ios": já abre no passo a passo
   onInstall: () => void; // Android: chama a instalação do navegador
   onClose: () => void; // "Agora não", Esc ou fundo
 }) {
-  const [step, setStep] = useState<"convite" | "ios">("convite");
+  const [step, setStep] = useState<"convite" | "ios">(initialStep);
   const sheet = useRef<HTMLDivElement>(null);
   const primary = useRef<HTMLButtonElement>(null);
   const ios = platform === "ios-safari" || platform === "ios-outro";

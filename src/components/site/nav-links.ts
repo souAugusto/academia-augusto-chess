@@ -5,4 +5,5 @@ export const SITE_NAV_LINKS = [
   { href: "/#analise", label: "Análise" },
   { href: "/#planos", label: "Planos" },
   { href: "/#faq", label: "Dúvidas" },
+  { href: "/app", label: "Baixar app" },
 ] as const;

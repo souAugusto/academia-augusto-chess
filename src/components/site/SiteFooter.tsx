@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { FinaleMark } from "@/components/brand/FinaleMark";
-import { InstallButton } from "@/components/pwa/InstallButton";
 import { BRAND } from "@/content/brand";
 
 const LINKS = [
+  { href: "/app", label: "Baixar app" },
   { href: "/planos", label: "Planos" },
   { href: "/termos", label: "Termos de uso" },
   { href: "/privacidade", label: "Privacidade" },
@@ -28,7 +28,6 @@ export function SiteFooter() {
               {link.label}
             </Link>
           ))}
-          <InstallButton />
         </nav>
       </div>
     </footer>
