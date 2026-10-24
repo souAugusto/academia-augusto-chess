@@ -82,11 +82,6 @@ export const FAQ = {
         "Sim. O cancelamento é feito na página Minha conta, e o acesso continua até o fim do período pago.",
     },
     TRIAL_FAQ,
-    {
-      question: "O que muda para quem entra agora como fundador?",
-      answer:
-        "[DEFINIR BENEFÍCIO DO FUNDADOR: preço travado, selo no ranking ou outro]",
-    },
   ],
 };
 

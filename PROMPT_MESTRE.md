@@ -137,7 +137,7 @@ PAYMENTS_LIVE=          # "1" só com confirmação do Augusto
 
 ## 12. Pendências do Augusto (placeholders até preencher)
 
-- Dia e horário das lives; benefício de fundador; duração e estrutura do método
+- Dia e horário das lives; duração e estrutura do método (benefício de fundador retirado do site em 2026-10-24, decisão do Augusto)
 - Conta do Asaas (sandbox para testes; produção só com confirmação); domínio definitivo e e-mail de suporte; SMTP próprio
 - Razão social, CNPJ e foro (termos e privacidade)
 - Credencial do Google (OAuth) no Supabase
